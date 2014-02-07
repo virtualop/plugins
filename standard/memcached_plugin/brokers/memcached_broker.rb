@@ -7,24 +7,16 @@ class MemcachedBroker < RHCP::Broker
     @wrapped_broker = wrapped_broker
     @plugin = plugin
 
-    # only enable if there's config for this plugin
-    if @plugin.config.has_key?('server_name')
-      memcached_server = @plugin.config['server_name']
-      $logger.debug("connecting to memcached server '#{memcached_server}'")
+    memcached_server = @plugin.config_string('server_name')
+    $logger.debug("connecting to memcached server '#{memcached_server}'")
 
-      @cache = MemCache.new(
-        [memcached_server],
-        :timeout => 5
-      )
-      $logger.info("memcached plugin active (connected to '#{memcached_server}')")
-    else
-      raise Exception.new("missing configuration key 'server_name' for plugin #{@plugin.class.to_s}")
-    end
+    @cache = MemCache.new(
+      [memcached_server],
+      :timeout => 5
+    )
+    $logger.info("memcached plugin active (connected to '#{memcached_server}')")
 
-    @expiry_seconds = 300
-    if @plugin.config.has_key?('expiration_seconds')
-      @expiry_seconds = @plugin.config['expiration_seconds']
-    end
+    @expiry_seconds = @plugin.config_string('expiration_seconds').to_i
   end
 
   def get_command_list(context = RHCP::Context.new())
