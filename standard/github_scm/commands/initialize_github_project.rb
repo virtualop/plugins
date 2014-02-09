@@ -4,26 +4,20 @@ param :machine
 param "directory", "the directory in which the working copy should be initialized"
 
 github_params
-param! "github_repo", "the repository that should be initialized", :lookup_method => lambda {
-    @op.list_github_repos.map { |x| 
-      x["full_name"]
-    }
-  }
-#param "project_name", ""
+param :github_repo
   
 on_machine do |machine, params|
-  repo = @op.list_github_repos.select { |x| 
-      x["full_name"] == params["github_repo"]
-  }.first
+  repo = @op.repos.select { |x| x['full_name'] == params['github_repo'] }.first
+  pp repo
   
-  # TODO untested
+  # TODO check first if the user has write permissions to this repo       
+  
   project_name = params["github_repo"].split("/").last
-  #machine.ssh_and_Check_result("command" => "mkdir #{project_name}")
   dir_name = params.has_key?("directory") ? params["directory"] : project_name
   machine.mkdir("dir_name" => dir_name)
   [
     "git init",
-    "touch README && git add README",
+    "touch README.md && git add README.md",
     "git commit -m 'first commit'",
     "git remote add origin #{repo["ssh_url"]}",
     "git push -u origin master"

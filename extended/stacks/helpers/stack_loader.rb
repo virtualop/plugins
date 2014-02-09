@@ -135,6 +135,9 @@ class StackLoader
     end
     
     def memory(*args)
+      puts "environment : #{@params["environment"]}" if @params
+      puts "environment (extra) : #{@params["extra_params"]["environment"]}" if @params && @params["extra_params"]
+
       arg = args.first
       if arg.class == Array
         @data["memory_size"] = (arg.size == 3 ? arg[1] : arg.first)

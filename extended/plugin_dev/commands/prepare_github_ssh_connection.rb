@@ -16,8 +16,13 @@ on_machine do |machine, params|
   pp p
   github_user = @op.github_user(p)
   
-  machine.ssh "git config --global user.email '#{github_user["email"]}'"
+  email = github_user["email"]
+  if (! email) || (email == '')
+    # TODO use email from webapp user here
+    #email = 
+  end
   machine.ssh "git config --global user.name '#{github_user["name"]}'"
+  machine.ssh "git config --global user.email '#{github_user["email"]}'"
   
   ssh_config = read_local_template(:ssh_config, binding())
   machine.append_to_file("file_name" => "#{machine.home}/.ssh/config", "content" => ssh_config)

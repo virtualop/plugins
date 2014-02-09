@@ -21,3 +21,14 @@ def param_github_project(options = {})
   })
   RHCP::CommandParam.new("github_project", "the github project to install (e.g. philippt/virtualop)", options)
 end
+
+def param_github_repo(options = {})
+  merge_options_with_defaults(options, {
+    :mandatory => true,
+    :default_param => true,
+    :lookup_method => lambda {      
+      @op.repos.pick('full_name')
+    }
+  })
+  RHCP::CommandParam.new("github_repo", "the github project to install (e.g. philippt/virtualop)", options)
+end

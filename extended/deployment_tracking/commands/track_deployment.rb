@@ -16,6 +16,11 @@ on_machine do |machine, params|
       if service['extra_params'].has_key?('git_branch')
         version = service['extra_params']['git_branch']
       end
+    elsif service['extra_params'].has_key?('type')
+      type = service['extra_params']['type']
+      if service['extra_params'].has_key?('source')
+        source = service['extra_params'].has_key?('source')
+      end
     end
   end
   

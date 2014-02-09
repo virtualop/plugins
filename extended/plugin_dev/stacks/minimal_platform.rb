@@ -14,17 +14,12 @@ stack :nagios do |m, p|
   m.disk 50
 end
  
-stack :xoplogs do |m, params|
-  m.github 'philippt/xoplogs'
-  m.domain_prefix 'xoplogs'
-  m.memory [ 512, 1024, 2048 ]
-  m.disk 100
-   
-  #m.post_install do |machine|
-  # TODO check if this works (lots of 'machine' thingies)
-  #  @op.configure_xoplogs("xoplogs_machine" => machine.name, "auto_import_machine_groups" => [ params["machine"] ])
-  #end
-end
+# stack :xoplogs do |m, params|
+  # m.github 'philippt/xoplogs'
+  # m.domain_prefix 'xoplogs'
+  # m.memory [ 512, 1024, 2048 ]
+  # m.disk 100
+# end
  
 stack :datarepo do |m, params|
   m.canned_service :datarepo
@@ -113,7 +108,7 @@ on_install do |stacked, params|
   @op.configure_nagios_config_generator("nagios_machine_name" => stacked["nagios"].first["full_name"], "default_services" => ["ssh"])
   @op.configure_nagios_status("nagios_bin_url" => "http://#{stacked["nagios"].first["domain"]}/nagios/cgi-bin", "nagios_user" => "nagiosadmin", "nagios_password" => "the_password")
   
-  @op.configure_xoplogs("xoplogs_machine" => stacked["xoplogs"].first["full_name"], "auto_import_machine_groups" => [ host_name ])
+  #@op.configure_xoplogs("xoplogs_machine" => stacked["xoplogs"].first["full_name"], "auto_import_machine_groups" => [ host_name ])
   
   @op.with_machine(@op.whoareyou("name_only" => "true")) do |i|
     i.install_service_from_working_copy("working_copy" => "virtualop", "service" => "import_logs")    

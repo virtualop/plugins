@@ -36,6 +36,9 @@ on_machine do |machine, params|
       end
     end
     
+    params['extra_params'] ||= {}
+    params['extra_params']['type'] = 'canned'
+    params['extra_params']['source'] = service_name
     @op.install_service_from_descriptor(params)
   else
     @op.comment("service #{service_name} already installed, nothing to do.")
