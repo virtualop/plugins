@@ -19,7 +19,7 @@ on_machine do |machine, params|
     elsif service['extra_params'].has_key?('type')
       type = service['extra_params']['type']
       if service['extra_params'].has_key?('source')
-        source = service['extra_params'].has_key?('source')
+        source = service['extra_params']['source']
       end
     end
   end
