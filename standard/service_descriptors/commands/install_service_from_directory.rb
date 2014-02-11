@@ -15,11 +15,8 @@ on_machine do |machine, params|
       "service_root" => params["directory"]
     })
     
-    # TODO do we really need this?
     if params.has_key?('extra_params')
-      params["extra_params"].each do |k,v|
-        params[k] = v
-      end
+      params.merge! params['extra_params']
     end
     
     machine.install_service_from_descriptor(params)

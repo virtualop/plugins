@@ -5,6 +5,7 @@ param! :descriptor_machine
 param! "descriptor", "fully qualified path where the service descriptor can be found)"
 param "service_root", "path where the service should be installed"
 param "version", "version information about the service to be installed"
+param 'without_packages', 'package types (e.g. "github") that should not be installed'
 
 accept_extra_params
 
