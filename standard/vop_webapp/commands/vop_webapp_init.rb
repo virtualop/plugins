@@ -1,7 +1,8 @@
-param :machine
-param! 'path'
+param :machine, '', :default_value => 'self'
+param! 'path', 'service root of the webapp', :default_value => '/usr/lib/virtualop/webapp' 
 
 on_machine do |machine, params|
+  # TODO lets rather do this
   #machine.install_service_from_directory(
   #  'directory' => params['path'],
   #  'service' => 'virtualop_webapp', 

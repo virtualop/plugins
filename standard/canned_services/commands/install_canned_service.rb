@@ -1,7 +1,7 @@
 description "installs a service from a 'canned' service descriptor, i.e. a descriptor available to the virtualop, but not from the target machine"
 
 param :machine
-param! :canned_service
+param! :canned_service, '', :default_param => true
 param "force", "set to true to install even if the service is installed already", :default_value => false
 
 accept_extra_params
