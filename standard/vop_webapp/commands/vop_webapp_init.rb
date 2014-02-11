@@ -1,5 +1,5 @@
-param :machine, '', :default_value => 'self'
-param! 'path', 'service root of the webapp', :default_value => '/usr/lib/virtualop/webapp' 
+param :machine, '', :default_value => 'self', :mandatory => false
+param 'path', 'service root of the webapp', :default_value => '/usr/lib/virtualop/webapp' 
 
 on_machine do |machine, params|
   # TODO lets rather do this
@@ -15,7 +15,7 @@ on_machine do |machine, params|
   
   machine.mkdir "#{service_root}/log"
   
-  machine.install_canned_service 'my_sql'
+  machine.install_canned_service 'my_sql/my_sql'
   
   machine.create_database 'vop_logging'
   
