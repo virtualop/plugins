@@ -1,5 +1,5 @@
 param :machine
-param! 'packages_folder'
+param! 'dependencies', 'output of read_dependencies'
 
 on_machine do |machine, params|
   os = machine.machine_detail["os"]
@@ -7,7 +7,7 @@ on_machine do |machine, params|
     distro = machine.linux_distribution.split("_").first
   end
   
-  deps = machine.read_dependencies(params)
+  deps = params['dependencies']
   
   if deps[:vop]
     deps[:vop].each do |spec|
@@ -88,9 +88,6 @@ on_machine do |machine, params|
       machine.rvm_ssh("gem install bundler")
       machine.rvm_ssh("bundle install --gemfile=#{tmp_file_name}")
     end 
-    
-    
-    
   end
   
 end

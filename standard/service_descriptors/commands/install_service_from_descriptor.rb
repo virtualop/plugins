@@ -5,7 +5,7 @@ param! :descriptor_machine
 param! "descriptor", "fully qualified path where the service descriptor can be found)"
 param "service_root", "path where the service should be installed"
 param "version", "version information about the service to be installed"
-param 'without_packages', 'package types (e.g. "github") that should not be installed'
+param 'without_packages', 'package types (e.g. "github") that should not be installed', :allows_multiple_values => true
 
 accept_extra_params
 
@@ -31,8 +31,7 @@ on_machine do |machine, params, request|
   @op.with_machine(params["descriptor_machine"]) do |descriptor_machine|
     
     dotvop_dir = "#{descriptor_dir}/.vop"
-    if descriptor_machine.file_exists("file_name" => dotvop_dir)
-      @op.comment("message" => "found descriptor dir #{dotvop_dir}")
+    if descriptor_machine.file_exists dotvop_dir
       descriptor_dir = dotvop_dir 
     end
     
@@ -89,145 +88,27 @@ on_machine do |machine, params, request|
     end
   
     if plugin_name == service_name
-        
-      package_dir = "#{descriptor_dir}/packages"
       
-      package_files = descriptor_machine.file_exists("file_name" => package_dir) ? descriptor_machine.list_files("directory" => package_dir) : []
+      dependencies = descriptor_machine.read_dependencies(descriptor_dir + '/packages')
       
-      if package_files.include? "vop"
-        lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/vop")
-        lines.each do |service_spec|
-          service_spec.strip!
-          next if /^#/.match(service_spec)
-          unless /\//.match(service_spec)
-            puts "service_spec : '#{service_spec}'"
-            service_spec += '/' + service_spec
-          end
-          vop_service_name = service_spec.split("/").first
-          # TODO version
-          puts "installing vop dependency : '#{vop_service_name}'"
-          machine.install_canned_service("service" => service_spec) unless machine.list_installed_services.include?(vop_service_name)
-        end    
+      if params['without_packages']
+        params['without_packages'].each do |moriturus|
+          $logger.warn "ignoring dependencies of type '#{moriturus}' because of without_packages parameter"
+          dependencies.delete moriturus
+        end
       end
       
-      if machine.machine_detail["os"] == "windows"
+      machine.install_dependencies('dependencies' => dependencies)
+        
+      if params.has_key?("service_root") && params["service_root"] != ''
+        gemfile_location = "#{params["service_root"]}/Gemfile"
+        if machine.file_exists(gemfile_location)
+          machine.rvm_ssh("gem install bundler")        
+          machine.rvm_ssh("cd #{params['service_root']} && bundle install --gemfile=#{gemfile_location}")
+        end
+      end
       
-      else
-        case machine.linux_distribution.split("_").first
-        when "centos"          
-          if package_files.include? "rpm_repos"
-            lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/rpm_repos")
-            machine.install_rpm_repo("repo_url" => lines) unless lines.size == 0
-          end  
-          
-          if package_files.include? "rpm"
-            lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/rpm")    
-            machine.install_rpm_packages_from_file("lines" => lines) unless lines.size == 0
-          end
-        when "ubuntu"
-          if package_files.include? "apt_repos"
-            lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/apt_repos")    
-            machine.install_apt_repo("repo_url" => lines) unless lines.size == 0
-          end
-          
-          if package_files.include? "apt"
-            lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/apt")    
-            machine.install_apt_package("name" => lines) unless lines.size == 0
-          end
-        when "sles"
-          if package_files.include? "sles_repos"
-            lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/sles_repos").select { |x| ! /^#/.match(x) }
-            machine.install_zypper_repo("line" => lines) unless lines.size == 0
-          end
-
-          if package_files.include? "sles"
-            lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/sles").select { |x| ! /^#/.match(x) }
-            machine.install_rpm_packages_from_file("lines" => lines) unless lines.size == 0
-          end
-        end
-
-        # -> non-distribution specific linux
-        if package_files.include? "github"
-          working_copies = machine.list_working_copies_with_projects
-  
-          descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/github").each do |line|
-            next if /^#/.match(line)
-            found = working_copies.select { |row| row["project"] == line }
-            if found.size > 0
-              working_copy = found.first
-              $logger.info("working copy for github dependency #{line} already exists locally")
-              if not machine.list_services.map { |x| x["full_name"] }.include? line
-                machine.install_service_from_working_copy("working_copy" => working_copy["name"], "service" => working_copy["name"])
-              end
-            else              
-              github_params = {"github_project" => line}
-              # inherit git_branch if the dependency project has a branch or tag by that name
-              if params.has_key?("extra_params") && params["extra_params"]
-                if params["extra_params"].has_key?("git_branch")
-                  inherit_branch = false
-                  if has_github_params(params)
-                    trees =  @op.list_branches("github_project" => line) + 
-                      @op.list_tags("github_project" => line).map do |x|
-                        x["name"]
-                      end
-                    if trees.include? params["extra_params"]["git_branch"]
-                      inherit_branch = true 
-                    end
-                  end
-                  
-                  if inherit_branch
-                    github_params["git_branch"] = params["extra_params"]["git_branch"]
-                  end
-                end
-                #github_params = github_params.merge_from(params["extra_params"], :git_branch, :git_tag)
-              end
-              machine.install_service_from_github(github_params)
-            end
-          end
-        end
-        
-        if package_files.include? "wget"
-          descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/wget").each do |line|
-            next if /^#/ =~ line
-            machine.wget("url" => line, "target_dir" => machine.home)           
-          end
-        end
-        
-        if package_files.include? "gem"
-          lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/gem")    
-          machine.install_gems_from_file("lines" => lines) unless lines.size == 0          
-        end
-        
-        if package_files.include? "Gemfile"
-          lines = descriptor_machine.read_lines("file_name" => "#{descriptor_dir}/packages/Gemfile")
-          tmp_file_name = "/tmp/vop_install_service_from_descriptor_#{qualified_name}_#{@op.whoareyou}_#{Time.now.to_i.to_s}"
-          machine.write_file("target_filename" => tmp_file_name, "content" => lines.join("\n"))
-          
-          machine.rvm_ssh("gem install bundler")
-          machine.rvm_ssh("bundle install --gemfile=#{tmp_file_name}")
-          
-          # TODO [rpm]
-          #machine.as_user('root') do |root|
-          #  root.ssh("gem install bundler")
-          #  root.ssh("bundle install --gemfile=#{tmp_file_name}")
-          #end
-          #machine.rvm_ssh("gem install bundler")
-        end
-        
-        if params.has_key?("service_root") && params["service_root"] != ''
-          gemfile_location = "#{params["service_root"]}/Gemfile"
-          if machine.file_exists(gemfile_location)
-            # TODO [rpm]
-            #machine.as_user('root') do |root|
-            #  root.ssh("gem install bundler")
-            #end
-            machine.rvm_ssh("gem install bundler")        
-            machine.rvm_ssh("cd #{params['service_root']} && bundle install --gemfile=#{gemfile_location}")
-          end
-        end
-      end # linux
-      
-      # TODO uranos
+      # TODO support additional dependency types (e.g. uranos)
       
     end
     
@@ -262,21 +143,20 @@ on_machine do |machine, params, request|
         param_values.merge!(params["extra_params"])
       end
       
-      $logger.info("available param values: \n#{param_values.map { |k,v| "\t#{k}\t#{v}" }.join("\n")}")
-       
       params_to_use = { }
       param_values.each do |k,v|
         params_to_use[k] = v if install_command.params.select do |p|
           p.name == k
         end.size > 0
       end
-      $logger.info("params_to_use : \n#{params_to_use.map { |k,v| "\t#{k}\t#{v}" }.join("\n")}")
       
-      @op.comment "invoking #{install_command.name}..."
+      $logger.info "invoking #{install_command.name}..."
+      $logger.info "params_to_use : \n#{params_to_use.map { |k,v| "\t#{k}\t#{v}" }.join("\n")}"
+      
       begin
         @op.send(install_command.name.to_sym, params_to_use)
       rescue => detail
-        @op.comment("message" => "got a problem while executing install command '#{install_command.name}' : #{detail.message}")
+        $logger.error "got a problem while executing install command '#{install_command.name}' : #{detail.message}"
         raise detail
       end
     end

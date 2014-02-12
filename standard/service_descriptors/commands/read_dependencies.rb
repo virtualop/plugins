@@ -1,5 +1,5 @@
 param :machine
-param! 'packages_folder'
+param! 'packages_folder', '', :default_param => true
 
 display_type :hash
 

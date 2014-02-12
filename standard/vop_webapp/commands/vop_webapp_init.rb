@@ -7,7 +7,7 @@ on_machine do |machine, params|
   #  'directory' => params['path'],
   #  'service' => 'virtualop_webapp', 
   #  'extra_params' => {
-  #    'without_packages' => 'github'
+  #    'without_packages' => [ 'github' ]
   #  }
   #)
   
