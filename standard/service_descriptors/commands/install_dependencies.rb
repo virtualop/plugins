@@ -83,7 +83,7 @@ on_machine do |machine, params|
     
     if deps[:Gemfile]
       lines = deps[:Gemfile]
-      tmp_file_name = "/tmp/vop_install_service_from_descriptor_#{qualified_name}_#{@op.whoareyou}_#{Time.now.to_i.to_s}"
+      tmp_file_name = "/tmp/vop_install_service_from_descriptor_#{@op.whoareyou}_#{Time.now.to_i.to_s}"
       machine.write_file("target_filename" => tmp_file_name, "content" => lines.join("\n"))
       machine.rvm_ssh("gem install bundler")
       machine.rvm_ssh("bundle install --gemfile=#{tmp_file_name}")
