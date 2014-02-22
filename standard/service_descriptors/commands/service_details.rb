@@ -1,7 +1,7 @@
 description "reads detail information about the service from the file written during the installation"
 
 param :machine
-param :service
+param :service, '', :default_param => true
 
 display_type :hash
 

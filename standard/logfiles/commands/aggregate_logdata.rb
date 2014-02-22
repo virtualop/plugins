@@ -22,10 +22,12 @@ execute do |params|
         corrected_timestamp -= entry[:log_ts].hour * 60 * 60
       end
     
-      selector = if (log_type == 'access_log')
+      selector = if (log_type == 'access_log' && entry[:return_code])
         (entry[:return_code].to_i < 400) ? :success : :failure
-      elsif log_type == 'server_log'
+      elsif log_type == 'server_log' && entry[:log_level]
         entry[:log_level]
+      else
+        :success # TODO that should probably be unknown
       end
       raise "[woopsie] no selector found - that's probably a bug" unless selector
         
@@ -56,21 +58,24 @@ execute do |params|
     total = 0
     count = 0
     bucket.each do |entry|
-    if entry[:response_time_microsecs]
-      count += 1
-      total += entry[:response_time_microsecs].to_i / 1000
+      if entry[:response_time_microsecs]
+        count += 1
+        total += entry[:response_time_microsecs].to_i / 1000
+      end
     end
+    
+    if count > 0
+      avg = total / count
+      aggregated[:response_time_ms] ||= []
+      aggregated[:response_time_ms] << [
+        ts, avg
+      ]
     end
-    avg = total / count
+    
     if out_count < 5
       puts "total for #{Time.at(ts)} : #{total}, count #{count} of #{bucket.size}. avg: #{avg}"
       out_count += 1
     end
-
-    aggregated[:response_time_ms] ||= []
-    aggregated[:response_time_ms] << [
-      ts, avg
-    ]
   end unless raw[:success] == nil
 
   aggregated
