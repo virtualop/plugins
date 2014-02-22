@@ -2,8 +2,8 @@ param :machine
 param! 'dependencies', 'output of read_dependencies'
 
 on_machine do |machine, params|
-  os = machine.machine_detail["os"]
-  if os == 'linux'
+  distro = 'unknown'  
+  if machine.os == 'linux'
     distro = machine.linux_distribution.split("_").first
   end
   
@@ -23,7 +23,7 @@ on_machine do |machine, params|
     end
   end
   
-  if os == 'linux'
+  if machine.os == 'linux'
     if %w|centos redhat|.include? distro
       machine.install_rpm_repo("repo_url" => deps[:rpm_repos]) if deps[:rpm_repos]
       machine.install_rpm_packages_from_file("lines" => deps[:rpm]) if deps[:rpm]
