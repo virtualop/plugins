@@ -19,7 +19,9 @@ on_machine do |machine, params|
   
   machine.install_canned_service 'my_sql/my_sql'
   
-  machine.create_database 'vop_logging'
+  unless machine.list_databases.pick('name').include? 'vop_logging'
+    machine.create_database 'vop_logging'
+  end
   
   @op.configure 'slogans'
   
