@@ -10,6 +10,7 @@ param "marvin_password", "the password for the marvin user"
 param "target_host", "a production host onto which the new version is rolled out after successful tests"
 param 'data_repo'
 param 'release_version'
+param 'rpmbuild', 'a machine with RPM build environment'
 
 accept_extra_params 
 
@@ -45,6 +46,10 @@ execute do |params|
       'tag' => params['release_version']
     }.merge_from(params, :github_token))
     
+    if params['rpmbuild']
+      @op.vop_rpms('machine' => params['rpmbuild'], 'version' => params['release_version'])
+    end
+    
     # TODO extract maybe?
     if params['target_host']
       p = {
@@ -71,6 +76,10 @@ execute do |params|
       'keypair' => 'ci_vop',
       'comment' => "passed CI #{Time.now.strftime("%Y%m%d")}"
     }.merge_from(params, :github_token))
+    
+    if params['rpmbuild']
+      @op.vop_rpms('machine' => params['rpmbuild'], 'extra_folder' => 'ci')
+    end
   end
   
 end
