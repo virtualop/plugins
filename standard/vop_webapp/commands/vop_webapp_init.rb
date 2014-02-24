@@ -37,4 +37,7 @@ on_machine do |machine, params|
       'domain' => params['domain']
     }
   )
+  
+  #machine.change_runlevel 'running'
+  machine.start_service('service' => 'apache/apache')
 end
