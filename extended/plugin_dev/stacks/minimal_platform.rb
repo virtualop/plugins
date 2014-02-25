@@ -86,7 +86,7 @@ on_install do |stacked, params|
     @op.configure_default_passwords({}.merge_from(params, :default_user, :default_password))
   end
   # TODO hardcoded credentials
-  @op.configure_my_sql("mysql_user" => "root", "mysql_password" => "the_password")
+  #@op.configure_my_sql("mysql_user" => "root", "mysql_password" => "the_password")
   
   old_repos = @op.list_data_repos.select { |x| x["alias"] == "old_data_repo" }
   @op.comment("found #{old_repos.size} old repos")
