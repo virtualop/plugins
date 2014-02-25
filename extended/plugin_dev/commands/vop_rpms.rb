@@ -15,7 +15,7 @@ on_machine do |machine, params|
   machine.github_to_rpm(
     'github_repo' => 'virtualop/virtualop', 
     'source_repo' => [ 'virtualop/plugins', 'virtualop/services' ],
-    'rpm_name' => 'virtualop',      
+    'rpm_name' => "virtualop-#{params['version']}",      
     'target_dir' => target_dir,
     'tree' => params['version'],
     'extra_params' => { 
@@ -27,7 +27,7 @@ on_machine do |machine, params|
     
   machine.github_to_rpm(
     'github_repo' => 'virtualop/virtualop_webapp',
-    'rpm_name' => 'virtualop-webapp',
+    'rpm_name' => "virtualop-webapp-#{params['version']}",
     'target_dir' => target_dir,
     'tree' => params['version'],
     'extra_params' => { 
