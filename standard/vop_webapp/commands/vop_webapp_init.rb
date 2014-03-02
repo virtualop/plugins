@@ -23,6 +23,12 @@ on_machine do |machine, params|
     machine.create_database 'vop_logging'
   end
   
+  if params['db_type'] == 'mysql'
+    @op.mysql_config(params)
+  else
+    @op.sqlite_config(params)
+  end
+  
   @op.configure 'slogans'
   
   machine.rvm_ssh "cd #{service_root} && bundle install"
