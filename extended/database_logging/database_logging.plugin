@@ -4,7 +4,7 @@ dependency :erb_processor
 
 config_param! "db_host", "host on which the database is running that should be used"
 config_param! "db_user", "user name for the db connection"
-config_param! "db_pass", "password for the db connection"
+config_param "db_pass", "password for the db connection"
 config_param! "db_name", "name of the database to use"
 
 config_param "db_port", "TCP port the database is listening on", :default_value => 3306
