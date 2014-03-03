@@ -23,6 +23,7 @@ on_machine do |machine, params|
     machine.create_database 'vop_logging'
   end
   
+  machine.load_plugin "#{service_root}/.vop/virtualop_webapp.plugin"
   if params['db_type'] == 'mysql'
     @op.mysql_config(params)
   else

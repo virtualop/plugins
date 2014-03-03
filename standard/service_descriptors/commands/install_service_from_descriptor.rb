@@ -93,8 +93,8 @@ on_machine do |machine, params, request|
       
       if params['without_packages']
         params['without_packages'].each do |moriturus|
-          $logger.warn "ignoring dependencies of type '#{moriturus}' because of without_packages parameter"
-          dependencies.delete moriturus
+          $logger.warn "ignoring dependencies of type '#{moriturus}'"
+          dependencies.delete moriturus.to_sym
         end
       end
       
