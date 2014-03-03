@@ -1,5 +1,5 @@
 param :machine, '', :default_value => 'self', :mandatory => false
-param 'path', 'service root of the webapp', :default_value => '/usr/lib/virtualop/webapp'
+param! "service_root", "fully qualified path to the location of the service", :default_value => '/usr/lib/virtualop/webapp' 
 param 'domain', 'the domain at which the vop webinterface should be available', 
   :default_value => 'localhost', :default_param => true 
 
@@ -13,7 +13,7 @@ on_machine do |machine, params|
   #  }
   #)
   
-  service_root = params['path']
+  service_root = params['service_root']
   
   machine.mkdir "#{service_root}/log"
   

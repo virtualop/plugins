@@ -5,17 +5,19 @@ param! "hetzner_account", :description => "hetzner accounts to upload to the new
 param! "keypair", :description => "ssh keypair that should be uploaded to the new vop"
 param "clone", :description => "if set to true, the vop rolling out the stack will make a backup of itself into it's data repo and use this for setting up the new vop"
 param "clone_from", :description => "name of a machine to clone the vop data from"
+param "git_branch"
 param "github_token"
 param "target_domain", :description => "alternative domain that should be enabled during post_rollout"
 param "target_github_data", :description => "github application id and secret, separated by a slash. used for oauth integration"
 
 stack :vop do |m, p|
-  m.github 'virtualop/virtualop_webapp', :branch => 'stable'
+  m.github 'virtualop/virtualop_webapp', :branch => (p['git_branch'] || 'stable')
   m.domain_prefix 'vop'
   m.memory [ 512, 2048, 4096 ]
   m.disk 50
   m.param('service_root', '/home/marvin/virtualop_webapp')
   m.param('github_token', p['github_token']) if p.has_key?('github_token')
+  m.param('db_type', 'mysql')
 end
 
 on_install do |stacked, params|

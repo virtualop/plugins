@@ -1,0 +1,15 @@
+<div class="widg_inner">		  
+	<h2><a href="/~/machines">machinez</a></h2>	
+
+	<div id="w_machine_wrap">
+	<% @machines[0..4].each do |machine| %>
+	<a class="wi_machine" href="/inventory/machine/<%=machine.name%>"><%= machine.name %></a>
+	<% end %>
+	</div>
+	
+	<% if @machines.size > 5 %>
+	<a href="/~/machines"> all</a>
+	<% end %>
+
+	<div class="mchn-button"><%= link_to 'new VM', '/~/new_machine' %>	</div>
+</div>
