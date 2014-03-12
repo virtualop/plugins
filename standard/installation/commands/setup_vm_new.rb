@@ -20,7 +20,8 @@ accept_extra_params
 
 as_root do |machine, params|  
   
-  full_name = params["vm_name"] + "." + machine.name
+  machine_name = params['machine']
+  full_name = params["vm_name"] + "." + machine_name
   
   # TODO lock
   #@op.with_lock("name" => "setup_vm_new", "extra_params" => { "machine" => params["machine"] }) do
@@ -133,10 +134,10 @@ as_root do |machine, params|
     vm.hash_to_file("file_name" => "/var/lib/virtualop/setup_params", "content" => params)
   end
   
-  group_for_host = @op.list_machine_groups.select { |x| x["name"] == machine.name }.first
+  group_for_host = @op.list_machine_groups.select { |x| x["name"] == machine_name }.first
   if group_for_host
     @op.without_cache do
-      @op.list_machine_group_children("machine_group" => machine.name)
+      @op.list_machine_group_children("machine_group" => machine_name)
     end
   end 
   
