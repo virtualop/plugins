@@ -1,7 +1,12 @@
 #!/bin/bash
 
-. /etc/profile
-. <%= machine.home %>/.bashrc
+include () {
+    [[ -f "$1" ]] && source "$1"
+}
+
+include /etc/profile
+include $HOME/.profile
+include $HOME/.bashrc
 
 cd <%= service["service_root"] %>
 <% 1.upto(spawn).each do |idx| 

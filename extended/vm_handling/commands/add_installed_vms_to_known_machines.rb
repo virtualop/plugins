@@ -6,15 +6,30 @@ on_machine do |machine, params|
   machine.list_installed_vms.each do |vm|
     
     full_name = vm["vm_name"] + "." + machine.name
+
+    options = {
+      'type' => 'vm',
+      'host_name' => machine.name,
+      'name' => full_name      
+    }
+
+    ip_address = nil    
+    if vm['ipaddress'] && vm['ssh_port']
+      options['ssh_port'] = vm['ssh_port']
+      options['ssh_host'] = machine.ipaddress      
+    else
+      # no IP specified, check if there's a DHCP lease from libvirt
+      @op.without_cache do
+        dhcp_address = machine.libvirt_dhcp.select { |x| x['hostname'] == vm['vm_name'] }.first
+        if dhcp_address
+          # TODO this assumes that the host is configured to forward .foo DNS requests to libvirt's dnsmasq
+          options['ssh_host'] = vm['vm_name'] + '.foo'
+        end
+      end
+    end
     
-    @op.add_known_machine(
-      "ssh_host" => machine.ipaddress,
-      "ssh_port" => vm["ssh_port"],
-      "ssh_password" => "the_password",
-      "ssh_user" => "root",
-      "name" => full_name,
-      "type" => "vm",
-      "host_name" => machine.name
-    )
+    if options['ssh_host']
+      @op.add_known_machine(options)
+    end
   end
 end

@@ -193,6 +193,15 @@ class ServiceDescriptorLoader
     @service['static_html'] = o    
   end
   
+  def memory(*args)
+    arg = args.first
+    if arg.class == Array
+      @service["memory_size"] = (arg.size == 3 ? arg[1] : arg.first)
+    else
+      @service["memory_size"] = arg
+    end
+  end
+  
   def method_missing(m, *args)
     targets = [ :redirect_log, :start_command, :stop_command, :on_install ]
     targets += [ :port, :process_regex ]

@@ -19,7 +19,8 @@ on_machine do |machine, params|
     machine.ssh("command" => "virsh list --all").split("\n").each do |line|
       count += 1
       next unless count > 2
-      matched = /\s*([\d-]+)\s+(\w+)\s+(.+)/.match(line)
+      line.chomp!
+      matched = /\s*([\d-]+)\s+(\w+)\s+(.+)$/.match(line)
       next unless matched
       result << {
         "name" => matched.captures[1],

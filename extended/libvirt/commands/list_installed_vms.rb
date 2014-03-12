@@ -14,8 +14,14 @@ on_machine do |machine, params|
       input = machine.read_file("file_name" => dir_name + file)
       vm = YAML.load(input)
       vm["name"] = vm["vm_name"]
-      vm["ipaddress"] = vm["extra_arg"].select { |i| /^ip=/.match(i) }.first.split("=").last
-      vm["ssh_port"] = 2200 + vm["ipaddress"].split("\.").last.to_i
+            
+      ip = vm['ip'] || vm["extra_arg"].select { |i| /^ip=/.match(i) }.first
+      if ip
+        vm["ipaddress"] = ip.split("=").last
+        if vm["ipaddress"] 
+          vm["ssh_port"] = 2200 + vm["ipaddress"].split("\.").last.to_i
+        end
+      end
       result << vm
     end
   end

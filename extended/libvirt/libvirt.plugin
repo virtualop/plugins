@@ -4,3 +4,5 @@ dependency :vm
 
 tags :installation
 tags :virtual_insanity
+
+config_param 'default_bridge', 'name of a network bridge interface (e.g. "br10") that is used for new virtual machines'
