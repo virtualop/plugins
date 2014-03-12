@@ -16,6 +16,17 @@ param "template", "name of a predefined set of location and kickstart URLs. see 
 param "os_variant", "...", :default_value => 'virtio26'
 param "os_type", "...", :default_value => 'linux'
 
+param "environment", "if specified, the environment is written into a config file so that it's available through $VOP_ENV", :lookup_method => lambda {
+  @op.list_environments
+}
+
+param "canned_service", "name of a canned service to install on the machine", :allows_multiple_values => true
+param :github_project
+param :git_branch
+param :git_tag
+
+param "script_url", "http URL to a script that should be executed at the end of the installation"
+
 accept_extra_params  
 
 as_root do |machine, params|  
