@@ -27,6 +27,9 @@ param :git_tag
 
 param "script_url", "http URL to a script that should be executed at the end of the installation"
 
+param "http_proxy", "if specified, the http proxy is used for the installation and configured on the new machine"
+param "keep_proxy", "if set to true, the http proxy will not be deactivated at the end of the installation", :default_value => false
+
 accept_extra_params  
 
 as_root do |machine, params|  
@@ -40,15 +43,6 @@ as_root do |machine, params|
     p.merge!(
       "nameserver" => machine.first_configured_nameserver,      
     )
-    # if params['ip']
-      # parts = params["ip"].split("\.")[0..2]
-      # parts << '1'
-      # gateway = parts.join(".")
-      # p.merge!(
-        # "gateway" => gateway
-      # )
-    # end
-    
     if params['template']
       template = @op.list_vm_templates.select { |x| x['name'] == params['template'] }.first
       if template
@@ -62,7 +56,6 @@ as_root do |machine, params|
       )
     end
     
-    #machine.new_vm_from_kickstart(p)
     machine.new_vm(p)
     
     @op.flush_cache
