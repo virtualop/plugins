@@ -7,7 +7,7 @@ mark_as_read_only
 
 add_columns [ :path, :name, :type ]
 
-#include_for_crawling
+include_for_crawling
 
 with_contributions do |result, params|
   result = []

@@ -53,7 +53,6 @@ execute do |params|
     
     @op.flush_cache()
     
-    #host.setup_vm(p)
     host.new_machine(p)
   end
 end   

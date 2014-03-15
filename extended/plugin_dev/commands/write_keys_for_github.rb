@@ -7,7 +7,7 @@ on_machine do |machine, params|
   @op.upload_stored_keypair(params)
   keypair = @op.list_stored_keypairs { |x| x["alias"] == params["keypair"] }.first
   
-  # TODO username hardcoded in ssh_config
+  # TODO check for github params (template assumes that we have auth data)
   
   ssh_config = read_local_template(:ssh_config, binding())
   machine.append_to_file("file_name" => "#{machine.home}/.ssh/config", "content" => ssh_config)

@@ -30,7 +30,9 @@ param "script_url", "http URL to a script that should be executed at the end of 
 param "http_proxy", "if specified, the http proxy is used for the installation and configured on the new machine"
 param "keep_proxy", "if set to true, the http proxy will not be deactivated at the end of the installation", :default_value => false
 
-accept_extra_params  
+accept_extra_params
+
+notifications
 
 as_root do |machine, params|  
   

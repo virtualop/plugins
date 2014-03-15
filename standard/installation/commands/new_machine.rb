@@ -25,9 +25,5 @@ notifications
 execute do |params|
   params['machine'] ||= @op.installation_target
   
-  #if params['machine'] == 'localhost'
-    @op.setup_vm_new(params)
-  #else
-    #@op.setup_vm(params)  
-  #end
+  @op.setup_vm(params)
 end  
