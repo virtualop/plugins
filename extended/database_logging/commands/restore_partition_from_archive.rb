@@ -1,5 +1,6 @@
 param! "partition_name", "the identifier for the partition", :allows_multiple_values => true,
-  :lookup_method => lambda { @op.list_archived_partitions }
+  :lookup_method => lambda { @op.list_archived_partitions },
+  :default_param => true
   
 add_columns [ :partition, :success, :failure ]
 
