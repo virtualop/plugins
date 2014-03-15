@@ -23,3 +23,5 @@ on_activation do |plugin, config|
 end
 
 tags :logging
+
+ONE_DAY = 24 * 60 * 60
