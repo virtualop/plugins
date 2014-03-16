@@ -35,5 +35,7 @@ execute do |params|
   @op.with_machine(full_name) do |machine|
     machine.disable_ssh_key_check
     machine.upload_stored_keypair # TODO which one (or generate?)
+    
+    machine.prepare_github_ssh_connection
   end
 end

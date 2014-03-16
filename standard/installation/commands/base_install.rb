@@ -27,10 +27,10 @@ on_machine do |machine, params|
     machine.ssh("command" => "/etc/init.d/sshd restart")
     machine.ssh("command" => "sed -i -e 's!#PermitUserEnvironment no!PermitUserEnvironment yes!' /etc/ssh/sshd_config")
     
-    # TODO we should not need this anymore at some point (disabling selinux in kickstart now), but we need it
+    # TODO we should not need this anymore at some point (disabling selinux in kickstart now), but we do need it
     @op.without_cache do
       machine.ssh("command" => "setenforce Permissive")
-      machine.replace_in_file('file_name' => '/etc/sysconfig/selinux',
+      machine.replace_in_file('file_name' => '/etc/selinux/config',
         'source' => 'SELINUX=enforcing',
         'target' => 'SELINUX=permissive'
       )

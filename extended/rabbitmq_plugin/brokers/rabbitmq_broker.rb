@@ -109,7 +109,7 @@ class RabbitmqBroker < RHCP::LoggingBroker
     #commands << "process_messages"
     commands << "listen_and_execute"
     
-    commands += %w|enrich_machine_list machine_by_name list_machines on_machine|
+    commands += %w|with_machine enrich_machine_list machine_by_name list_machines on_machine|
     
     commands += %w|ssh_and_check_result ssh_extended get_ssh_connection|
     
@@ -169,7 +169,7 @@ class RabbitmqBroker < RHCP::LoggingBroker
       :mode => mode,
       :current_stack => current_stack,
       :request => request.as_json(),
-      :start_ts => start_ts.utc.iso8601() #  Die Timestamps wenn es geht im ISO8601 format bidde
+      :start_ts => start_ts.utc.iso8601()
     }
     
     to_rabbit(j)
