@@ -81,6 +81,7 @@ class ServiceDescriptorLoader
     end
   end
   
+  
   def outgoing_tcp(sym)
     @service["outgoing_tcp"] << sym.to_s
   end

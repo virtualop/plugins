@@ -112,6 +112,7 @@ class RabbitmqBroker < RHCP::LoggingBroker
     commands += %w|with_machine enrich_machine_list machine_by_name list_machines on_machine|
     
     commands += %w|ssh_and_check_result ssh_extended get_ssh_connection|
+    commands << %w|mysql_options db_host|
     
     commands    
   end

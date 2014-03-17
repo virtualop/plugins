@@ -1,7 +1,7 @@
 description "goes through all services and starts/stops them according to the runlevel specified in the service descriptor"
 
 param :machine
-param :runlevel
+param :runlevel, '', :default_param => true
 
 add_columns [ "service_name", "operation_name", "result" ]
 

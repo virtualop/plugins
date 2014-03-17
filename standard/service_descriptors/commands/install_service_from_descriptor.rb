@@ -295,7 +295,7 @@ on_machine do |machine, params, request|
           raise "problem in post_first_start block for service #{service["name"]} on #{params["machine"]} : #{detail.message}"
         end
       else
-        @op.comment "post_first_start key found in service details, but could not reload post_first_start block for execution. weird."
+        raise "post_first_start key found in service details, but could not reload post_first_start block for execution. weird."
       end
     end
   end
