@@ -7,12 +7,17 @@ param "datarepo_init_url", :description => "http URL to initialize the datarepo 
 param "default_user", :description => "default SSH user"
 param "default_password", :description => "default SSH password"
 
+stack :selenium do |m, params|
+  m.canned_service :selenium
+end
+
 stack :nagios do |m, p|
   m.canned_service :nagios
   m.domain_prefix 'nagios' 
   m.memory [ 512, 1024, 1024 ]
   m.disk 50
 end
+
  
 # stack :xoplogs do |m, params|
   # m.github 'philippt/xoplogs'
@@ -49,10 +54,6 @@ end
 stack :ldap do |m, params|
   m.canned_service :centos_ldap
   m.domain params["domain"]
-end
-
-stack :selenium do |m, params|
-  m.canned_service :selenium
 end  
  
 stack :owncloud do |m, params|
@@ -69,7 +70,9 @@ stack :owncloud do |m, params|
   m.param('bind_password', 'the_password')
   prefix = params['prefix'] ? params['prefix'] : ''
   selenium_machine =  "#{prefix}selenium.#{params["machine"]}"
-  m.param('selenium_machine', selenium_machine)  
+  m.param('selenium_machine', selenium_machine)
+  
+  # TODO needs :selenium, :ldap
 end
 
 # stack :openfire do |m, params|

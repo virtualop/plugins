@@ -53,7 +53,7 @@ on_machine do |machine, params|
   machine.start_service('service' => 'apache/apache')
   
   machine.install_canned_service('rabbitmq/rabbitmq')
-  machine.restart_service('service' => 'rabbit_mq/rabbitmq')
+  machine.restart_service('service' => 'rabbitmq/rabbitmq')
 
   @op.configure_rabbitmq_plugin('broker_enabled' => 'true')
   @op.configure_database_logging('db_host' => 'localhost', 'db_name' => 'vop_logging', 'db_user' => 'root')
