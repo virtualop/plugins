@@ -11,6 +11,10 @@ execute do |params|
     if row["type"] == 'vm'
       row["ssh_user"] = config_string('default_user') unless row.has_key? 'ssh_user'
       row["ssh_password"] = config_string('default_password') unless row.has_key? 'ssh_password'
+    elsif row["type"] == 'host'
+      # TODO hardcoded ssh user
+      row['ssh_user'] = 'root'
+      row['ssh_port'] = 22
     end
     row
   end

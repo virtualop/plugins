@@ -15,6 +15,9 @@ param 'rpmbuild', 'a machine with RPM build environment'
 accept_extra_params 
 
 execute do |params|
+  @op.configure('webtatic')
+  @op.configure('php55_centos')
+  
   begin
     if params.has_key?('marvin_email') && params.has_key?('marvin_password')
       @op.with_machine('localhost') do |machine|

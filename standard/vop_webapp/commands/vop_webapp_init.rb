@@ -53,11 +53,15 @@ on_machine do |machine, params|
   machine.start_service('service' => 'apache/apache')
   
   machine.install_canned_service('rabbitmq/rabbitmq')
-  machine.start_service('rabbit_mq/rabbitmq')
+  machine.restart_service('service' => 'rabbit_mq/rabbitmq')
 
   @op.configure_rabbitmq_plugin('broker_enabled' => 'true')
   @op.configure_database_logging('db_host' => 'localhost', 'db_name' => 'vop_logging', 'db_user' => 'root')
   
   machine.install_service_from_directory('directory' => service_root, 'service' => 'launcher')
   machine.install_service_from_directory('directory' => service_root, 'service' => 'message_processor')
+  
+  %w|virtualop/launcher virtualop/message_processor virtualop_webapp/thin|.each do |service|
+    machine.restart_service('service' => service)
+  end 
 end
