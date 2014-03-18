@@ -64,6 +64,10 @@ on_machine do |machine, params|
       tabs << [ "selenium_tests", "Selenium" ]
     end
     
+    if services.include? 'apache'
+      tabs << [ 'vhost_logs', 'Apache Logs' ]
+    end
+    
     if (machine.processes().select do |process|
       /yum -y update/.match(process["command_short"])
     end.size() > 0) and (machine.file_exists("file_name" => "/var/log/yum_update.log"))

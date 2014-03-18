@@ -55,15 +55,22 @@ stack :selenium do |m, params|
   m.canned_service :selenium
 end  
  
-#stack :owncloud do |m, params|
-#  m.canned_service :owncloud_server
-#  m.domain_prefix 'owncloud'
-#   
-  # m.param('ldap_host', "ldap.#{params["domain"]}")
-  # m.param('ldap_domain', params["domain"])
-  # m.param('bind_user', 'cn=manager')
-  # m.param('bind_password', 'the_password')
-#end
+stack :owncloud do |m, params|
+  m.canned_service :owncloud_server
+  m.domain_prefix 'owncloud'
+  
+  m.param('db_type', 'mysql')
+  m.param('db_user', 'owncloud')
+  m.param('db_pass', 'owncloud_pwd')
+  
+  m.param('ldap_host', "ldap.#{params["domain"]}")
+  m.param('ldap_domain', params["domain"])
+  m.param('bind_user', 'cn=manager')
+  m.param('bind_password', 'the_password')
+  prefix = params['prefix'] ? params['prefix'] : ''
+  selenium_machine =  "#{prefix}selenium.#{params["machine"]}"
+  m.param('selenium_machine', selenium_machine)  
+end
 
 # stack :openfire do |m, params|
   # m.canned_service :openfire

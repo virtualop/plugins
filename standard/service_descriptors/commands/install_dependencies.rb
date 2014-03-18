@@ -18,6 +18,7 @@ on_machine do |machine, params|
       $logger.info "installing vop dependency : '#{vop_service_name}'"
       # TODO version!
       unless machine.list_installed_services.include?(vop_service_name)
+        # TODO error-handling if service is not enabled
         machine.install_canned_service("service" => spec)
       end
     end

@@ -1,16 +1,16 @@
 description "installs a development VM for a user"
 
-param "user", "the user to prepare the machine for"
+#param "user", "the user to prepare the machine for"
 param :current_user
 
 execute do |params|
-  user = params["user"]
+  user = params['current_user']  
   
   dev_machine = "dev_#{user}"
   
   marvin_user = "marvin_#{dev_machine}"
   marvin_password = config_string('marvin_dev_machine_pwd')
-  unless @op.list_users.pick(:uid).include?(user)
+  unless @op.list_users.pick(:uid).include?(marvin_user)
     @op.add_user(
       'email' => 'marvin@virtualop.org',
       'first_name' => 'marvin',
@@ -34,8 +34,8 @@ execute do |params|
   
   @op.with_machine(full_name) do |machine|
     machine.disable_ssh_key_check
-    machine.upload_stored_keypair # TODO which one (or generate?)
+    machine.upload_stored_keypair('keypair' => 'ci_vop') # TODO which one (or generate?)
     
-    machine.prepare_github_ssh_connection
+    machine.prepare_github_ssh_connection('keypair' => 'ci_vop')
   end
 end

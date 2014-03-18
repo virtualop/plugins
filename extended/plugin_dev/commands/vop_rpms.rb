@@ -25,11 +25,12 @@ on_machine do |machine, params|
     }
   )
     
+  webapp_tree = params['version'] == 'master' ? 'rails3' : params['version']
   machine.github_to_rpm(
     'github_repo' => 'virtualop/virtualop_webapp',
     'rpm_name' => "virtualop-webapp-#{params['version']}",
     'target_dir' => target_dir,
-    'tree' => params['version'],
+    'tree' => webapp_tree,
     'extra_params' => { 
       'version' => params['version']
     }
