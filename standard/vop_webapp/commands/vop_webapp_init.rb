@@ -58,8 +58,9 @@ on_machine do |machine, params|
   @op.configure_rabbitmq_plugin('broker_enabled' => 'true')
   @op.configure_database_logging('db_host' => 'localhost', 'db_name' => 'vop_logging', 'db_user' => 'root')
   
-  machine.install_service_from_directory('directory' => service_root, 'service' => 'launcher')
-  machine.install_service_from_directory('directory' => service_root, 'service' => 'message_processor')
+  vop_service_root = '/usr/lib/virtualop' # TODO hardcoded
+  machine.install_service_from_directory('directory' => vop_service_root, 'service' => 'launcher')
+  machine.install_service_from_directory('directory' => vop_service_root, 'service' => 'message_processor')
   
   %w|virtualop/launcher virtualop/message_processor virtualop_webapp/thin|.each do |service|
     machine.restart_service('service' => service)

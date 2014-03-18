@@ -11,6 +11,11 @@ stack :selenium do |m, params|
   m.canned_service :selenium
 end
 
+stack :ldap do |m, params|
+  m.canned_service :centos_ldap
+  m.domain params["domain"]
+end  
+
 stack :nagios do |m, p|
   m.canned_service :nagios
   m.domain_prefix 'nagios' 
@@ -50,11 +55,6 @@ end
 # stack :powerdns do |m, params|
   # m.canned_service :powerdns
 # end
-# 
-stack :ldap do |m, params|
-  m.canned_service :centos_ldap
-  m.domain params["domain"]
-end  
  
 stack :owncloud do |m, params|
   m.canned_service :owncloud_server

@@ -13,8 +13,8 @@ execute do |params|
       row["ssh_password"] = config_string('default_password') unless row.has_key? 'ssh_password'
     elsif row["type"] == 'host'
       # TODO hardcoded ssh user
-      row['ssh_user'] = 'root'
-      row['ssh_port'] = 22
+      row['ssh_user'] = 'root' unless row['ssh_user']
+      row['ssh_port'] = 22 unless row['ssh_port']
     end
     row
   end
