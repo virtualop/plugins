@@ -13,7 +13,9 @@ add_columns [ :type, :sha, :path ]
 execute do |params|
   params["revision"] = params.has_key?("git_branch") ? params["git_branch"] : 'master'
   recursive = params.has_key?("recursive") ? 'recursive=1&' : ''
-  url = "https://api.github.com/repos/#{params["github_project"]}/git/trees/#{params["revision"]}?#{recursive}access_token=#{params["github_token"]}"
+  
+  token = has_github(params) ? "access_token=#{params["github_token"]}" : ''
+  url = "https://api.github.com/repos/#{params["github_project"]}/git/trees/#{params["revision"]}?#{recursive}#{token}"
   
   result = JSON.parse(@op.http_get("url" => url))
   result["tree"].clone if result["tree"]

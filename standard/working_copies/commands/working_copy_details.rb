@@ -1,7 +1,7 @@
 description "returns information about a working copy"
 
 param :machine
-param :working_copy
+param :working_copy, '', :default_param => true
 
 #mark_as_read_only
 

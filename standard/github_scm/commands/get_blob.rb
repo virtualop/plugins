@@ -10,6 +10,7 @@ param! "blob_url"
 display_type :blob
 
 execute do |params|
-  result = JSON.parse @op.http_get("url" => "#{params["blob_url"]}?access_token=#{params["github_token"]}")
+  token = has_github(params) ? "access_token=#{params["github_token"]}" : ''
+  result = JSON.parse @op.http_get("url" => "#{params["blob_url"]}?#{token}")
   Base64.decode64 result["content"]
 end

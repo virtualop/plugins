@@ -1,3 +1,8 @@
+def has_github(params)
+  (params['github_user'] && params['github_password']) || 
+  params['github_token'] 
+end
+
 def github_url(params, uri)
   if params.has_key?('github_user') and params.has_key?('github_password')
     "https://#{params["github_user"]}:#{params["github_password"]}@api.github.com" + uri

@@ -7,15 +7,20 @@ param 'with_install_command', '', :default_value => false
 
 display_type :hash
 
-#mark_as_read_only
+mark_as_read_only
 #no_cache
 
 execute do |params|
   org_name = params['github_project'].split('/').first
-  rows = org_name == @op.github_user(params)['login'] ?
-    @op.list_github_repos(params) :
-    @op.list_repos_for_org(params.merge('org' => org_name))
-  row = rows.select { |x| x['full_name'] == params['github_project'] }.first
+  
+  row = nil
+  if has_github(params)
+    own_project = org_name == @op.github_user(params)['login'] 
+    rows = own_project ?
+      @op.list_github_repos(params) :
+      @op.list_repos_for_org(params.merge('org' => org_name))
+    row = rows.select { |x| x['full_name'] == params['github_project'] }.first
+  end
   unless row
     #raise "sanity check failed: github project #{params['github_project']} not found in user or organisation repos"
     row = {

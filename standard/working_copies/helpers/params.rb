@@ -7,7 +7,6 @@ def param_working_copy(options = {})
           w["name"]
         end
       end
-      
     end
   })
   RHCP::CommandParam.new("working_copy", "the working copy that should be used", options) 

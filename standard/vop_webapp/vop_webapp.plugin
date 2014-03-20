@@ -20,8 +20,3 @@ config_param "db_type", "database flavour to be used by the rails webapp", :defa
 #config_param "db_user", "user name for the db connection", :default_value => 'root'
 #config_param "db_pass", "password for the db connection"
 #config_param "db_name", "name of the database to use", :default_value => 'virtualop'
-
-on_activation do |config, params|
-  #puts "yo mama"
-  #tab 'processes', 'processes', @plugin.path + '/tabs/processes.erb'
-end   
