@@ -50,17 +50,17 @@ execute do |params|
       
       public_key = machine.read_file "#{machine.home}/.ssh/id_rsa.pub"
       @op.add_ssh_key('title' => full_name, 'key' => public_key)
-    end
     
-    if params['features'].include?('owncloud')
-      machine.install_canned_service(
-        'service' => 'owncloud_client/owncloud_client',
-        'extra_params' => {
-          'owncloud_domain' => config_string('owncloud_url'),
-          'username' => marvin_user,
-          'password' => marvin_password
-        }
-      )
+      if params['features'].include?('owncloud')
+        machine.install_canned_service(
+          'service' => 'owncloud_client/owncloud_client',
+          'extra_params' => {
+            'owncloud_domain' => config_string('owncloud_url'),
+            'username' => marvin_user,
+            'password' => marvin_password
+          }
+        )
+      end
     end
   end
 end

@@ -52,9 +52,10 @@ stack :vop_website do |m, params|
   m.param('vop_url', "http://vop.#{params["domain"]}")
 end
 
-# stack :powerdns do |m, params|
-  # m.canned_service :powerdns
-# end
+stack :powerdns do |m, params|
+  m.canned_service :powerdns
+  m.domain params["domain"]
+end
  
 stack :owncloud do |m, params|
   m.canned_service :owncloud_server
