@@ -3,11 +3,13 @@ description "given a stored SSH keypair, this will prepare a machine's configura
 github_params
 
 param :machine
-param :keypair
+param :keypair, '', :mandatory => false
 
 on_machine do |machine, params|
-  machine.upload_stored_keypair("keypair" => params["keypair"])
-  keypair = @op.list_stored_keypairs { |x| x["alias"] == params["keypair"] }.first
+  if params['keypair']
+    machine.upload_stored_keypair("keypair" => params["keypair"])
+    #keypair = @op.list_stored_keypairs { |x| x["alias"] == params["keypair"] }.first
+  end
   
   puts "params"
   pp params

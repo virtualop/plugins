@@ -7,7 +7,6 @@ execute do |params|
   data = {
     "name" => params["name"]
   }
-  pp data
   tempfile = @op.write_tempfile("data" => data.to_json())
 
   result = nil
@@ -17,11 +16,8 @@ execute do |params|
       "target_url" => github_url(params, '/user/repos')
     )
     result = JSON.parse(http_result)
-    pp result
   end
 
-  #result
-  
   @op.without_cache do
     @op.list_github_repos
   end

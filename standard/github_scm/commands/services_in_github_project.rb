@@ -4,7 +4,7 @@ github_params
 param! :github_project
 param :git_branch
 
-#mark_as_read_only
+mark_as_read_only
 
 #add_columns [ :name, :unix_service, :port, :process_regex, :http_endpoint, :tcp_endpoint ]
 

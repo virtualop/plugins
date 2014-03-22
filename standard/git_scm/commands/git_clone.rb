@@ -26,11 +26,26 @@ on_machine do |machine, params|
     command += " -b #{params["git_branch"]}"
   end 
   command += " #{params["git_url"]}"
-  command += " #{params["directory"]}" if params.has_key?('directory')
-  machine.ssh("command" => command)
+  directory = params["directory"]
+  command += " #{directory}" if directory
+  begin
+    machine.ssh command    
+  rescue => detail
+    # TODO this kind of logic should probably be somewhere higher in the chain
+    if /could not create.+Permission denied/ =~ detail.message
+      user_name = machine.id['user']
+      machine.as_user('root') do |root|
+        root.mkdir directory
+        root.chown('file_name' => directory, 'ownership' => "#{user_name}")        
+      end
+      machine.ssh command
+    else
+      raise
+    end
+  end
   
-  if params.has_key?('git_tag') and params["git_tag"] != ''
-    machine.ssh("command" => "cd #{dir} && git checkout #{params["git_tag"]}")
+  if params.has_key?('git_tag') and params["git_tag"] != ''    
+    machine.ssh "cd #{dir} && git checkout #{params["git_tag"]}"
   end
   
   @op.without_cache do

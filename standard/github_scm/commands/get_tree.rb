@@ -18,5 +18,9 @@ execute do |params|
   url = "https://api.github.com/repos/#{params["github_project"]}/git/trees/#{params["revision"]}?#{recursive}#{token}"
   
   result = JSON.parse(@op.http_get("url" => url))
-  result["tree"].clone if result["tree"]
+  if result["tree"]
+    result["tree"].clone
+  else
+    nil
+  end
 end

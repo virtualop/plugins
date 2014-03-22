@@ -18,12 +18,13 @@ on_machine do |machine, params|
   [
     "git init",
     "touch README.md && git add README.md",
-    "git commit -m 'first commit'",
-    "git remote add origin #{repo["ssh_url"]}",
-    "git push -u origin master"
+    "git commit -m 'first commit'"
   ].each do |x|
     machine.ssh("command" => "cd #{dir_name} && #{x}")
   end
+  
+  
+  machine.ssh "cd #{dir_name} && git push -u origin master"
 end  
 
 

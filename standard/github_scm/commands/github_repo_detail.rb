@@ -3,11 +3,10 @@ param! :github_project
 param :git_branch
 param 'with_install_command', '', :default_value => false
 
-#add_columns [ :full_name ]
-
 display_type :hash
 
-mark_as_read_only
+# TODO this should be read only, but breaks the installation
+#mark_as_read_only
 #no_cache
 
 execute do |params|
@@ -30,8 +29,9 @@ execute do |params|
   
   row.merge_from params, :git_branch
   result = @op.inspect_github_repos('project_data' => row).first
+  
 
-  if params['with_install_command']
+  if params['with_install_command']    
     services = @op.list_services_in_github_project('github_project' => params['github_project'])
     
     if result && result['services'] && result['services'].size > 0
