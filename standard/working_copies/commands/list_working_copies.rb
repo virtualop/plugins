@@ -64,7 +64,9 @@ with_contributions do |result, params|
       begin
         path = row['path']
         if /symbolic link/.match(machine.ssh("file #{path}"))
-          link_targets << machine.ssh("readlink #{path}").chomp
+          target = machine.ssh("readlink #{path}").chomp
+          target = $1 if /(.+)\/$/ =~ target
+          link_targets << target
         end
       rescue => detail
         $logger.info("#{row['path']} is probably not a link : #{detail.message}")

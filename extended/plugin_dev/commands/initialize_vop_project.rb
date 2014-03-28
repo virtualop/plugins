@@ -18,4 +18,6 @@ on_machine do |machine, params|
     params['extra_content'] = 'static_html'
   end
   @op.add_service(params)
+  
+  machine.chmod('file_name' => dotvop_dir, 'permissions' => 'go+rx')
 end
