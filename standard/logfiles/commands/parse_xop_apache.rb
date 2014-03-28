@@ -16,7 +16,8 @@ execute do |params|
     #          epoch                host    remote ip   x_forwarded_for                status  bytes   microsecs     auth?   method    url                version  ref      useragent
     #result = /^([\d\.]+)\s+\[.+\]\s+(\S+)\s+(.+)\s+((?:[\d\.\w]+,\s)*[\d+\.\w]+)\s+(\d+)\s+(.+)b\s+(\d+)micros\s+(\S+)\s+"(\w+)\s+(\S+?)(?:\?(.+))?\s+(.+)"\s+"(.+)"\s+"(.+)"$/.match(line)
     #result = /^([\d\.]+)\s+\[.+\]\s+(\S+)\s+(.+)\s+((?:[\d\.\w]+,\s)*[\d+\.\w]+)\s+(\d+)\s+(.+)b\s+(\d+)micros\s+(\S+)\s+"(\w+)\s+(\S+?)(?:\?(.+))?"\s+"([^"]+)"\s+"([^"]+)"$/.match(line)
-    result = /^([\d\.]+)\s+\[.+\]\s+(\S+)\s+(.+)\s+((?:[\d\.\w]+,\s)*[\d+\.\w]+)\s+(\d+)\s+(.+)b\s+(\d+)micros\s+(\S+)\s+"(\w+)\s+(\S+?)(?:\?(.+))?(?:\s+(.+))?"\s+"([^"]+)"\s+"([^"]+)"$/.match(line)
+    #result = /^([\d\.]+)\s+\[.+\]\s+(\S+)\s+(.+)\s+((?:[\d\.\w]+,\s)*[\d+\.\w]+)\s+(\d+)\s+(.+)b\s+(\d+)micros\s+(\S+)\s+"(\w+)\s+(\S+?)(?:\?(.+))?(?:\s+(.+))?"\s+"([^"]+)"\s+"([^"]+)"$/.match(line)
+    result = /^([\d\.]+)\s+\[.+\]\s+(\S+)\s+([\d\.]+)\s+((?:[\d\.\w]+,\s)*[\d+\.\w]+|-)\s+(\d+)\s+(.+)b\s+(\d+)micros\s+(\S+)\s+"(\w+)\s+(\S+?)(?:\?(.+))?(?:\s+(.+))?"\s+"([^"]+)"\s+"([^"]+)"$/.match(line)
     if result then
       entry = {
         :log_ts => Time.at(result.captures[0].to_i),

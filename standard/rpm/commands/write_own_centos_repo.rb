@@ -6,7 +6,10 @@ on_machine do |vm, params|
   vm.rm("file_name" => target_file_name) if vm.file_exists("file_name" => target_file_name)
   
   full_url = @op.plugin_by_name("installation").config_string("install_kernel_location")
-  mirror_base = full_url[0..full_url.index('/', 10)-1]
+  
+  # we need to extract the mirror base from the URL that ends in
+  #   $releasever/os/$basearch/
+  mirror_base = full_url.split('/')[0..-3]
     
   process_local_template(:centos_base_repo, vm, target_file_name, binding())
 end

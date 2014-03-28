@@ -4,6 +4,9 @@ param :machine
 param! "directory", "path to the project"
 param! "name", "name for the service"
 
+param 'extra_content'
+param 'extra_install_command_header'
+
 on_machine do |machine, params|
   service_name = params["name"]
   
@@ -12,9 +15,13 @@ on_machine do |machine, params|
   
   machine.mkdir("dir_name" => service_dir)
   descriptor = "#{service_dir}/#{service_name}.rb"
+  descriptor_content = "# service #{service_name}"
+  if params['extra_content']
+    descriptor_content += "\n" + params['extra_content']
+  end
   machine.write_file(
     'target_filename' => descriptor, 
-    'content' => "# service #{service_name}"
+    'content' => descriptor_content
   )
   
   install_command_file = [ dotvop_dir, '/commands/', "#{service_name}_install.rb" ].join("/")

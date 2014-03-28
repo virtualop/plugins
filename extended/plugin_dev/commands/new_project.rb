@@ -17,23 +17,7 @@ execute do |params|
   name = params['name']
     
   raise 'no user?' unless user
-    
-  # dev_machine = if params['machine']
-    # params['machine']    
-  # else
-    # # try to find the user's dev machine
-    # dev_name = "dev_#{user}"
-    # # TODO needs rails_vop
-    # user_machine = @op.list_rails_machines.select { |x| 
-      # /^#{dev_name}/ =~ x['name'] 
-    # }.first
-#     
-    # unless user_machine
-      # raise "could not find dev machine for user #{user} - looked for #{dev_name}"  
-    # end
-    # $logger.info "auto-selecting #{user_machine['name']}"
-    # user_machine['name']
-  # end
+  
   dev_machine = params['machine'] || @op.default_dev_machine
   
   @op.new_github_project('name' => name)
@@ -51,6 +35,7 @@ execute do |params|
         if is_web_project
           "/var/www/html/#{name}"
         else
+          # ownCloud/projects?
           "#{machine.home}/#{name}"
         end
       end
@@ -63,9 +48,21 @@ execute do |params|
     
     # TODO make sure that the current user can commit to this repo (we need authorized ssh keys)
     machine.initialize_github_project('directory' => service_root, 'github_repo' => full_name)
-    descriptor = machine.initialize_vop_project('directory' => service_root, 'name' => name)
     
     install_params = {}
+    
+    #descriptor = machine.initialize_vop_project('directory' => service_root, 'name' => name, 'web_project' => is_web_project)
+    
+    init_params = {
+        'directory' => service_root, 'name' => name
+    }
+    if is_web_project
+        init_params.merge!(
+          'extra_install_command_header' => 'param "domain"'
+        )
+    end
+    descriptor = machine.initialize_vop_project(init_params)
+    
     
     if is_web_project
       machine.append_to_file('file_name' => descriptor, 'content' => 'static_html')
