@@ -9,7 +9,7 @@ on_machine do |vm, params|
   
   # we need to extract the mirror base from the URL that ends in
   #   $releasever/os/$basearch/
-  mirror_base = full_url.split('/')[0..-3].join('/')
+  mirror_base = full_url.split('/')[0..-4].join('/')
   @op.comment "mirror base : #{mirror_base}"
     
   process_local_template(:centos_base_repo, vm, target_file_name, binding())
