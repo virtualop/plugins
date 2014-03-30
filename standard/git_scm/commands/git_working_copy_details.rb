@@ -37,7 +37,10 @@ on_machine do |machine, params|
       $logger.warn("could not fetch origin information for project #{corrected_path} : #{detail}")
     end
     
-    wc["active_branch"] = machine.list_branches_for_working_copy("working_copy" => params["working_copy"]).select { |x| x["active"] == "true" }.first["name"]
+    branches = machine.list_branches_for_working_copy("working_copy" => params["working_copy"])
+    if branches && branches.size > 0
+      wc["active_branch"] = branches.select { |x| x["active"] == "true" }.first["name"]
+    end
     #last_log = nil
     last_log = @op.working_copy_log(params).first
     if last_log

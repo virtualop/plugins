@@ -104,7 +104,6 @@ execute do |params|
       end
     end
     
-    #pp result
     if result.size > 0
       project_name = plugin_name
       
@@ -118,8 +117,7 @@ execute do |params|
         puts "did not find default service - looked for '#{default_service_name}'"
       end
     end  
-    
-    result
   end
+  result
 end
  

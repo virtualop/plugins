@@ -9,7 +9,7 @@ param :git_branch
 
 param "service_root"
 
-param "force", "set (to any value) if you want to override existing target directories"
+param "force", "set (to any value) if you want to write into existing target directories"
 
 accept_extra_params
 

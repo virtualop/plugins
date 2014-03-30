@@ -16,7 +16,8 @@ param :git_tag
 param "canned_service", "name of a canned service to install on the machine", :allows_multiple_values => true
 
 param "template", "name of a predefined set of location and kickstart URLs. see list_vm_templates", 
-  :lookup_method => lambda { @op.list_vm_templates.pick(:name) }
+  :lookup_method => lambda { @op.list_vm_templates.pick(:name) },
+  :default_value => 'centos'
 
 accept_extra_params
 
