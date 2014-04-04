@@ -20,4 +20,11 @@ on_machine do |machine, params|
   @op.add_service(params)
   
   machine.chmod('file_name' => dotvop_dir, 'permissions' => 'go+rx')
+  
+  working_copy = machine.list_working_copies.select { |x| x['path'] == params['directory'] }.first
+  if working_copy
+    @op.without_cache do
+      machine.working_copy_details('working_copy' => working_copy['name'])
+    end
+  end
 end
