@@ -12,7 +12,7 @@ on_machine do |machine, params|
   source = machine.read_file("file_name" => full_name)
       
   name = full_name.split("/").last.split(".").first
-  service = ServiceDescriptorLoader.read(@op, nil, name, source).services.first
+  service = ServiceDescriptorLoader.read(@op, nil, name, source, full_name).services.first
   
   parts = full_name.split("/")
   2.times do 

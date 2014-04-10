@@ -13,6 +13,7 @@ on_machine do |machine, params|
   tabs = [
     ["machine_overview", "Overview"],
     ["working_copies_new", "Working Copies"],
+    ["domains", "Domains"],
     #["working_copies_new", "Working Copies New"],
     ["status_working_copies", "Status Working Copies"],
     ["log_files", "Log Files"],

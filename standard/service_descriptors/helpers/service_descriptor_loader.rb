@@ -219,11 +219,19 @@ class ServiceDescriptorLoader
     end
   end
   
-  def self.read(op, plugin, name, source)
+  def self.read(op, plugin, name, source, file_name = nil)
     loader = new(op, plugin)
 
     loader.new_service(name)
-    loader.instance_eval source
+    begin
+      if file_name
+        loader.instance_eval source, file_name
+      else
+        loader.instance_eval source
+      end
+    rescue => detail
+      raise "could not read service descriptor '#{name}' : #{detail.message}\n#{detail.backtrace[0..9].join("\n")}"
+    end
 
     loader
   end

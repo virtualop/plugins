@@ -73,7 +73,8 @@ execute do |params|
         puts "launched."
         
       rescue Exception => msg
-        $logger.error(msg)
+        puts "[error] #{msg.detail}\n#{msg.backtrace[0..10].join("\n")}"
+        #$logger.error(msg)
       ensure
         @op.flush_buffer
         q.ack
