@@ -1,0 +1,10 @@
+dependencies [ :core, :machines, :erb_processor ]
+
+dependencies [ :powerdns, :vop_webapp ]
+
+# TODO remove
+dependency :plugin_dev
+
+
+config_param! 'domain', 'the base domain for the platform'
+config_param 'powerdns_machine', 'a powerdns machine that is used for public DNS config'

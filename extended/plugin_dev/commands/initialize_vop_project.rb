@@ -17,7 +17,7 @@ on_machine do |machine, params|
     params['extra_install_command_header'] = 'param "domain"'
     params['extra_content'] = 'static_html'
   end
-  @op.add_service(params)
+  descriptor = @op.add_service(params)
   
   machine.chmod('file_name' => dotvop_dir, 'permissions' => 'go+rx')
   
@@ -27,4 +27,6 @@ on_machine do |machine, params|
       machine.working_copy_details('working_copy' => working_copy['name'])
     end
   end
+  
+  descriptor
 end

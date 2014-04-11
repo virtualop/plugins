@@ -15,8 +15,13 @@ param 'rpmbuild', 'a machine with RPM build environment'
 accept_extra_params 
 
 execute do |params|
-  @op.configure('webtatic')
-  @op.configure('php55_centos')
+  @op.configure 'webtatic'
+  @op.configure 'php55_centos'
+  
+  @op.configure_installation('installation_target' => [ params['host'] ])
+  @op.configure('plugin_name' => 'minimal_platform', 'extra_params' => {
+    'domain' => 'ci.virtualop.org'
+  })
   
   begin
     if params.has_key?('marvin_email') && params.has_key?('marvin_password')
@@ -32,15 +37,18 @@ execute do |params|
     $logger.error("could not create marvin user : #{detail.message}")
   end
   
-  #@op.find_vms
-  
   @op.load_dev_plugin
   
-  @op.trigger_stack_rollout("machine" => params["host"], "stack" => "minimal_platform", "extra_params" => {
-    "prefix" => "ci_", "domain" => "ci.virtualop.org",
-    "default_user" => params["default_user"],
-    "default_password" => params["default_password"] 
-  })
+  @op.trigger_stack_rollout(
+    "machine" => params["host"], 
+    "stack" => "minimal_platform", 
+    "extra_params" => {
+      "prefix" => "ci_", 
+      "domain" => "ci.virtualop.org",
+      "default_user" => params["default_user"],
+      "default_password" => params["default_password"] 
+    }
+  )
   
   if params['release_version']
     @op.tag_as({

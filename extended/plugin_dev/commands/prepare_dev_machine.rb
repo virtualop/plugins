@@ -64,4 +64,6 @@ execute do |params|
       machine.install('service' => params['service'])
     end
   end
+  
+  full_name
 end

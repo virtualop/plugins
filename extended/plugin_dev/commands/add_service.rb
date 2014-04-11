@@ -1,4 +1,4 @@
-description "adds vop configuration for a service inside a project"
+description "adds vop configuration for a service inside a project, returns the descriptor filename"
 
 param :machine
 param! "directory", "path to the project"

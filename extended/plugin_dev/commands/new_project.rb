@@ -49,20 +49,19 @@ execute do |params|
     # TODO make sure that the current user can commit to this repo (we need authorized ssh keys)
     machine.initialize_github_project('directory' => service_root, 'github_repo' => full_name)
     
-    install_params = {}
-    
-    #descriptor = machine.initialize_vop_project('directory' => service_root, 'name' => name, 'web_project' => is_web_project)
-    
+    install_params = {}    
     init_params = {
-        'directory' => service_root, 'name' => name
+        'directory' => service_root, 
+        'name' => name
     }
+    
     if is_web_project
         init_params.merge!(
           'extra_install_command_header' => 'param "domain"'
         )
     end
-    descriptor = machine.initialize_vop_project(init_params)
     
+    descriptor = machine.initialize_vop_project(init_params)
     
     if is_web_project
       machine.append_to_file('file_name' => descriptor, 'content' => 'static_html')
