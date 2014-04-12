@@ -2,4 +2,4 @@ dependency :email
 dependency :vm_handling
 dependency :erb_processor
 
-tags :plumbing, :notifications
+tags :plumbing

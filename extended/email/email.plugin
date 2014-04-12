@@ -9,7 +9,7 @@ config_param! "sender_address", "email address that should be used as sender add
 
 on_activation do |plugin, config|
   require 'net/smtp'
-  require 'smtp_tls'
+  #require 'smtp_tls'
 end
 
 tags :plumbing

@@ -10,10 +10,11 @@ param 'extra_install_command_header'
 on_machine do |machine, params|
   service_name = params["name"]
   
-  dotvop_dir = params["directory"] + '/.vop'
+  dotvop_dir = params["directory"]
   service_dir = dotvop_dir + '/services'
   
   machine.mkdir("dir_name" => service_dir)
+  
   descriptor = "#{service_dir}/#{service_name}.rb"
   descriptor_content = "# service #{service_name}"
   if params['extra_content']

@@ -1,4 +1,4 @@
-description "writes skeleton versions of all necessary vop metadata into a directory"
+description "writes skeleton versions of all necessary vop metadata into a project directory"
 
 param :machine
 param! "directory", "path to the directory to write into"
@@ -17,7 +17,7 @@ on_machine do |machine, params|
     params['extra_install_command_header'] = 'param "domain"'
     params['extra_content'] = 'static_html'
   end
-  descriptor = @op.add_service(params)
+  descriptor = machine.add_service('directory' => dotvop_dir, 'name' => params['name'])
   
   machine.chmod('file_name' => dotvop_dir, 'permissions' => 'go+rx')
   

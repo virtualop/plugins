@@ -14,7 +14,7 @@ execute do |params|
     x['environment'] &&
     x['environment'] == 'development' &&
     x['owner'] == user &&  
-    /^#{@op.dev_machine_name}_/ =~ dev_machine['name']
+    /^#{@op.dev_machine_name('current_user' => user)}/ =~ x['name']
   end.each do |dev_machine|
     @op.comment "auto-cleaning up dev machine #{dev_machine['name']}"
   end

@@ -6,10 +6,16 @@ param "path", "the path in which the new plugin should be created", :default_val
 param "extra_folder", "name of extra folders that should be created inside the .vop dir", :allows_multiple_values => true
 
 execute do |params|
+  plugin_path = params["path"]
+  plugin_dir = plugin_path + '/' + params["name"]
+  
   @op.with_machine('localhost') do |localhost|
-    plugin_path = params["path"]
-    plugin_dir = plugin_path + '/' + params["name"]
     localhost.mkdir("dir_name" => plugin_dir)
     localhost.initialize_plugin({"directory" => plugin_dir}.merge_from(params, :name, :extra_folder))
   end
+  @op.execute_through_rabbit('command_name' => 'configure', 'extra_params' => {
+    'plugin_name' => params['name']
+  })
+  
+  plugin_dir
 end
