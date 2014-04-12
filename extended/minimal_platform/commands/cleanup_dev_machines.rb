@@ -10,6 +10,7 @@ execute do |params|
   user = params['login']
   raise 'no user?' unless user
   
+  # TODO move into my_dev_machines
   @op.list_rails_machines.select do |x| 
     x['environment'] &&
     x['environment'] == 'development' &&
@@ -17,5 +18,6 @@ execute do |params|
     /^#{@op.dev_machine_name('current_user' => user)}/ =~ x['name']
   end.each do |dev_machine|
     @op.comment "auto-cleaning up dev machine #{dev_machine['name']}"
+    # TODO auto-cleanup dev machines
   end
 end
