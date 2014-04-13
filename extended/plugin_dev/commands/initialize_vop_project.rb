@@ -11,13 +11,17 @@ param 'extra_install_command_header'
 on_machine do |machine, params|
   dotvop_dir = "#{params["directory"]}/.vop"
   machine.mkdir("dir_name" => dotvop_dir)
+  
   machine.initialize_plugin("directory" => dotvop_dir, "name" => params["name"])
+  
+  params['directory'] = dotvop_dir
   
   if params['web_project']
     params['extra_install_command_header'] = 'param "domain"'
     params['extra_content'] = 'static_html'
   end
-  descriptor = machine.add_service('directory' => dotvop_dir, 'name' => params['name'])
+  
+  descriptor = @op.add_service(params)
   
   machine.chmod('file_name' => dotvop_dir, 'permissions' => 'go+rx')
   

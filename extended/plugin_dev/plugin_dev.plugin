@@ -8,4 +8,4 @@ config_param 'marvin_dev_machine_pwd', ''
 config_param 'owncloud_url'
 
 config_param 'default_dev_domain', 'the base domain on which users dev projects should be published', 
-	:default_value => 'dev2.virtualop.org'
+	:default_value => 'dev.virtualop.org'

@@ -11,7 +11,7 @@ execute do |params|
   raise 'no user?' unless user
   
   domain = config_string('domain')
-  user_domain = "#{user}.#{domain}"
+  user_domain = @op.user_domain
   
   if config_string('powerdns_machine', '') != ''
     @op.comment "DNS for new user #{user} : #{user_domain}..."
