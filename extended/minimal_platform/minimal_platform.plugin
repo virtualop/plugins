@@ -1,6 +1,6 @@
 dependencies [ :core, :machines, :erb_processor ]
 
-dependencies [ :powerdns, :vop_webapp ]
+dependencies [ :powerdns, :vop_webapp, :github_scm ]
 
 # TODO remove
 dependency :plugin_dev
@@ -8,3 +8,5 @@ dependency :plugin_dev
 
 config_param! 'domain', 'the base domain for the platform'
 config_param 'powerdns_machine', 'a powerdns machine that is used for public DNS config'
+config_param 'marvin_dev_machine_pwd'
+config_param 'owncloud_url'

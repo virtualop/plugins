@@ -26,15 +26,15 @@ on_machine do |machine, params|
   
   machine.mkdir service_root
   
-  machine.initialize_vop_project({'directory' => service_root}.merge_from(params, :name, :web_project))
+  machine.initialize_vop_project({'directory' => service_root}.merge_from(params, :name, :web_project, :domain))
   
   @op.without_cache do
     machine.list_working_copies
   end
   
-  if params['domain']
-    machine.install_service_from_working_copy('working_copy' => name, 'service' => name, 'extra_params' => { 'domain' => params['domain'] })    
-  end
+  #if params['domain']
+  #  machine.install_service_from_working_copy('working_copy' => name, 'service' => name, 'extra_params' => { 'domain' => params['domain'] })    
+  #end
   
   service_root
 end

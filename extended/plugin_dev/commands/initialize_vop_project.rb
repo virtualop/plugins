@@ -5,6 +5,7 @@ param! "directory", "path to the directory to write into"
 param! "name", "vop project name"
 
 param 'web_project', 'set to true to add the +static_html+ flag and a domain parameter'
+param 'domain'
 
 param 'extra_install_command_header'
 
@@ -24,6 +25,16 @@ on_machine do |machine, params|
   descriptor = @op.add_service(params)
   
   machine.chmod('file_name' => dotvop_dir, 'permissions' => 'go+rx')
+  
+  if params['web_project'] && params['domain']
+    machine.install_service_from_directory(
+      'directory' => params['directory'],
+      'service' => params['name'],
+      'extra_params' => {
+        'domain' => params['domain']   
+      } 
+    )
+  end
   
   working_copy = machine.list_working_copies.select { |x| x['path'] == params['directory'] }.first
   if working_copy
