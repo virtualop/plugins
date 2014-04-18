@@ -1,6 +1,6 @@
 dependencies [ :core, :machines, :erb_processor ]
 
-dependencies [ :powerdns, :vop_webapp ]
+dependencies [ :powerdns, :vop_webapp, :installation ]
 
 # TODO remove
 dependency :plugin_dev
@@ -8,3 +8,6 @@ dependency :plugin_dev
 
 config_param! 'domain', 'the base domain for the platform'
 config_param 'powerdns_machine', 'a powerdns machine that is used for public DNS config'
+
+config_param 'estimated_init_time_secs', 'estimated time for initializing a new user (new_user_async)', :default_value => 900
+config_param 'estimated_hello_world_steps', 'estimated command execution steps for deploying the hello_world service', :default_value => 900

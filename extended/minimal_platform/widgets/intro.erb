@@ -1,0 +1,116 @@
+<span id="intro_wrapper">
+	<span id="no_machine_yet" style="display: none">
+	  <h2>Welcome, <%= current_user.login %>!</h2>
+	
+	  <p>You have just signed up, so two things should be happening now: 
+		 A new virtual machine is created for you, and a new subdomain called <%= $op.user_domain %> is configured.</p>
+	  <br/>
+	  
+	  <p>initialization status:</p>
+	  <div id="init_status">
+	  </div>
+	  <div id="init_progress"></div>
+	</span>
+
+	<span id="deploy_test_service" style="display: none">
+	  <h2>Hello, <%= current_user.login %>!</h2>
+	  
+	  <p>It seems that your dev machine has been setup successfully. Would you like to <a href="#" id="install_hello_world">deploy a test service</a>?</p>
+	  <div class="status"></div>
+	  <div class="progress"></div>
+	</span>
+</span>
+
+<script type="text/javascript">
+$(function() {
+
+	var machines = $('#machines .machine');
+	if (machines.length == 0) {
+		$('#no_machine_yet').show();
+		
+		(function worker() {
+		  $.ajax({
+		    url: '/logging/user_init_job?command=new_user_async', 
+		    success: function(data) {
+		      var request = data.request;
+		      
+		      /*
+		      if (typeof request === "undefined") {
+		        
+		      } else {
+		        
+		      }
+		      */
+		      
+			  var response_code = request.response_code;
+			  console.log("init status ", response_code);
+			  console.log("stats ", data.stats.total_count);
+			  console.log("estimated", data.estimated);
+			  
+			  $( "#init_progress" ).progressbar({
+			    max: data.estimated,
+			  	value: data.stats.total_count
+			  });
+			  
+		  	  if (response_code == 'ok') {
+		  	    $('#init_status').html('completed successfully. would you like to <a href="#" id="install_hello_world">deploy a test service</a> now?');
+		  	  } else if (response_code == 'error') {
+		  	  	$('#init_status').html('error : ' + request.error_text);
+		  	  } else {
+				$('#init_status').html('in progress (probably)<br/>estimated time: < 10 minutes');
+				console.log("gimme progress ", data.stats.total_count);
+				$( "#init_progress" ).progressbar({
+	  		  	  value: parseInt(data.stats.total_count)
+			  	});
+			  	var perc = (data.stats.total_count / (data.estimated / 100));
+			  	$('#init_progress').attr('title', '~ ' + perc + '% completed');
+		  	  }		     
+		    },
+		    complete: function() {
+		      // Schedule the next request when the current one's complete
+		      setTimeout(worker, 5000);
+		    }
+		  });
+		})();
+		
+		/*
+		$.get('/logging/user_init_job?command=new_user_async', function(data) {
+		  var request = data.request;
+		  var response_code = request.response_code;
+		  console.log("init status ", response_code);
+		  console.log("stats ", data.stats.total_count);
+		  console.log("estimated", data.estimated);
+		  
+		  $( "#init_progress" ).progressbar({
+		    max: data.estimated,
+		  	value: data.stats.total_count
+		  });
+		  
+	  	  if (response_code == 'ok') {
+	  	    $('#init_status').html('completed successfully. would you like to <a href="#" id="install_hello_world">deploy a test service</a> now?');
+	  	  } else if (response_code == 'error') {
+	  	  	$('#init_status').html('error : ' + request.error_text);
+	  	  } else {
+			$('#init_status').html('in progress (probably)<br/>estimated time: < 10 minutes');
+			console.log("gimme progress ", data.stats.total_count);
+			$( "#init_progress" ).progressbar({
+  		  	  value: parseInt(data.stats.total_count)
+		  	});
+		  	var perc = data.estimated / data.stats.total_count;
+		  	$('#init_progress').attr('title', '~ ' + perc + '% completed');
+	  	  }
+		});
+		*/
+	} else {
+		$('#deploy_test_service').show();
+	}
+	
+	$('body').on('click', '#install_hello_world', function(e) {
+	  // <%= $op.dev_machine_name('full' => 'true') %>
+	  rhcp.launch('.notice', 'deploying a test service', 
+	  'command=install_canned_service&service=hello_world/hello_world&machine=<%= $op.dev_machine_name('full' => 'true') %>&domain=<%= $op.user_domain %>&user_name=<%= current_user.login %>');
+	  e.preventDefault();
+	});
+});
+</script>
+

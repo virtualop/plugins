@@ -23,6 +23,7 @@ execute do |params|
     'domain' => 'ci.virtualop.org'
   })
   
+  
   begin
     if params.has_key?('marvin_email') && params.has_key?('marvin_password')
       @op.with_machine('localhost') do |machine|

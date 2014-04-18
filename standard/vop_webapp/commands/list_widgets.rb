@@ -6,7 +6,7 @@ with_contributions do |result, params|
   puts "current user : #{params['current_user']}"
   pp params['current_user']
   
-  [
+  result + [
     {
       'name' => 'machinez',
       'position' => 'main',

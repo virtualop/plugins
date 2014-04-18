@@ -1,4 +1,4 @@
-param :current_user
+param :current_user, '', :default_param => true
 
 execute do |params|
   user = params['current_user']

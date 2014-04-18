@@ -17,6 +17,8 @@ on_machine do |machine, params|
     process_local_template(:http_proxy, machine, "/etc/profile.d/http_proxy.sh", binding())
   end 
   
+  process_local_template(:bash_prompt, machine, '/etc/profile.d/bash_colors.sh', binding())
+  
   # TODO machine.append_to_file("file_name" => "/etc/hosts", "content" => "127.0.0.1 #{machine.name}")
   # TODO append "search #{domain_thing}" => "/etc/resolv.conf"
   
