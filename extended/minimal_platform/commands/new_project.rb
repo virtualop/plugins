@@ -52,34 +52,36 @@ execute do |params|
     install_params = {}    
     init_params = {
         'directory' => service_root, 
-        'name' => name
-    }
+        'name' => name,
+        'web_project' => is_web_project
+    }.merge_from(params, :domain)
     
-    if is_web_project
-        init_params.merge!(
-          'extra_install_command_header' => 'param "domain"'
-        )
-    end
+    #if is_web_project
+    #    init_params.merge!(
+    #      'extra_install_command_header' => 'param "domain"'
+    #    )
+    #end
     
     descriptor = machine.initialize_vop_project(init_params)
     
-    if is_web_project
-      machine.append_to_file('file_name' => descriptor, 'content' => 'static_html')
-      install_params['domain'] = params['domain']
-    end
+    #if is_web_project
+    #  machine.append_to_file('file_name' => descriptor, 'content' => 'static_html')
+    #  install_params['domain'] = params['domain']
+    #end
     
-    machine.install_service_from_directory(
-      'directory' => service_root,
-      'service' => name,
-      'extra_params' => install_params 
-    )
+    #machine.install_service_from_directory(
+    #  'directory' => service_root,
+    #  'service' => name,
+    #  'extra_params' => install_params 
+    #)
     
-    machine.as_user('root') do |root|
-      # TODO hardcoded marvin
-      root.chown('file_name' => service_root, 'ownership' => 'marvin.apache')
-    end
     
     if is_web_project
+      machine.as_user('root') do |root|
+        # TODO hardcoded marvin
+        root.chown('file_name' => service_root, 'ownership' => 'marvin.apache')
+      end
+      
       index_html = "#{service_root}/index.html"
       process_local_template(:welcome, machine, index_html, binding())
       machine.allow_apache_read_access('file_name' => index_html)

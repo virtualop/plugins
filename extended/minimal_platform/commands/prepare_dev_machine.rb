@@ -32,6 +32,7 @@ execute do |params|
       $logger.error "[BUG] machine.name seems to return the user context here : #{machine.name}"
       
       if params['features'].include?('github')
+        #machine.install_canned_service 'github_dev/github_dev'
         machine.prepare_github_ssh_connection
         public_key = machine.read_file "#{machine.home}/.ssh/id_rsa.pub"
         @op.add_ssh_key('title' => full_name, 'key' => public_key)
