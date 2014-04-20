@@ -7,7 +7,7 @@ add_columns [ :partition, :success, :failure ]
 execute do |params|
   result = []
   params["partition_name"].each do |partition_name|
-    @op.with_machine("localhost") do |machine|
+    @op.with_machine("self") do |machine|
       count_success = 0
       count_failure = 0
       table_names().each do |fragment|

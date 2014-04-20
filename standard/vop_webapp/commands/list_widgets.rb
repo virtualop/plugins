@@ -10,21 +10,6 @@ with_contributions do |result, params|
       'name' => 'machinez',
       'position' => 'main',
       'template' => @plugin.path + '/widgets/machinez.erb'
-    },
-    {
-      'name' => 'vop_logging',
-      'position' => 'north',
-      'template' => "#{Rails.root.to_s}/app/views/home/widgets/_vop_logging.erb"
-    },
-    {
-      'name' => 'machines',
-      'position' => 'fix',
-      'template' => "#{Rails.root.to_s}/app/views/home/widgets/_machines.erb"
-    },
-    {
-      'name' => 'projects',
-      'position' => 'fix',
-      'template' => "#{Rails.root.to_s}/app/views/home/widgets/_projects.erb"
     }
   ]  
 end

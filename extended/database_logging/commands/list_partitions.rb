@@ -5,7 +5,7 @@ display_type :list
 execute do |params|
   result = []
     
-  @op.with_machine("localhost") do |machine|
+  @op.with_machine("self") do |machine|
     machine.show_tables("database" => config_string("db_name")).each do |table|
       matched = /.+_((\d{4})(\d{2})(\d{2}))$/.match(table["name"])
       if matched
