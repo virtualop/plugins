@@ -15,14 +15,18 @@ on_machine do |machine, params|
   
   machine.initialize_plugin("directory" => dotvop_dir, "name" => params["name"])
   
-  params['directory'] = dotvop_dir
+  #params['directory'] = dotvop_dir
   
+  p = {
+    'directory' => dotvop_dir, 
+    'name' => params['name']
+  }
   if params['web_project']
-    params['extra_install_command_header'] = 'param "domain"'
-    params['extra_content'] = 'static_html'
+    p['extra_install_command_header'] = 'param "domain"'
+    p['extra_content'] = 'static_html'
   end
   
-  descriptor = @op.add_service(params)
+  descriptor = machine.add_service(p)
   
   machine.chmod('file_name' => dotvop_dir, 'permissions' => 'go+rx')
   

@@ -1,21 +1,21 @@
 <span id="intro_wrapper">
+<div class="widget_close edit_widgets">x</div>
+	<h2>Hello, <%= current_user.login %>!</h2>
 	<span id="no_machine_yet" style="display: none">
-	  <h2>Welcome, <%= current_user.login %>!</h2>
-	
 	  <p>You have just signed up, so two things should be happening now: 
 		 A new virtual machine is created for you, and a new subdomain called <%= $op.user_domain %> is configured.</p>
 	  <br/>
 	  
-	  <p>initialization status:</p>
+	  <p>initialization: </p>
 	  <div id="init_status">
 	  </div>
 	  <div id="init_progress"></div>
 	</span>
 
 	<span id="deploy_test_service" style="display: none">
-	  <h2>Hello, <%= current_user.login %>!</h2>
-	  
-	  <p>It seems that your dev machine has been setup successfully. Would you like to <a href="#" id="install_hello_world">deploy a test service</a>?</p>
+	  <span class="title">
+	  	<p>It seems that your dev machine has been setup successfully. Would you like to <a href="#" id="install_hello_world">deploy a test service</a>?</p>
+	  </span>
 	  <div class="status"></div>
 	  <div class="progress"></div>
 	</span>
@@ -34,12 +34,9 @@ $(function() {
 		    success: function(data) {
 		      var request = data.request;
 		      if ((request === undefined) || (request == null)) {
-		        console.log("empty response from logging/user_init_job");
+		        //console.log("empty response from logging/user_init_job");
 		      } else {
 				  var response_code = request.response_code;
-				  console.log("init status ", response_code);
-				  console.log("stats ", data.stats.total_count);
-				  console.log("estimated", data.estimated);
 				  
 				  $( "#init_progress" ).progressbar({
 				    max: data.estimated,
@@ -47,12 +44,12 @@ $(function() {
 				  });
 				  
 			  	  if (response_code == 'ok') {
-			  	    $('#init_status').html('completed successfully. would you like to <a href="#" id="install_hello_world">deploy a test service</a> now?');
+			  	    $('#init_status').html('completed successfully.');
+			  	    location.reload();
 			  	  } else if (response_code == 'error') {
 			  	  	$('#init_status').html('error : ' + request.error_text);
 			  	  } else {
-					$('#init_status').html('in progress (probably)<br/>estimated time: < 10 minutes');
-					console.log("gimme progress ", data.stats.total_count);
+					$('#init_status').html('in progress');
 					$( "#init_progress" ).progressbar({
 		  		  	  value: parseInt(data.stats.total_count)
 				  	});
@@ -62,13 +59,53 @@ $(function() {
 			   }     
 		    },
 		    complete: function() {
-		      // Schedule the next request when the current one's complete
 		      setTimeout(worker, 5000);
 		    }
 		  });
 		})();
 	} else {
 		$('#deploy_test_service').show();
+		
+		(function worker() {
+		  $.ajax({
+		    url: '/logging/test_deploy_job', 
+		    success: function(data) {
+		      var request = data.request;
+		      if ((request === undefined) || (request == null)) {
+		        //console.log("empty response from logging/user_init_job");
+		      } else {
+				  var response_code = request.response_code;
+				  
+				  $( "#progress" ).progressbar({
+				    max: data.estimated,
+				  	value: data.stats.total_count
+				  });
+				  
+				  $('#deploy_test_service .title').html('deploying test service...');
+				  
+				  var status = $('#deploy_test_service .status');
+				  var progress = $('#deploy_test_service .progress');
+				  
+			  	  if (response_code == 'ok') {
+			  	    status.html('completed successfully.');
+			  	    location.reload();
+			  	  } else if (response_code == 'error') {
+			  	  	status.html('error : ' + request.error_text);
+			  	  } else {
+					status.html('in progress');
+					progress.progressbar({
+		  		  	  value: parseInt(data.stats.total_count)
+				  	});
+				  	var perc = (data.stats.total_count / (data.estimated / 100));
+				  	progress.attr('title', '~ ' + perc + '% completed');
+			  	  }		
+			   }     
+		    },
+		    complete: function() {
+		      setTimeout(worker, 5000);
+		    }
+		  });
+		})();
 	}
 	
 	$('body').on('click', '#install_hello_world', function(e) {
