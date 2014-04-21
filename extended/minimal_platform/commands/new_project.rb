@@ -85,10 +85,11 @@ execute do |params|
       index_html = "#{service_root}/index.html"
       process_local_template(:welcome, machine, index_html, binding())
       machine.allow_apache_read_access('file_name' => index_html)
+      machine.add_file_to_version_control('working_copy' => name, 'file_name' => 'index.html')
     end
     
-    machine.add_file_to_version_control('working_copy' => name, 'file_name' => 'index.html .vop')
-    machine.commit_and_push_working_copy('working_copy' => name, 'comment' => 'generated index page, vop service descriptor')
+    machine.add_file_to_version_control('working_copy' => name, 'file_name' => '.vop')
+    machine.commit_and_push_working_copy('working_copy' => name, 'comment' => 'vop service descriptor')
   end   
 
 end

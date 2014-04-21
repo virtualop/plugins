@@ -7,7 +7,7 @@ config_param "install_kernel_location", "the location from which the kernel+init
   #:default_value => "http://mirror.virtualop.org/pub/Mirrors/centos/6/os/x86_64/"
   
 config_param "kickstart_url", "the HTTP url to the kickstart script to use for setting up new VMs",
-  :default_value => "http://vop.dev2.virtualop.org/kickstart/"  
+  :default_value => "http://vop.dev.virtualop.org/kickstart/"  
   
 config_param "kickstart_url_vm", "the HTTP url to the kickstart script to use for setting up new VMs",
   :default_value => "http://vop.beta.virtualop.org/kickstart/centos6_minimal"
