@@ -24,6 +24,8 @@
 <script type="text/javascript">
 $(function() {
 
+	var progressed = false;
+
 	var machines = $('#machines .machine');
 	if (machines.length == 0) {
 		$('#no_machine_yet').show();
@@ -45,7 +47,9 @@ $(function() {
 				  
 			  	  if (response_code == 'ok') {
 			  	    $('#init_status').html('completed successfully.');
-			  	    location.reload();
+			  	    if (progressed) {
+			  	    	location.reload();
+			  	    }
 			  	  } else if (response_code == 'error') {
 			  	  	$('#init_status').html('error : ' + request.error_text);
 			  	  } else {
@@ -55,6 +59,7 @@ $(function() {
 				  	});
 				  	var perc = (data.stats.total_count / (data.estimated / 100));
 				  	$('#init_progress').attr('title', '~ ' + perc + '% completed');
+				  	progressed = true;
 			  	  }		
 			   }     
 		    },
@@ -88,7 +93,9 @@ $(function() {
 				  
 			  	  if (response_code == 'ok') {
 			  	    status.html('completed successfully.');
-			  	    location.reload();
+			  	    if (progressed) {
+			  	    	location.reload();
+			  	    }
 			  	  } else if (response_code == 'error') {
 			  	  	status.html('error : ' + request.error_text);
 			  	  } else {
@@ -98,6 +105,7 @@ $(function() {
 				  	});
 				  	var perc = (data.stats.total_count / (data.estimated / 100));
 				  	progress.attr('title', '~ ' + perc + '% completed');
+				  	progressed = true;
 			  	  }		
 			   }     
 		    },
