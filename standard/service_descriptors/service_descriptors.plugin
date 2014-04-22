@@ -12,3 +12,5 @@ dependency :ssh_connector
 
 config_param! "descriptor_dirs", "list of fully qualified paths holding service descriptors", :allows_multiple_values => true
 config_param "service_config_dir", "directory where descriptors for installed services should be written when a service is installed", :default_value => "/etc/vop/installed_services"
+
+tags :deployment

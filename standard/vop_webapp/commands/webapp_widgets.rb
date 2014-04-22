@@ -12,10 +12,11 @@ execute do |params|
     areas.each do |area|
       area_path = "#{webapp_widgets_path}/#{area}"
       next unless machine.file_exists area_path
-      machine.list_files(area_path).each do |file|
-        /_(.+)\.erb$/ =~ file or next
+      machine.list_files(area_path).sort.each do |file|
+        /_(\d+_)?(.+)\.erb$/ =~ file or next
         result << {
-          'name' => $1,
+          'file_name' => file,
+          'name' => $2,
           'position' => area,
           'template' => "#{area_path}/#{file}"
         }

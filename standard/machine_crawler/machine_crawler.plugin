@@ -1,1 +1,3 @@
 dependencies [ :machines, :core, :libvirt ]
+
+tags :plumbing

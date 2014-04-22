@@ -18,3 +18,5 @@ on_init do |plugin, config|
   
   #require 'backports'
 end
+
+tags :plumbing

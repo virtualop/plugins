@@ -3,3 +3,5 @@ dependency :machines
 dependency :working_copies
 
 #dependency :machine_crawler
+
+tags :deployment

@@ -22,7 +22,6 @@ stack :nagios do |m, p|
   m.memory [ 512, 1024, 1024 ]
   m.disk 50
 end
-
  
 # stack :xoplogs do |m, params|
   # m.github 'philippt/xoplogs'
@@ -96,9 +95,7 @@ on_install do |stacked, params|
   if params.has_key?("default_user")
     @op.configure_default_passwords({}.merge_from(params, :default_user, :default_password))
   end
-  # TODO hardcoded credentials
-  #@op.configure_my_sql("mysql_user" => "root", "mysql_password" => "the_password")
-  
+
   old_repos = @op.list_data_repos.select { |x| x["alias"] == "old_data_repo" }
   @op.comment("found #{old_repos.size} old repos")
   if old_repos.size > 0
@@ -124,8 +121,6 @@ end
 post_rollout do |stacked, params|
   @op.comment "post rollout. successful: #{params["result"][:success].size}, failed: #{params["result"][:failure].size}"
   
-  pp params
-  
   failure = params["result"][:failure]
   raise "some stacks could not be rolled out: #{failure.map { |x| x["name"] }}" unless failure.size == 0
   
@@ -134,7 +129,6 @@ post_rollout do |stacked, params|
   if params.has_key?('extra_params')
     params.merge! params['extra_params']
   end
-  pp params
   
   if params.has_key?("target_domain")
     target_domain = params["target_domain"]

@@ -14,3 +14,5 @@ on_init do |plugin, config|
   require 'helpers/init_dropdir'
   init_dropdir plugin, plugin.config_string("account_dropdir")
 end
+
+tags :deployment

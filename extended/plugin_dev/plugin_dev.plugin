@@ -9,3 +9,5 @@ config_param 'owncloud_url'
 
 config_param 'default_dev_domain', 'the base domain on which users dev projects should be published', 
 	:default_value => 'dev.virtualop.org'
+	
+tags :development 

@@ -16,3 +16,5 @@ on_init do |plugin, config|
   plugin.state[:drop_dir] = provider
   Dir.mkdir(dir_name) unless File.exists?(dir_name)
 end
+
+tags :plumbing

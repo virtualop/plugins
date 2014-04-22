@@ -8,4 +8,4 @@ config_param 'find_maxdepth', 'maximum tree depth, is passed to find for searchi
 config_param 'follow_symlinks', 'if set to true, will follow symlink while searching working copies', :default_value => true
 config_param 'path_blacklist', 'exclude filter to use while searching working copies'
 
-tags :deployment, :installation
+tags :deployment, :installation, :abstract, :development

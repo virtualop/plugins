@@ -1,3 +1,4 @@
+<% if current_user.account_age_days < 2 %>
 <span id="intro_wrapper">
 <div class="widget_close edit_widgets">x</div>
 	<h2>Hello, <%= current_user.login %>!</h2>
@@ -25,6 +26,7 @@
 $(function() {
 
 	var progressed = false;
+	var complete = false;
 
 	var machines = $('#machines .machine');
 	if (machines.length == 0) {
@@ -47,6 +49,7 @@ $(function() {
 				  
 			  	  if (response_code == 'ok') {
 			  	    $('#init_status').html('completed successfully.');
+			  	    complete = true;
 			  	    if (progressed) {
 			  	    	location.reload();
 			  	    }
@@ -64,7 +67,9 @@ $(function() {
 			   }     
 		    },
 		    complete: function() {
-		      setTimeout(worker, 5000);
+		      if (! complete) {
+		      	setTimeout(worker, 5000);
+		      }
 		    }
 		  });
 		})();
@@ -124,3 +129,4 @@ $(function() {
 });
 </script>
 
+<% end %>
