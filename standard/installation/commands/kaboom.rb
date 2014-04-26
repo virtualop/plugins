@@ -48,8 +48,10 @@ execute do |params|
     end
   end
   
-  @op.with_machine(host_name) do |host|    
-    host.terminate_vm("name" => vm_name) if host.list_vms.map { |x| x["name"] }.include? vm_name
+  @op.with_machine(host_name) do |host|  
+    if host.list_vms.map { |x| x["name"] }.include? vm_name
+      @op.terminate params['machine']
+    end  
     
     @op.flush_cache()
     

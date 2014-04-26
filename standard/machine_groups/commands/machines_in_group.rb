@@ -1,6 +1,6 @@
 description "returns all machines that can be found in the specified machine group or it's children"
 
-param :machine_group
+param :machine_group, '', :default_param => true
 
 result_as :list_machines
 

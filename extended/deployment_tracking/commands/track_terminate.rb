@@ -1,12 +1,11 @@
-# TODO would it be better to contribute to terminate?
-contributes_to :notify_cleanup_machine_start
+contributes_to :notify_terminate_stop_ok
 
 param :current_user
 
 accept_extra_params
 
 execute do |params|
-  machine_name = params["extra_params"]["machine"]
-  m = Machine.find_by_name(data["name"])
+  machine_name = params["extra_params"]["result"]
+  m = Machine.find_by_name machine_name
   m.delete()
 end

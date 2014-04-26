@@ -1,3 +1,14 @@
+param 'full'
+
 execute do |params|
-  %w|development staging production|
+  data = {
+    'dev' => 'development',
+    'stg' => 'staging',
+    'prd' => 'production'
+  }
+  if params['full']
+    data
+  else
+    data.values
+  end
 end

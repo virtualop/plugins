@@ -18,6 +18,9 @@ on_machine do |machine, params|
   end 
   
   process_local_template(:bash_prompt, machine, '/etc/profile.d/bash_colors.sh', binding())
+  machine.chmod("file_name" => '/etc/profile.d/bash_colors.sh', 'permissions' => 'go+r')
+  
+  
   
   # TODO machine.append_to_file("file_name" => "/etc/hosts", "content" => "127.0.0.1 #{machine.name}")
   # TODO append "search #{domain_thing}" => "/etc/resolv.conf"
