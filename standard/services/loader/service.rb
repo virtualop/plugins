@@ -1,0 +1,3 @@
+class Service < Loader
+
+end

@@ -1,4 +1,0 @@
-dependency :core
-dependency :machines
-
-tags :plumbing, :abstract

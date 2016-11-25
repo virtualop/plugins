@@ -1,5 +1,0 @@
-dependencies [ :machines, :core, :libvirt ]
-
-tags :plumbing
-
-config_param 'target', 'a machine group that should be crawled. if not set, all known machines are crawled.', :allows_multiple_values => true

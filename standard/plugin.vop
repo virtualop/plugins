@@ -1,3 +1,1 @@
-dependencies [ :machines, :erb_processor, :core ]
 
-enabled_without_config
