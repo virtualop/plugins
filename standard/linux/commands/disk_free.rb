@@ -1,4 +1,4 @@
-param! 'machine'
+param! :machine
 param 'dir'
 
 run do |machine, params|
