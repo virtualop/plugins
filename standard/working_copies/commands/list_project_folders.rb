@@ -1,4 +1,4 @@
-#description "project folders are locations in which working copies are searched"
+description "project folders are locations in which working copies are searched"
 
 run do
   [

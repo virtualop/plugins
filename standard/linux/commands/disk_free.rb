@@ -1,5 +1,5 @@
 param! :machine
-param 'dir'
+param "dir"
 
 run do |machine, params|
   command = "df -hl"
