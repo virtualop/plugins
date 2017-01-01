@@ -1,3 +1,5 @@
-contribute :to => 'machine' do
-  [{ name: "localhost" }]
+contribute to: "machine" do
+  [
+    { name: "localhost" }
+  ]
 end

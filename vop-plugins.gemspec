@@ -1,9 +1,9 @@
 # coding: utf-8
-require 'vop'
+#require 'vop'
 
 Gem::Specification.new do |spec|
   spec.name          = "vop-plugins"
-  spec.version       = Vop::VERSION
+  spec.version       = "0.3.2"
   spec.authors       = ["Philipp T."]
   spec.email         = ["philipp@virtualop.org"]
 
@@ -15,8 +15,6 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-
-  spec.add_dependency "vop", ">= 0.3.0"
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake"

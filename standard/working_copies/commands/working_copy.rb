@@ -1,3 +1,5 @@
+param! :machine
+
 entity('name', on: 'machine') do |params|
-  params[:contributions]
+  @op.collect_contributions('name' => 'working_copy', 'raw_params' => params)
 end
