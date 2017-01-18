@@ -5,9 +5,7 @@ param! :machine, :default_param => true
 param "count", :default => 1
 param "verbose", :default => false
 
-run do |machine, count, verbose|
-  output = `ping -c #{count} #{machine.name}`
-  ping_ok = $?.exitstatus == 0
-  puts output if verbose
-  ping_ok
+run do |params, machine|
+  params["address"] = machine.name
+  @op.ping_address(params)
 end
