@@ -1,0 +1,9 @@
+depends_on :machines
+
+on :init do |plugin|
+  plugin.state[:services] = []
+end
+
+hook :loading_finished do
+  @op.load_plugin_services
+end

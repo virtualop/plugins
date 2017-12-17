@@ -1,1 +1,9 @@
-dependency :core
+description "foo"
+
+on :init do |plugin|
+  plugin.state[:redis] = Redis.new
+
+  plugin.state[:ssh_connections] = {}
+end
+
+# TODO depends_on :isoremix

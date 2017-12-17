@@ -1,8 +1,7 @@
-param! "machine_name",
-  lookup: lambda { |params| @op.list_machines.map { |x| x["name"] }}
+param! :machine, use_context: false
 
-run do |context, machine_name|
-  context['machine'] = machine_name
-  context['prompt'] = "#{machine_name} >> "
+run do |machine, context|
+  context["machine"] = machine.name
+  context["prompt"] = "#{machine.name} >> "
   true
 end

@@ -1,11 +1,11 @@
-param! "machine"
-param! "expression", :default_param => true
+param! :machine
+param! "regex", default_param: true
 
-show columns: %i|pid command_short|
+show columns: %w|pid command|
 
-run do |params, expression|
-  column_name = :command_short
-  @op.processes(params).select do |item|
-    item[column_name] =~ Regexp.new(expression)
+run do |machine, regex|
+  the_regex = /#{Regexp.escape(regex)}/
+  machine.processes.select do |process|
+    the_regex.match(process["command"])
   end
 end

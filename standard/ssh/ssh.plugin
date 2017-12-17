@@ -1,0 +1,9 @@
+require "net/ssh"
+require "net/ssh/proxy/jump"
+require "net/scp"
+
+depends_on :machines
+
+on :init do |plugin|
+  plugin.state[:ssh_connections] = {}
+end

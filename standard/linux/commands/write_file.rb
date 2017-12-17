@@ -1,26 +1,13 @@
-require "tempfile"
-
 param! :machine
-param! "file"
+param! "file_name"
 param! "content"
+param "sudo", default: false
 
-run do |machine, file, content|
-  bytes_written = 0
-  name_fragment = "vop_#{$$}_"
-  tmp = Tempfile.new(name_fragment)
-  begin
-    tmp.write content
-    bytes_written = tmp.size
-    tmp.flush()
-    tmp.close()
-
-    $logger.debug "scp from #{tmp.path} to #{file}"
-    machine.scp(
-      local_path: tmp.path,
-      remote_path: file
-    )
-  ensure
-    tmp.delete
+run do |machine, file_name, content, sudo|
+  write_cmd = if sudo    
+    "| sudo tee #{file_name}"
+  else
+    "> #{file_name}"
   end
-  bytes_written
+  machine.ssh "echo '#{content}' #{write_cmd}"
 end

@@ -1,6 +1,8 @@
-param! "machine"
+param! :machine
 
-show columns: %i|pid command_short|
+show columns: %w|pid command_short|
+
+read_only
 
 run do |params, machine|
   input = machine.ssh("ps aux")
@@ -10,10 +12,10 @@ run do |params, machine|
     (user, pid, cpu, mem, vsz, rss, tty, stat, start, time) = parts[0..9]
     command = parts[10..parts.length-1].join(" ")
     {
-      pid: pid,
-      command: command,
-      command_short: command[0..119],
-      user: user
+      "pid" => pid,
+      "command" => command,
+      "command_short" => command[0..79],
+      "user" => user
     }
   end
 end

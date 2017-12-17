@@ -1,2 +1,1 @@
-depends :core
-depends :machines
+depends_on [ :ssh, :machines ]

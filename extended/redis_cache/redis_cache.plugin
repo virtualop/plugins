@@ -1,0 +1,8 @@
+require "redis"
+
+on :init do |plugin|
+  plugin.state[:redis] = Redis.new()
+  $logger.debug "redis_cache init : #{plugin.state[:redis]}"
+end
+
+#autoload false
