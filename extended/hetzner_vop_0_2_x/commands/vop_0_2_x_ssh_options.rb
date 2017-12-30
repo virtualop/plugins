@@ -1,6 +1,6 @@
 param! :machine
 
-contribute to: "ssh_options" do |machine, params|
+contribute to: "ssh_options" do |machine, params, plugin|
   result = {}
 
   # connect as root to the physical hosts
@@ -12,7 +12,7 @@ contribute to: "ssh_options" do |machine, params|
     # connect to the VM through the host's IP
     result["host_or_ip"] = @op.ssh_options(machine: host_name)["host_or_ip"]
     result["user"] = "root"
-    result["password"] = "the_password"
+    result["password"] = plugin.config["hetzner_root_password"]
     result["port"] = machine.metadata["ip"].split(".").last.to_i + 2200
   end
 

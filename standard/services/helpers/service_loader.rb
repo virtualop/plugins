@@ -14,7 +14,9 @@ module Vop
     end
 
     def new_service(name)
+      $logger.debug "new service in #{@plugin.name}: #{name}"
       @service = Service.new(@plugin, name)
+      $logger.debug "service plugin : #{@service.plugin.name}"
       @services << @service
       @service
     end

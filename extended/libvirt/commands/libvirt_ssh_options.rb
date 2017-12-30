@@ -1,6 +1,8 @@
+# TODO extract into xop-libvirt
+
 param! :machine
 
-contribute to: "ssh_options" do |machine, params|
+contribute to: "ssh_options" do |machine, params, plugin|
   result = {}
 
   # connect to new-style libvirt VMs through the parent host as ProxyJump host
@@ -16,8 +18,11 @@ contribute to: "ssh_options" do |machine, params|
      vm_ip = @op.vm_address("machine" => parent_name, "name" => vm_short_name)
      result["host_or_ip"] = vm_ip
 
-     result["user"] = "marvin"
-     result["password"] = "foobar123"
+     if plugin.config["ssh_user"].nil? || plugin.config["ssh_password"].nil?
+       raise "missing configuration - expected 'ssh_user' and 'ssh_password' in config for #{plugin.name}"
+     end
+     result["user"] = plugin.config["ssh_user"]
+     result["password"] = plugin.config["ssh_password"]
   end
 
   result

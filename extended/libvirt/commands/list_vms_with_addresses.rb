@@ -2,8 +2,10 @@ param! :machine
 
 run do |machine|
   machine.list_vms.map do |vm|
-    puts "vm : #{vm["name"]}"
-    vm["address"] = machine.vm_address("name" => vm["name"])
+    $logger.debug "vm : #{vm.pretty_inspect}"
+    if vm["state"] == "running"
+      vm["address"] = machine.vm_address("name" => vm["name"])
+    end
     vm
   end
 end

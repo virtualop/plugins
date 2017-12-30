@@ -2,6 +2,30 @@ module Vop
 
   module ServiceSyntax
 
+    def resolve_options_string(options)
+      if options.is_a? String
+        options = {
+          description: options
+        }
+      end
+      options
+    end
+
+    def param(name, options = {})
+      options = resolve_options_string(options)
+
+      @service.params << CommandParam.new(name, options)
+    end
+
+    def param!(name, options = {})
+      options = resolve_options_string(options)
+      options.merge! mandatory: true
+      param(name, options)
+    end
+
+
+
+
     def process_regex(regex)
       @service.data[:process_regex] ||= []
       @service.data[:process_regex] << regex

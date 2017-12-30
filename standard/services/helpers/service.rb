@@ -1,17 +1,19 @@
 module Vop
 
-  class Service
+  class Service < ThingWithParams
 
     attr_reader :plugin, :name
     attr_reader :data
     attr_accessor :install_blocks
 
     def initialize(plugin, name)
+      super()
+
       @plugin = plugin
       @name = name
       @data = {
         install: { }
-      }      
+      }
       @install_blocks = [ ]
     end
 

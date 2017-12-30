@@ -1,1 +1,4 @@
 depends_on [ :machines, :ssh ]
+
+config_param! "ssh_user"
+config_param! "ssh_password"

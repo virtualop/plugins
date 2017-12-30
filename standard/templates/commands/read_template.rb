@@ -1,5 +1,4 @@
 param! "template"
-param "bind"
 param "vars", default: {}
 
 run do |template, vars|

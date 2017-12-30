@@ -4,9 +4,9 @@ require "tempfile"
 param! :machine
 param! :service
 
+allows_extra
 
-
-run do |plugin, machine, service|
+run do |plugin, machine, service, params|
   processed = Hash.new { |h,k| h[k] = [] }
 
   description = service.data[:install]
@@ -51,13 +51,21 @@ run do |plugin, machine, service|
         unless File.exists? template_path
           raise "template not found at #{template_path}"
         end
+
         tmp = Tempfile.new("vop_service_install_template")
         begin
-          renderer = ERB.new(IO.read(template_path))
-          # TODO could use some bindings
-          tmp << renderer.result
+          # TODO could use more bindings?
+          vars = {
+            "service" => service,
+            "machine" => machine
+          }
+          @op.machines["localhost"].write_template(
+            template: template_path,
+            to: tmp.path,
+            bind: OpenStruct.new(vars).instance_eval { binding }
+          )
           tmp.flush
-          $logger.info "processed template written into #{tmp.path}"
+          $logger.info "template #{what[:template]} processed into #{what[:to]} (using local temp path #{tmp.path})"
           machine.scp_up("local_path" => tmp.path, "remote_path" => what[:to])
           processed[:template] << what
         ensure
@@ -69,17 +77,13 @@ run do |plugin, machine, service|
 
   if description.include?(:repo)
     description[:repo].each do |repo|
-      params = Hash[ repo.map { |k,v| [k.to_s, v] } ]
-      machine.add_apt_repo(params)
+      p = Hash[ repo.map { |k,v| [k.to_s, v] } ]
+      machine.add_apt_repo(p)
     end
   end
 
   if description.include?(:package)
     machine.install_package(description[:package])
-    # TODO test and remove
-    # description[:package].each do |package|
-    #   machine.sudo("command" => "apt-get install -y #{package}")
-    # end
   end
 
   if description.include?(:url)
@@ -96,7 +100,23 @@ run do |plugin, machine, service|
   raise "no service found named '#{service["name"]}'" unless svc
   svc.install_blocks.each_with_index do |install_block, idx|
     $logger.info "calling install block #{idx}"
-    install_block.call(machine)
+    block_param_names = install_block.parameters.map { |x| x.last }
+    payload = []
+    block_param_names.each do |block_param_name|
+      case block_param_name.to_s
+      when "machine"
+        payload << machine
+      when "params"
+        $logger.debug "params for payload for block #{idx} : #{params.pretty_inspect}"
+        payload << params
+      when "plugin"
+        payload << svc.plugin
+      else
+        raise "unknown block param #{block_param_name} in installation block #{idx} for service #{service["name"]}"
+      end
+    end
+
+    install_block.call(*payload)
   end
 
   machine.processes!

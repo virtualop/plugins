@@ -13,11 +13,11 @@ param "no_os_variant", default: false
 
 run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_address, no_os_variant|
   # record installation progress
-
-  $logger.info "starting to install VM '#{name}' on '#{machine.name}'"
   installation = Installation.find_or_create_by(host_name: machine.name, vm_name: name)
   installation.status = :started
   installation.save!
+
+  $logger.info "starting to install VM '#{name}' on '#{machine.name}'"
 
   begin
     image_dir = "/var/lib/libvirt/images"
@@ -84,7 +84,7 @@ run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_addres
     installation.status = :base_install
   rescue => e
     installation.status = :failed
-    logger.error("installation of vm #{name} on host #{machine.name} failed: #{e.message}\n#{e.backtrace.join("\n")}")
+    $logger.error("installation of vm #{name} on host #{machine.name} failed: #{e.message}\n#{e.backtrace.join("\n")}")
   ensure
     installation.save!
   end
@@ -93,7 +93,6 @@ run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_addres
 
   machine.list_vms!
   machine.processes!
-  #machine.vnc_ports!
 
   vm
 end
