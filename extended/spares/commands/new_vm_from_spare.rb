@@ -7,6 +7,7 @@ run do |machine, name, params|
 
   spares = machine.list_spares
   # TODO this should happen within a lock
+  # TODO also, we should only use spares that have been installed completely
   if spares.size > 0
     spare = spares.first
     spare_full_name = "#{spare}.#{machine.name}"

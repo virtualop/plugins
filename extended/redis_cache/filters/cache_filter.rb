@@ -60,9 +60,15 @@ run do |command, request, plugin|
         origin_class += "/#{fresh_result.first.class.to_s}"
       end
       for_cache = CacheWrapper.new(fresh_result, {"origin" => origin_class})
-      $logger.debug "caching for #{request.cache_key} (#{origin_class}) : #{for_cache.to_json}"
-      # TODO filter sensitive data
-      redis.set(request.cache_key, for_cache.to_json)
+      json = nil
+      begin
+        # TODO filter sensitive data
+        json = for_cache.to_json
+        $logger.debug "caching for #{request.cache_key} (#{origin_class}) : #{json}"
+        redis.set(request.cache_key, json)
+      rescue => detail
+        $logger.warn("could not cache #{request.cache_key} - response not serializable")
+      end
       result = fresh_result
     end
     raise ::Vop::InterruptChain.new(response)

@@ -6,4 +6,5 @@ depends_on :machines
 
 on :init do |plugin|
   plugin.state[:ssh_connections] = {}
+  plugin.state[:jump_connections] = {}
 end

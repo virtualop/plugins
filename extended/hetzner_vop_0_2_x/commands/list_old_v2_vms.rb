@@ -14,10 +14,11 @@ run do |machine|
       files.each do |file|
         full_name = File.join(dir_name, file["name"])
         yaml = machine.read_file("file" => full_name)
-        data = YAML.load(yaml)
+        data = ::YAML.load(yaml)
 
         hash = {
           "type" => "vm",
+          "source" => "list_old_v2_vms",
           "name" => "#{data["vm_name"]}.#{machine.id}",
         }
 

@@ -1,21 +1,22 @@
 param! :machine
 param! "template"
 param! "to"
-param "bind"
+param "bind", default: nil
 
 run do |machine, template, to, params, bind|
-
   tmp = Tempfile.new("vop_write_template")
   begin
-    renderer = ERB.new(IO.read(template))    
+    renderer = ERB.new(IO.read(template))
     tmp << renderer.result(bind)
     tmp.flush
     $logger.debug "processed template written into #{tmp.path}"
     begin
       machine.scp_up("local_path" => tmp.path, "remote_path" => to)
     rescue => detail
+      # TODO move this maneuver into something like write_file ?
       if detail.message =~ /Permission denied/
-        $logger.info "could not scp: #{detail.message}, gonna scp into /tmp and then sudo-mv"
+        $logger.info "could not scp as mortal user into #{to}, gonna scp into /tmp and then sudo-mv"
+        $logger.debug detail.message
         remote_tmp = Dir::Tmpname.make_tmpname(["/tmp/vop_template"], nil)
         begin
           machine.scp_up("local_path" => tmp.path, "remote_path" => remote_tmp)
@@ -25,6 +26,8 @@ run do |machine, template, to, params, bind|
             machine.ssh("rm #{remote_tmp}")
           end
         end
+      else
+        raise detail
       end
     end
 

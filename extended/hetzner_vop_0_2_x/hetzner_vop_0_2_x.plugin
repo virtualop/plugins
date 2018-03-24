@@ -1,1 +1,5 @@
 config_param! "hetzner_root_password"
+
+require "yaml"
+
+depends_on :machines

@@ -9,7 +9,7 @@ param "request_pty", default: false
 param "show_output", default: false
 
 run do |machine, params, show_output|
-  connection = machine.ssh_connection
+  connection = machine.get_ssh_connection
 
   $logger.debug "request_pty ? #{params["request_pty"]}"
 
@@ -18,7 +18,6 @@ run do |machine, params, show_output|
   combined = ""
   result_code = nil
   connection.open_channel do |channel|
-    # TODO we might need this for sudo commands - check
     if params.has_key?('request_pty') && params['request_pty'].to_s == "true"
       $logger.debug "requesting pty"
       channel.request_pty do |ch, success|
@@ -86,7 +85,7 @@ run do |machine, params, show_output|
     if lines.size > 1 || first_line.size > 50
       short_command += "[...]"
     end
-    $logger.info "ssh [#{params["machine"]}] #{short_command}, result : #{result_code}"
+    $logger.info "ssh [#{params["machine"]}] #{first_line}, result : #{result_code}"
     $logger.debug "full command : #{params["command"].lines.join("\n")}"
 
     {

@@ -11,6 +11,7 @@ run do |machine, params|
   lines = machine.sudo("ip addr #{dev_filter}").split("\n")
   lines.each do |line|
     line.chomp! and line.strip!
+    # TODO handle inet6
     next unless matched = /inet\s([\d\.]+)(?:\/(\d+))?/.match(line)
     result << {
       "address" => $1,

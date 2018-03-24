@@ -12,7 +12,7 @@ run do |machine, vm_name, new_name, params|
   new_file_name = (xml_file_name.split("/")[0..-2] << "#{new_name}.xml").join("/")
 
   machine.sudo "cp #{xml_file_name} #{new_file_name}"
-  machine.replace_in_file("file_name" => new_file_name, "source" => vm_name, "target" => new_name)
+  machine.replace_in_file("file_name" => new_file_name, "source" => vm_name, "target" => new_name, "sudo" => true)
 
   # move volume
   pools = machine.list_pools.map { |x| x["name"] }

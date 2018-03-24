@@ -9,13 +9,14 @@ param "iso_path", description: "path to the ISO image of an installation CD",
   default: "/data/libvirt/isos/ubuntu-16.04.3-server-amd64.rebuilt17.iso"
 param "vnc_listen_address", description: "address on which the VM should be accessible through VNC", default: "127.0.0.1"
 
-param "no_os_variant", default: false
+param "no_os_variant", default: true # On Ubuntu 17.10, there's no OS variant for ubuntu 17.10...
 
 run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_address, no_os_variant|
-  # record installation progress
-  installation = Installation.find_or_create_by(host_name: machine.name, vm_name: name)
-  installation.status = :started
-  installation.save!
+  @op.track_installation_status(
+    host_name: machine.name,
+    vm_name: name,
+    status: "provisioning"
+  )
 
   $logger.info "starting to install VM '#{name}' on '#{machine.name}'"
 
@@ -51,9 +52,6 @@ run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_addres
               " -v"
     machine.sudo(command)
 
-    # TODO remove (should be part of list_vms_for_scan)
-    machine.list_vms!
-
     scanned = machine.list_vms_for_scan
     @op.machines_found(scanned)
 
@@ -62,12 +60,19 @@ run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_addres
     vm = @op.machines[full_name]
     $logger.info "vm setup complete, testing SSH connect to #{vm.name}..."
     $logger.debug "ssh options : #{vm.ssh_options}"
+
+    # remove old host key
+    machine.vm_addresses!(name: name)
+    vm_address = machine.vm_address(name: name)
+    @op.clean_known_host(ip: vm_address)
+
     $logger.info "waiting 5"
     sleep 5
+
     success = 0
     max_tries = 25
     max_tries.downto(0) do |idx|
-      break if success >= 7
+      break if success >= 3
       $logger.info "waiting 2 [##{idx}]"
       sleep 2
       begin
@@ -81,15 +86,22 @@ run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_addres
         $logger.error "ssh connect failed : #{e.message}"
       end
     end
-    installation.status = :base_install
+
+    @op.track_installation_status(
+      host_name: machine.name,
+      vm_name: name,
+      status: "provisioned"
+    )
   rescue => e
-    installation.status = :failed
-    $logger.error("installation of vm #{name} on host #{machine.name} failed: #{e.message}\n#{e.backtrace.join("\n")}")
-  ensure
-    installation.save!
+    @op.track_installation_status(
+      host_name: machine.name,
+      vm_name: name,
+      status: "provisioning_failed"
+    )
+    $logger.error("provisiong of vm #{name} on host #{machine.name} failed: #{e.message}\n#{e.backtrace.join("\n")}")
   end
 
-  $logger.info "base install finished : #{installation.status}"
+  $logger.info "new machine #{name} provisioned on host #{machine.name}"
 
   machine.list_vms!
   machine.processes!

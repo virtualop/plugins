@@ -17,5 +17,8 @@ show columns: [ :full_string, :name, :version ]
 contribute to: "list_packages" do |machine|
   #ivtv-firmware-20080701-20.2.noarch
   #e2fsprogs-1.41.12-3.el6.x86_64
-  ssh_regex(machine, "rpm -qa", /^((.+?)-(\d+.+))$/, [:full_string, :name, :version])
+  ssh_regex(machine, "rpm -qa",
+    /^((.+?)-(\d+.+))$/,
+    [:full_string, :name, :version]
+  )
 end

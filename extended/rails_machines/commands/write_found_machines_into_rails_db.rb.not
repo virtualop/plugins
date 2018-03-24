@@ -1,15 +1,14 @@
-require "time"
-require "redis"
-
 param! "machines", multi: true
 
-run do |machines|
-  redis = Redis.new
+contribute to: "machines_found" do |machines|
   stats = Hash.new { |h,k| h[k] = 0 }
 
   machines.each do |machine_row|
     name = machine_row["name"]
 
+    if name.nil?
+      $logger.error "a machine has been found without a name : #{machine_row.pretty_inspect}"
+    end
     existing = Machine.find_by_name(name)
     if existing
       existing.seen_at = Time.now()
@@ -17,14 +16,15 @@ run do |machines|
       stats[:existing] += 1
       $logger.debug "updating #{name}"
     else
-      new_machine = Machine.create(name: name)
+      new_machine = Machine.create!(name: name)
       stats[:new] += 1
       $logger.debug "new #{name}"
     end
-
-    cache_key = "vop.machine.#{name}"
-    redis.set(cache_key, machine_row.to_json)
   end
+
+  # TODO maybe invalidate only if there are new machines?
+  @op.rails_machines!
+  @op.redis_machines!
 
   stats
 end

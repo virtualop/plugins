@@ -9,7 +9,6 @@ run do |machine, count|
     vm_name = "spare#{sprintf('%02d', idx)}"
 
     unless existing.include? vm_name
-      #NewVmWorker.perform_async(machine.name, vm_name)
       machine.new_vm_from_scratch("name" => vm_name)
       result << vm_name
     end

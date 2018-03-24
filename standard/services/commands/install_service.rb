@@ -35,6 +35,8 @@ run do |plugin, machine, service, params|
         unless File.exists? local_path
           raise "file not found at #{local_path}"
         end
+        # TODO this does not work if remote_path needs root permissions
+        # (and current user is marvin)
         machine.scp_up("local_path" => local_path, "remote_path" => what[:to])
         processed[:copy] << what
       end

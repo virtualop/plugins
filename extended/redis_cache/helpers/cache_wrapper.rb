@@ -11,11 +11,17 @@ module Vop
     end
 
     def to_json
-      JSON.generate({
-        "options" => options,
-        "data" => data,
-        "timestamp" => @timestamp.to_i
-      })
+      begin
+        JSON.generate({
+          "options" => options,
+          "data" => data,
+          "timestamp" => @timestamp.to_i
+        })
+      rescue => detail
+        $logger.warn("problem generating JSON : #{detail.message}")
+        $logger.debug("offending payload : #{data.pretty_inspect}")
+        raise detail
+      end
     end
 
     def self.from_json string

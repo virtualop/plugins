@@ -10,7 +10,7 @@ run do |machine, url, file|
 
   command = "curl --silent --location"
   command += " --create-dirs -o #{file}"
-  command += " #{url}"
+  command += " '#{url}'"
 
   $logger.debug "command: #{command}"
   machine.ssh(command)

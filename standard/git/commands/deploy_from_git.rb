@@ -4,9 +4,12 @@ param! "domain", multi: true, description: "the domain on which the project shou
 param "subfolder", description: "folder inside git checkout that should be published (as web root)"
 
 contribute to: "deploy" do |machine, git_url, domain, params, subfolder|
-  installation = Installation.find_or_create_by(host_name: machine.parent.name, vm_name: machine.name.split(".").first)
-  installation.status = :deploying
-  installation.save!
+  host_name = machine.parent.name
+  @op.track_installation_status(
+    host_name: host_name,
+    vm_name: machine.name.split(".").first,
+    status: "deploying"
+  )
 
   machine.install_service("service" => "apache.apache")
 
@@ -16,11 +19,16 @@ contribute to: "deploy" do |machine, git_url, domain, params, subfolder|
   end
   machine.add_static_vhost("server_name" => domain, "web_root" => web_root)
 
+  # TODO actually, this should maybe be machine.publish(machine.internal_ip => domain)
+  # (and the apache-specific add_reverse_proxy contributes to publish)
   machine.parent.reverse_proxy.add_reverse_proxy(
     "server_name" => domain,
     "target_url" => "http://#{machine.internal_ip}/"
   )
 
-  installation.status = :deployed
-  installation.save!
+  @op.track_installation_status(
+    host_name: host_name,
+    vm_name: machine.name.split(".").first,
+    status: "deployed"
+  )
 end

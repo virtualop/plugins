@@ -8,7 +8,7 @@ run do |params, plugin|
   $logger.debug "invalidating #{request.cache_key}"
 
   count = redis.del request.cache_key
-  $logger.info "removed #{count} key(s) from cache"
+  $logger.debug "removed #{count} key(s) from cache : #{request.cache_key}"
 
   count
 end

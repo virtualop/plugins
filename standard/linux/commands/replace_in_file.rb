@@ -7,10 +7,16 @@ param! "target", "the replacement string"
 param "sudo", default: false
 
 run do |machine, params, sudo|
-  sed_cmd = "sed -i -e 's/#{params["source"]}/#{params["target"]}/g' #{params["file_name"]}"
+  source = params["source"].gsub('/', '\/')
+  target = params["target"].gsub('/', '\/')
+  sed_cmd = "sed -i -e 's/#{source}/#{target}/g' #{params["file_name"]}"
   if sudo
     machine.sudo sed_cmd
   else
     machine.ssh sed_cmd
+  end
+  # TODO this hangs when sudo=true
+  unless sudo
+    machine.read_file! params["file_name"]
   end
 end

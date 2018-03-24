@@ -1,11 +1,14 @@
 param! :machine
 
-param "dist", default: "Ubuntu 17.04 minimal"
+param "dist", default: "Ubuntu 17.10 minimal"
 param "arch", default: 64
 
 param "lang", default: "en"
 
-run do |machine, dist, arch, params|
+param "ssh_key", description: "fingerprints of SSH keys that should be authorized to login",
+  multi: true, default: []
+
+run do |machine, dist, arch, lang, ssh_key|
   server_ip = machine.metadata["server_ip"]
   unless server_ip
     raise "no server IP found for #{machine.name}"
@@ -25,7 +28,8 @@ run do |machine, dist, arch, params|
   post_data = {
     dist: dist,
     arch: arch,
-    lang: "en"
+    lang: lang,
+    authorized_key: ssh_key
   }
   request.set_form_data(post_data)
 

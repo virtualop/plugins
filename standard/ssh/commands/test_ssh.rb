@@ -1,11 +1,19 @@
 require "timeout"
 
 param! "machine"
-param "seconds", :default => 10
+param "seconds", default: 10
 
 read_only
 
-KNOWN_MESSAGES = ["execution expired", "No route to host", "Connection refused", "closed stream", "getaddrinfo: Name or service not known", "Broken pipe"]
+KNOWN_MESSAGES = [
+  "execution expired",
+  "No route to host",
+  "Connection refused",
+  "closed stream",
+  "getaddrinfo: Name or service not known",
+  "Broken pipe",
+  "timed out while connecting to"
+]
 run do |params, seconds|
   result = nil
 
@@ -19,10 +27,9 @@ run do |params, seconds|
     matched = nil
     KNOWN_MESSAGES.each do |text|
       pattern = Regexp.new(text)
-      if detail.message =~ pattern
+      if matched = pattern.match(detail.message)
         $logger.debug "known error #{pattern}"
         result = false
-        matched = true
         break
       end
     end
