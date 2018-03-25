@@ -1,0 +1,11 @@
+[Unit]
+Description=<%= description %>
+
+[Service]
+<% unless user.nil? %>
+User=<%= user %>
+<% end %>
+ExecStart=<%= exec_start %>
+
+[Install]
+WantedBy=multi-user.target

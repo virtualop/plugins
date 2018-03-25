@@ -9,7 +9,7 @@ run do |hetzner_account|
   begin
     data = hetzner_account.hetzner_http("http_request" => request)
   rescue => e
-    $logger.warn("problem fetching hetzner server list: #{e.message}")
+    $logger.warn("problem listing SSH keys: #{e.message}")
   end
 
   data

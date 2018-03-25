@@ -1,8 +1,10 @@
 param! :machine
 
+read_only
+
 run do |machine|
   result = []
-  
+
   input = machine.ssh "systemctl list-unit-files --type=service"
   input.split("\n").each_with_index do |line, idx|
     # skip one header line

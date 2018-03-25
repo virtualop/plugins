@@ -16,7 +16,7 @@ run do |hetzner_account, params|
 
   response = http.request(request)
   unless response.is_a? Net::HTTPOK
-    raise "could not fetch server list from #{uri} : #{response.message} (#{response.code})"
+    raise "received HTTP code #{response.code} from #{uri} : #{response.message}"
   end
 
   json_response = response.body.strip
