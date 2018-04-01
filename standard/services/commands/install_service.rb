@@ -88,6 +88,12 @@ run do |plugin, machine, service, params|
     machine.install_package(description[:package])
   end
 
+  if description.include?(:gems)
+    description[:gems].each do |gem|
+      machine.sudo("gem install #{gem}")
+    end
+  end
+
   if description.include?(:url)
     description[:url].each do |url|
       file_name = url.split("?").first.split("/").last

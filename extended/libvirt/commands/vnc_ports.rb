@@ -2,10 +2,9 @@ param! :machine
 
 show columns: %w|vm vnc vnc_port command|
 
-# TODO would be nice
-# on :invalidate do |machine|
-#   machine.processes!
-# end
+invalidate do |machine|
+  machine.processes!
+end
 
 run do |machine, params|
   machine.processes.map do |process|

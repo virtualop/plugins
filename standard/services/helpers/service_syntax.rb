@@ -68,6 +68,17 @@ module Vop
         end
       end
 
+      if what.include? :gem
+        @service.data[:install][:gems] ||= []
+
+        gems = if what[:gem].is_a?(Array)
+          what[:gem]
+        else
+          [ what[:gem] ]
+        end
+        @service.data[:install][:gems] += gems
+      end
+
       if what.include? :repository
         @service.data[:install][:repo] ||= []
 

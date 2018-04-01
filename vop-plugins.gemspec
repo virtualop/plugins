@@ -3,7 +3,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "vop-plugins"
-  spec.version       = "0.3.4"
+  spec.version       = "0.3.5"
   spec.authors       = ["Philipp T."]
   spec.email         = ["philipp@virtualop.org"]
 

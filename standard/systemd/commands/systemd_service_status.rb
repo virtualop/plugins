@@ -1,5 +1,5 @@
 param! :machine
-param! "service", default_param: true
+param_service
 
 run do |machine, service|
   machine.ssh("systemctl status #{service}")
