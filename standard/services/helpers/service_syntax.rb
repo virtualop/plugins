@@ -31,6 +31,11 @@ module Vop
       @service.data[:process_regex] << regex
     end
 
+    def binary_name(name)
+      @service.data[:binary_name] ||= []
+      @service.data[:binary_name] << name
+    end
+
     def deploy(what = {}, &block)
       if block_given?
         @service.install_blocks << block

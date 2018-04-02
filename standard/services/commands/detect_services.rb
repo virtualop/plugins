@@ -15,6 +15,19 @@ run do |machine, plugin|
         end
       end
     end
+
+    if service.data.has_key? :binary_name
+      service.data[:binary_name].each do |name|
+        found = false
+        begin
+          found = machine.ssh("which #{name}")
+        rescue => e
+        end
+        if found
+          result << service.name
+        end
+      end
+    end
   end
 
   result
