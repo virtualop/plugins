@@ -36,7 +36,7 @@ run do |machine|
     result["processes"] = machine.processes!
     result["processes_top_mem"] = machine.processes_top_mem
 
-    result["services"] = machine.detect_services
+    result["services"] = machine.detect_services!
   end
   result
 end

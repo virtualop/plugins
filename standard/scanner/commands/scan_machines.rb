@@ -5,12 +5,7 @@ contribute to: "scan" do
   $logger.debug "scanned contributions: #{scanned.size}"
   stats = @op.machines_found(scanned)
 
-  if inspect
-    @op.machines.each do |machine|
-      machine.inspect_async
-      #InspectMachineWorker.perform_async(machine.name)
-    end
-  end
+  @op.machines.each &:inspect_async
 
   stats
 end
