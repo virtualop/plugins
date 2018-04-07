@@ -3,5 +3,14 @@ param! "url", default_param: true
 param "dir"
 
 run do |machine, url, dir|
-  machine.ssh("git clone #{url} #{dir}")
+  project_name = project_name_from_git_url(url)
+
+  if dir.nil?
+    dir = project_name
+  end
+  # TODO pull updates if the dir exists already?
+  unless machine.file_exists(dir)
+    machine.ssh("git clone #{url} #{dir}")
+  end
+  dir
 end

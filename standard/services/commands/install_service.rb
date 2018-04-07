@@ -94,6 +94,12 @@ run do |plugin, machine, service, params|
     end
   end
 
+  if description.include?(:github)
+    description[:github].each do |repo|
+      machine.deploy_from_github("github_project" => repo)
+    end
+  end
+
   if description.include?(:url)
     description[:url].each do |url|
       file_name = url.split("?").first.split("/").last

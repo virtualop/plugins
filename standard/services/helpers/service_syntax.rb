@@ -84,6 +84,17 @@ module Vop
         @service.data[:install][:gems] += gems
       end
 
+      if what.include? :github
+        @service.data[:install][:github] ||= []
+
+        repos = if what[:github].is_a?(Array)
+          what[:github]
+        else
+          [ what[:github] ]
+        end
+        @service.data[:install][:github] += repos
+      end
+
       if what.include? :repository
         @service.data[:install][:repo] ||= []
 

@@ -2,13 +2,7 @@ param! :machine
 param! "url", default_param: true
 
 run do |machine, url|
-  project_name = nil
-  if /\/([^\/]+)\.git$/.match(url)
-    project_name = $1
-  end
-  if project_name.nil?
-    raise "could not determine project_name from Git URL: unexpected format #{url}"
-  end
+  project_name = project_name_from_git_url(url)
 
   dir = "/var/www/#{project_name}"
   unless machine.file_exists(dir)

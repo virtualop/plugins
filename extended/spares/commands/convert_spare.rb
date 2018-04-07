@@ -5,10 +5,10 @@ param! "new_name", "name for the new machine"
 
 run do |machine, new_name|
   host = machine.parent
-
-  # TODO sanity check that this is called on a spare vm, not a host?
-  # TODO sanity check that the spare is in a usable state?
   host_name = machine.name
+
+  # TODO check that this is called on a spare vm, not a host?
+  # TODO check that the spare is in a usable state?
 
   @op.track_installation_status(
     host_name: host_name,
