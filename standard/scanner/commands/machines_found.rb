@@ -14,6 +14,7 @@ run do |machines, plugin|
   redis = plugin.state[:redis]
 
   MACHINE_LIST = "vop.machines"
+  # TODO can't empty here, clean somewhere else?
   #redis.ltrim(MACHINE_LIST, 1, 0) # empty
   known = redis.lrange(MACHINE_LIST, 0, -1)
 

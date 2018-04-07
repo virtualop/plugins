@@ -52,6 +52,7 @@ run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_addres
               " -v"
     machine.sudo(command)
 
+    # TODO extract everything below into its own command (e.g. in :machines?)
     scanned = machine.list_vms_for_scan
     @op.machines_found(scanned)
 
