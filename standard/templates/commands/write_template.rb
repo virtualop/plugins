@@ -17,7 +17,7 @@ run do |machine, template, to, params, bind|
       if detail.message =~ /Permission denied/
         $logger.info "could not scp as mortal user into #{to}, gonna scp into /tmp and then sudo-mv"
         $logger.debug detail.message
-        remote_tmp = Dir::Tmpname.make_tmpname(["/tmp/vop_template"], nil)
+        remote_tmp = "/tmp/vop_template_scp_sudo_mv_#{to.gsub("/", "_")}_#{Time.now.utc.to_i}"
         begin
           machine.scp_up("local_path" => tmp.path, "remote_path" => remote_tmp)
           machine.sudo("mv #{remote_tmp} #{to}")
