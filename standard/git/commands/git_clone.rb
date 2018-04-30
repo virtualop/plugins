@@ -8,9 +8,7 @@ run do |machine, url, dir|
   if dir.nil?
     dir = project_name
   end
-  # TODO pull updates if the dir exists already?
-  unless machine.file_exists(dir)
-    machine.ssh("git clone #{url} #{dir}")
-  end
+  machine.ssh("git clone #{url} #{dir}")
+
   dir
 end
