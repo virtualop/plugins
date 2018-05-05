@@ -46,6 +46,8 @@ run do |plugin, machine|
     machine.processes_top_mem
 
     result["services"] = machine.detect_services!
+
+    result["packages"] = machine.list_packages
   end
 
   redis = plugin.state[:redis]

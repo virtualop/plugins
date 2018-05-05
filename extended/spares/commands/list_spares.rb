@@ -1,9 +1,7 @@
 param! :machine
 
 run do |machine|
-  machine.list_vms.map do |vm|
-    vm["name"] =~ /^spare/ &&
-    vm["state"] == "running" &&
-    @op.test_ssh("machine" => "#{vm['name']}.#{machine.name}") ? vm["name"] : nil
-  end.compact
+  machine.list_vms.map { |vm| vm["name"] }.select do |vm_name|
+    vm_name =~ /^spare/
+  end
 end
