@@ -1,5 +1,8 @@
 [Unit]
 Description=<%= description %>
+<% unless after.nil? %>
+After=<%= after.join(" ") %>
+<% end %>
 
 [Service]
 <% unless user.nil? %>

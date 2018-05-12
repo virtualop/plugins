@@ -8,7 +8,10 @@ run do |machine, url, dir|
   if dir.nil?
     dir = project_name
   end
-  machine.ssh("git clone #{url} #{dir}")
+
+  unless machine.file_exists(dir)
+    machine.ssh("git clone #{url} #{dir}")
+  end
 
   dir
 end

@@ -1,4 +1,4 @@
-param! "machine"
+param! :machine
 
 show :display_type => :hash
 

@@ -48,6 +48,9 @@ run do |plugin, machine|
     result["services"] = machine.detect_services!
 
     result["packages"] = machine.list_packages
+    if result["services"].include? "apache.apache"
+      result["vhosts"] = machine.vhosts!
+    end
   end
 
   redis = plugin.state[:redis]
