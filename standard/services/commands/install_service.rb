@@ -2,7 +2,7 @@ require "erb"
 require "tempfile"
 
 param! :machine
-param! :service
+param! :service, default_param: true
 
 allows_extra
 
