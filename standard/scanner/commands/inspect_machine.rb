@@ -47,9 +47,11 @@ run do |plugin, machine|
 
     result["services"] = machine.detect_services!
 
-    result["packages"] = machine.list_packages
-    if result["services"].include? "apache.apache"
-      result["vhosts"] = machine.vhosts!
+    # TODO packages contain non-serializable characters (like processes above)
+    #result["packages"] =
+    machine.list_packages
+    if machine.detect_services!.include? "apache.apache"
+      machine.vhosts!
     end
   end
 

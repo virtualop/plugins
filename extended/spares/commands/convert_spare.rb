@@ -3,7 +3,11 @@ description "converts a pre-installed spare machine into a usable installation"
 param! :machine, "the spare to convert"
 param! "new_name", "name for the new machine"
 
-run do |machine, new_name|
+param "memory", description: "in MB", default: 512
+# param "cpu_count", default: 1
+# param "disk_size", description: "in GB", default: 25
+
+run do |machine, new_name, memory|
   host = machine.parent
   host_name = machine.name
 
@@ -42,7 +46,8 @@ run do |machine, new_name|
     scanned = host.list_vms_for_scan
     @op.machines_found(scanned)
 
-    # TODO adjust memory, CPU and disk (see 0.2.x)
+    # TODO adjust CPU and disk (see 0.2.x)
+    host.set_maxmem("name" => new_name, "value" => memory)
 
     # start converted VM
     host.start_vm("name" => new_name)
@@ -54,6 +59,8 @@ run do |machine, new_name|
 
       vm["state"] == "running"
     end)
+
+    host.set_mem("name" => new_name, "value" => memory)
 
     full_name = "#{new_name}.#{host.name}"
 
