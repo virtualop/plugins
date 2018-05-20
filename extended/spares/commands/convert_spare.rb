@@ -32,12 +32,12 @@ run do |machine, new_name, memory|
       $logger.info "caught exception during VM shutdown, probably normal"
     end
 
-    @op.wait("timeout" => 120, "block" => lambda do
+    @op.wait(timeout: 120) do
       vm = host.list_vms!.select { |x| x["name"] == vm_name }.first
       raise "vm #{vm_name} not found on #{host.name}" if vm.nil?
 
       vm["state"] == "shut off"
-    end)
+    end
 
     # libvirt rename
     host.rename_vm("vm_name" => vm_name, "new_name" => new_name)
@@ -52,27 +52,25 @@ run do |machine, new_name, memory|
     # start converted VM
     host.start_vm("name" => new_name)
 
-    @op.wait("timeout" => 120, "block" => lambda do
+    @op.wait(timeout: 120) do
       new_vm_list = @op.list_vms!("machine" => host.name)
       vm = new_vm_list.select { |x| x["name"] == new_name }.first
       raise "vm #{new_name} not found on #{host.name}" if vm.nil?
 
       vm["state"] == "running"
-    end)
+    end
 
     host.set_mem("name" => new_name, "value" => memory)
 
     full_name = "#{new_name}.#{host.name}"
 
     # wait until vm_addresses returns a meaningful result
-    @op.wait(
-      "timeout" => 30,
-      "block" => lambda do
-        addresses = host.vm_addresses!("name" => new_name)
-        $logger.debug "addresses : #{addresses.pretty_inspect}"
-        ! addresses.nil? && ! addresses.empty?
-      end
-    )
+    @op.wait(timeout: 30) do
+      addresses = host.vm_addresses!("name" => new_name)
+      $logger.debug "addresses : #{addresses.pretty_inspect}"
+
+      ! addresses.nil? && ! addresses.empty?
+    end
 
     @op.ssh_options!("machine" => full_name)
 
