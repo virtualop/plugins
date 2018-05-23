@@ -47,7 +47,7 @@ run do |machine, new_name, memory|
     @op.machines_found(scanned)
 
     # TODO adjust CPU and disk (see 0.2.x)
-    host.set_maxmem("name" => new_name, "value" => memory)
+    host.set_maxmem("name" => new_name, "value" => memory) unless memory.nil?
 
     # start converted VM
     host.start_vm("name" => new_name)
@@ -60,7 +60,7 @@ run do |machine, new_name, memory|
       vm["state"] == "running"
     end
 
-    host.set_mem("name" => new_name, "value" => memory)
+    host.set_mem("name" => new_name, "value" => memory) unless memory.nil?
 
     full_name = "#{new_name}.#{host.name}"
 
