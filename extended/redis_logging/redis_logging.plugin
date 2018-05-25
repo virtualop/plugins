@@ -1,0 +1,43 @@
+require "redis"
+
+on :init do |plugin|
+  plugin.state[:redis] = Redis.new
+end
+
+on :before_execute do |plugin, payload|
+  request = payload[:request]
+
+  call_stack = Thread.current["call_stack"] || []
+  call_stack << request.command.short_name
+  Thread.current["call_stack"] = call_stack
+end
+
+on :after_execute do |plugin, payload|
+  request = payload[:request]
+  response = payload[:response]
+
+  call_stack = Thread.current["call_stack"]
+  unless call_stack.nil?
+    call_stack.pop
+
+    if call_stack.size >= 0
+      is_core = request.command.plugin.options[:core]
+      unless is_core
+        puts "*** executed #{request.command.name} #{response.status} #{is_core ? "[core]" : ""} +++"
+        redis = plugin.state[:redis]
+        redis.publish("vop_log", {
+          command: request.command.name,
+          status: response.status,
+          level: call_stack.size,
+          preview: response.result.to_s[0..50]
+        })
+      end
+    end
+
+    if call_stack.size == 0
+      Thread.current["call_stack"] = nil
+    else
+      Thread.current["call_stack"] = call_stack
+    end
+  end
+end
