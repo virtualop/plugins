@@ -16,6 +16,7 @@ run do |machine, working_copy|
         else
           $1
         end,
+      "raw" => $1,
       "path" => $2
     }
   end
