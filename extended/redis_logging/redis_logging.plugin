@@ -11,6 +11,14 @@ on :before_execute do |plugin, payload|
   call_stack = Thread.current["call_stack"] || []
   call_stack << request.command.short_name
   Thread.current["call_stack"] = call_stack
+
+  redis = plugin.state[:redis]
+  redis.publish("vop_log", {
+    state: "before",
+    command: request.command.name,
+    params: request.param_values,
+    level: call_stack.size
+  }.to_json())
 end
 
 on :after_execute do |plugin, payload|
@@ -24,9 +32,10 @@ on :after_execute do |plugin, payload|
     if call_stack.size >= 0
       is_core = request.command.plugin.options[:core]
       unless is_core
-        puts "*** executed #{request.command.name} #{response.status} #{is_core ? "[core]" : ""} +++"
+        #puts "*** executed #{request.command.name} #{response.status} #{is_core ? "[core]" : ""} +++"
         redis = plugin.state[:redis]
         redis.publish("vop_log", {
+          state: "after",
           command: request.command.name,
           params: request.param_values,
           status: response.status,
