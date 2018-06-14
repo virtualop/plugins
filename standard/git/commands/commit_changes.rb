@@ -1,11 +1,20 @@
-description "commits changes in all tracked files"
+description "commits changes in a working copy"
 
 param! :machine
 param! "working_copy"
 param! "comment", "description of the changes"
 
-run do |machine, working_copy, comment|
-  machine.ssh "cd #{working_copy} && git commit -a -m '#{comment}'"
+param "file", multi: true, description: "can be used to specify which files to commit. defaults to all changes"
+
+run do |params, machine, working_copy, comment, file|
+  git_command = "git commit -m '#{comment}'"
+  git_command += " " + if file.nil?
+    "-a"
+  else
+    file.join(" ")
+  end
+
+  machine.ssh "cd #{working_copy} && #{git_command}"
 
   machine.git_status! working_copy: working_copy
 end
