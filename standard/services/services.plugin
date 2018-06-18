@@ -2,6 +2,7 @@ depends_on :machines
 
 on :init do |plugin|
   plugin.state[:services] = []
+  plugin.state[:redis] = Redis.new
 end
 
 hook :loading_finished do

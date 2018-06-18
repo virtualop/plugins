@@ -133,8 +133,15 @@ run do |plugin, machine, service, params|
     install_block.call(*payload)
   end
 
+
   machine.processes!
   machine.detect_services!
+
+  redis = plugin.state[:redis]
+  redis.publish("installation_status", {
+    "machine" => machine.name,
+    "service" => service["name"]
+  }.to_json())
 
   processed
 end
