@@ -5,5 +5,5 @@ run do |machine, working_copy|
   # TODO handle branches
   machine.ssh "cd #{working_copy} && git pull origin master"
 
-  # TODO invalidate current_revision
+  machine.current_revision!("working_copy" => working_copy)
 end

@@ -8,8 +8,8 @@ run do |machine, working_copy, count|
   input.lines.map do |line|
     revision, *title = line.split
     {
-      revision: revision,
-      title: title.join(" ")
+      "revision" => revision,
+      "title" => title.join(" ")
     }
   end
 end
