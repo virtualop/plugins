@@ -16,5 +16,6 @@ run do |params, machine, working_copy, comment, file|
 
   machine.ssh "cd #{working_copy} && #{git_command}"
 
+  machine.current_revision! working_copy: working_copy
   machine.git_status! working_copy: working_copy
 end
