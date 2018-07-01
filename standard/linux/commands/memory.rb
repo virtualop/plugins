@@ -1,3 +1,4 @@
+
 param! :machine
 
 param "unit", description: "display unit (see man free)", default: "m"
@@ -26,6 +27,8 @@ run do |machine, unit|
           "shared" => shared,
           "buffer" => buffer
         }
+        full = (used.to_i / (total.to_i / 100)).round(2)
+        row["full"] = full
 
         known = %w|Mem Swap|
         if known.include? matched.captures[0]
