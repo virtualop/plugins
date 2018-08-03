@@ -15,7 +15,7 @@ run do |hetzner_account, params|
   $logger.info "authenticating with user #{hetzner_account["username"]}"
 
   response = http.request(request)
-  unless response.is_a? Net::HTTPOK
+  unless response.is_a?(Net::HTTPOK) || response.code == 201
     raise "received HTTP code #{response.code} from #{uri} : #{response.message}"
   end
 
