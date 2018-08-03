@@ -110,6 +110,12 @@ run do |plugin, machine, service, params|
     end
   end
 
+  if description.include?(:service)
+    description[:service].each do |service|
+      machine.install_service(service: service)
+    end
+  end
+
   svc = plugin.state[:services].select { |x| x.name == service["name"] }.first
   raise "no service found named '#{service["name"]}'" unless svc
   svc.install_blocks.each_with_index do |install_block, idx|
@@ -132,7 +138,6 @@ run do |plugin, machine, service, params|
 
     install_block.call(*payload)
   end
-
 
   machine.processes!
   machine.detect_services!

@@ -110,6 +110,10 @@ module Vop
         @service.data[:install][:url] << what[:url]
       end
 
+      if what.include? :service
+        (@service.data[:install][:service] ||= []) << what[:service]
+      end
+
     end
 
     def known_binaries(list)
