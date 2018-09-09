@@ -38,31 +38,35 @@ on :after_execute do |plugin, payload|
   request = payload[:request]
   response = payload[:response]
 
-  call_stack = Thread.current["call_stack"]
-  unless call_stack.nil?
-    record = call_stack.pop
+  begin
+    call_stack = Thread.current["call_stack"]
+    unless call_stack.nil?
+      record = call_stack.pop
 
-    if call_stack.size >= 0
-      is_core = request.command.plugin.options[:core]
-      unless is_core
-        #puts "*** executed #{request.command.name} #{response.status} #{is_core ? "[core]" : ""} +++"
-        redis = plugin.state[:redis]
-        redis.publish("vop_log", {
-          id: record[:id],
-          state: "after",
-          command: request.command.name,
-          params: request.param_values,
-          status: response.status,
-          level: call_stack.size,
-          preview: response.result.to_s[0..50]
-        }.to_json())
+      if call_stack.size >= 0
+        is_core = request.command.plugin.options[:core]
+        unless is_core
+          #puts "*** executed #{request.command.name} #{response.status} #{is_core ? "[core]" : ""} +++"
+          redis = plugin.state[:redis]
+          redis.publish("vop_log", {
+            id: record[:id],
+            state: "after",
+            command: request.command.name,
+            params: request.param_values,
+            status: response.status,
+            level: call_stack.size,
+            preview: response.result.to_s[0..50]
+          }.to_json())
+        end
+      end
+
+      if call_stack.size == 0
+        Thread.current["call_stack"] = nil
+      else
+        Thread.current["call_stack"] = call_stack
       end
     end
-
-    if call_stack.size == 0
-      Thread.current["call_stack"] = nil
-    else
-      Thread.current["call_stack"] = call_stack
-    end
+  rescue => e
+    $logger.error "Problem while logging : #{e.message}"
   end
 end
