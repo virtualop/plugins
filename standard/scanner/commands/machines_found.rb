@@ -13,10 +13,9 @@ run do |machines, plugin|
 
   redis = plugin.state[:redis]
 
-  MACHINE_LIST = "vop.machines"
   # TODO can't empty here, clean somewhere else?
   #redis.ltrim(MACHINE_LIST, 1, 0) # empty
-  known = redis.lrange(MACHINE_LIST, 0, -1)
+  known = redis.lrange(machine_list_key(), 0, -1)
 
   begin
     machines.each do |machine_row|
@@ -25,7 +24,7 @@ run do |machines, plugin|
       redis.set(cache_key, machine_row.to_json)
 
       unless known.include? machine_name
-        redis.rpush(MACHINE_LIST, machine_name)
+        redis.rpush(machine_list_key(), machine_name)
       end
     end
   ensure
