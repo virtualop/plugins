@@ -1,6 +1,6 @@
 description "adds a public key to the SSH directory of a user on a machine so that it is authorized to login"
 
-param :machine
+param! :machine
 param! "public_key", description: "the public key that should be added", :default_param => true
 
 run do |machine, public_key|
