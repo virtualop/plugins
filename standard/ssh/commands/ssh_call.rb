@@ -2,11 +2,12 @@ param! :machine
 
 param! "command", default_param: true
 
-param "on_data", default: nil
-param "on_stderr", default: nil
+param "show_output", default: false
 param "request_pty", default: false
 
-param "show_output", default: false
+param "on_data", default: nil
+param "on_stderr", default: nil
+param "dont_loop", default: false, description: "if set to true, the command will return after spawning the process without waiting for it to terminate."
 
 run do |machine, params, show_output|
   connection = machine.get_ssh_connection
@@ -68,7 +69,7 @@ run do |machine, params, show_output|
     end
   end
 
-  if params.has_key?('dont_loop') and params['dont_loop'] == "true"
+  if params.has_key?('dont_loop') and params['dont_loop']
     $logger.debug "not waiting for process to finish"
     {
       "combined" => combined,

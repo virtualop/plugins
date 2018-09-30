@@ -4,7 +4,6 @@ param! "machine"
 param! "command", :default_param => true
 
 param "request_pty", :default => false
-
 param "show_output", default: false
 
 run do |params|
