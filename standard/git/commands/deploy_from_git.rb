@@ -4,10 +4,7 @@ param "domain", multi: true, description: "the domain on which the project shoul
 param "subfolder", description: "folder inside git checkout that should be published (as web root)"
 
 contribute to: "deploy" do |machine, git_url, params, subfolder|
-  host_name = machine.parent.name
-  @op.track_installation_status(
-    host_name: host_name,
-    vm_name: machine.name.split(".").first,
+  machine.track_machine_installation_status(
     status: "deploying"
   )
 
@@ -31,9 +28,7 @@ contribute to: "deploy" do |machine, git_url, params, subfolder|
     machine.git_clone(git_url)
   end
 
-  @op.track_installation_status(
-    host_name: host_name,
-    vm_name: machine.name.split(".").first,
+  machine.track_machine_installation_status(
     status: "deployed"
   )
 end

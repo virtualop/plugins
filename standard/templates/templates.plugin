@@ -1,3 +1,5 @@
 require "erb"
 require "tempfile"
 require "tmpdir"
+
+depends_on :machines
