@@ -27,6 +27,8 @@ on :before_execute do |plugin, payload|
     redis.publish("vop_log", {
       id: command_id,
       state: "before",
+      phase: "before",
+      origin: request.origin,
       command: request.command.name,
       params: request.param_values,
       level: call_stack.size
@@ -51,6 +53,8 @@ on :after_execute do |plugin, payload|
           log_data = {
             id: record[:id],
             state: "after",
+            phase: "after",
+            origin: request.origin,
             command: request.command.name,
             params: request.param_values,
             level: call_stack.size,
