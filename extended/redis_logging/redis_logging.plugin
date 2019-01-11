@@ -48,15 +48,18 @@ on :after_execute do |plugin, payload|
         unless is_core
           #puts "*** executed #{request.command.name} #{response.status} #{is_core ? "[core]" : ""} +++"
           redis = plugin.state[:redis]
-          redis.publish("vop_log", {
+          log_data = {
             id: record[:id],
             state: "after",
             command: request.command.name,
             params: request.param_values,
-            status: response.status,
             level: call_stack.size,
             preview: response.result.to_s[0..50]
-          }.to_json())
+          }
+          if response
+            log_data[:status] = response.status
+          end
+          redis.publish("vop_log", log_data.to_json())
         end
       end
 

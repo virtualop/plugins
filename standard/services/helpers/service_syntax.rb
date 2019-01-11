@@ -25,15 +25,14 @@ module Vop
 
 
 
-
     def process_regex(regex)
       @service.data[:process_regex] ||= []
-      @service.data[:process_regex] << regex
+      @service.data[:process_regex] += (regex.is_a?(Array) ? regex : [ regex ])
     end
 
     def binary_name(name)
       @service.data[:binary_name] ||= []
-      @service.data[:binary_name] << name
+      @service.data[:binary_name] += (name.is_a?(Array) ? name : [ name ])
     end
 
     def deploy(what = {}, &block)

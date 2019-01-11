@@ -9,6 +9,8 @@ allows_extra
 run do |plugin, machine, service, params|
   processed = Hash.new { |h,k| h[k] = [] }
 
+  @op.verify_mandatory_params(params)
+
   description = service.data[:install]
   if description.include?(:files)
     if description[:files].include?(:create)
@@ -120,23 +122,12 @@ run do |plugin, machine, service, params|
   raise "no service found named '#{service["name"]}'" unless svc
   svc.install_blocks.each_with_index do |install_block, idx|
     $logger.info "calling install block #{idx}"
-    block_param_names = install_block.parameters.map { |x| x.last }
-    payload = []
-    block_param_names.each do |block_param_name|
-      case block_param_name.to_s
-      when "machine"
-        payload << machine
-      when "params"
-        $logger.debug "params for payload for block #{idx} : #{params.pretty_inspect}"
-        payload << params
-      when "plugin"
-        payload << svc.plugin
-      else
-        raise "unknown block param #{block_param_name} in installation block #{idx} for service #{service["name"]}"
-      end
-    end
 
-    install_block.call(*payload)
+    new_params = params.merge({
+      service: service["name"],
+      install_block: install_block
+    })
+    machine.run_install_block(new_params)
   end
 
   machine.processes!

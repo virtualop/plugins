@@ -30,5 +30,5 @@ run do |machine, plugin|
     end
   end
 
-  result
+  result.uniq.sort
 end

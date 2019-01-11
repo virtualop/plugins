@@ -2,6 +2,7 @@ param! :machine
 param! "git_url", description: "URL to the github repository to deploy"
 param "domain", multi: true, description: "the domain on which the project should be deployed"
 param "subfolder", description: "folder inside git checkout that should be published (as web root)"
+param "dir"
 
 contribute to: "deploy" do |machine, git_url, params, subfolder|
   machine.track_machine_installation_status(
@@ -25,7 +26,7 @@ contribute to: "deploy" do |machine, git_url, params, subfolder|
       "target_url" => "http://#{machine.internal_ip}/"
     )
   else
-    machine.git_clone(git_url)
+    machine.git_clone("url" => git_url, "dir" => params["dir"])
   end
 
   machine.track_machine_installation_status(
