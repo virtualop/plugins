@@ -15,10 +15,12 @@ run do |command, request, plugin|
       cached = cache_wrapper.data
       origin_class = cache_wrapper.options["origin"]
       (main, child) = origin_class.split("/")
-      if main == "Array" && child == "Vop::Entity"
-        cached.map! do |entity_data|
-          Entity.json_create(plugin.op, entity_data)
+      if child == "Vop::Entity"
+      #if (main == "Array" || main == "Vop::Entities") && child == "Vop::Entity"
+        inflated = cached.map do |entity_data|
+          Entity.from_json(plugin.op, entity_data)
         end
+        cached = ::Vop::Entities.new(inflated)
       end
     else
       cache_state = "miss"
@@ -53,13 +55,22 @@ run do |command, request, plugin|
     else
       response = request.next_filter.execute(request)
       fresh_result = response.result
-      context = response.context
 
+      # keep track of the data structure
       origin_class = fresh_result.class.to_s
       if fresh_result.is_a?(Array)
         origin_class += "/#{fresh_result.first.class.to_s}"
       end
-      for_cache = CacheWrapper.new(fresh_result, {"origin" => origin_class})
+
+      # prepare the data to cache
+      cache_data = fresh_result
+      if fresh_result.is_a?(::Vop::Entities)
+        cache_data = fresh_result.map do |entity|
+          entity.to_json()
+        end
+      end
+      for_cache = CacheWrapper.new(cache_data, {"origin" => origin_class})
+
       json = nil
       begin
         # TODO filter sensitive data
