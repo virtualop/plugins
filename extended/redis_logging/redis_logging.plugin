@@ -58,10 +58,10 @@ on :after_execute do |plugin, payload|
             command: request.command.name,
             params: request.param_values,
             level: call_stack.size,
-            preview: response.result.to_s[0..50]
           }
           if response
             log_data[:status] = response.status
+            log_data[:preview] = response.result.to_s[0..50]
           end
           redis.publish("vop_log", log_data.to_json())
         end

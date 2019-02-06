@@ -29,6 +29,7 @@ run do |machines, plugin|
     end
   ensure
     @op.redis_machines!
+    @op.machines!
   end
 
   {}

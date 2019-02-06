@@ -26,13 +26,12 @@ run do |plugin, machine|
   end
 
   now = Time.now.utc.to_i
+  result["scan_from"] = now
 
   machine.update_metadata new_data: {
     "ssh_status" => result["ssh_status"],
     "ssh_status_from" => now
   }
-
-  result["scan_from"] = now
 
   if result["ssh_status"]
     begin

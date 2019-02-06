@@ -11,7 +11,8 @@ run do |plugin, machine, service, params|
 
   @op.verify_mandatory_params(params)
 
-  description = service.data[:install]
+  $logger.debug "install data : #{service.data["install"]}"
+  description = service.data["install"]
   if description.include?(:files)
     if description[:files].include?(:create)
       creates = description[:files][:create]
