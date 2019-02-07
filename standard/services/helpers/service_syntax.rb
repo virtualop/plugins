@@ -41,76 +41,79 @@ module Vop
       end
 
       if what.include? :create
-        files = @service.data[:install][:files] ||= {}
-        files[:create] ||= []
-        files[:create] << what[:create]
+        files = @service.data["install"]["files"] ||= {}
+        files["create"] ||= []
+        files["create"] << what[:create]
       end
 
       if what.include? :files
         raise "deploy (:files) needs a 'to' option" unless what.include?(:to)
-        files = @service.data[:install][:files] ||= {}
-        files[:copy] ||= []
-        files[:copy] << {
-          from: what[:files],
-          to: what[:to]
+        files = @service.data["install"]["files"] ||= {}
+        files["copy"] ||= []
+        files["copy"] << {
+          "from" => what[:files],
+          "to" => what[:to]
         }
       end
 
       if what.include? :template
         raise "deploy (:template) needs a 'to' option" unless what.include?(:to)
-        files = @service.data[:install][:files] ||= {}
-        (files[:template] ||= []) << what
+        files = @service.data["install"]["files"] ||= {}
+        (files["template"] ||= []) << {
+            "template" => what[:template],
+            "to" => what[:to]
+          }
       end
 
       if what.include? :package
-        @service.data[:install][:package] ||= []
+        @service.data["install"]["package"] ||= []
 
         if what[:package].is_a?(Array)
-            @service.data[:install][:package] += what[:package]
+            @service.data["install"]["package"] += what[:package]
         else
-          @service.data[:install][:package] << what[:package]
+          @service.data["install"]["package"] << what[:package]
         end
       end
 
       if what.include? :gem
-        @service.data[:install][:gems] ||= []
+        @service.data["install"]["gems"] ||= []
 
         gems = if what[:gem].is_a?(Array)
           what[:gem]
         else
           [ what[:gem] ]
         end
-        @service.data[:install][:gems] += gems
+        @service.data["install"]["gems"] += gems
       end
 
       if what.include? :github
-        @service.data[:install][:github] ||= []
+        @service.data["install"]["github"] ||= []
 
         repos = if what[:github].is_a?(Array)
           what[:github]
         else
           [ what[:github] ]
         end
-        @service.data[:install][:github] += repos
+        @service.data["install"]["github"] += repos
       end
 
       if what.include? :repository
-        @service.data[:install][:repo] ||= []
+        @service.data["install"]["repo"] ||= []
 
         if what[:repository].is_a?(Array)
-            @service.data[:install][:repo] += what[:repository]
+            @service.data["install"]["repo"] += what[:repository]
         else
-          @service.data[:install][:repo] << what[:repository]
+          @service.data["install"]["repo"] << what[:repository]
         end
       end
 
       if what.include? :url
-        @service.data[:install][:url] ||= []
-        @service.data[:install][:url] << what[:url]
+        @service.data["install"]["url"] ||= []
+        @service.data["install"]["url"] << what[:url]
       end
 
       if what.include? :service
-        (@service.data[:install][:service] ||= []) << what[:service]
+        (@service.data["install"]["service"] ||= []) << what[:service]
       end
 
     end

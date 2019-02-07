@@ -46,7 +46,7 @@ run do |machine, new_name, memory|
     scanned = host.list_vms_for_scan
     @op.machines_found(scanned)
 
-    # TODO adjust CPU and disk (see 0.2.x)
+    # TODO adjust CPU and disk
     host.set_maxmem("name" => new_name, "value" => memory) unless memory.nil?
 
     # start converted VM

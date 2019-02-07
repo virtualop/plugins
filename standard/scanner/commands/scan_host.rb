@@ -10,6 +10,6 @@ run do |machine|
   @op.machines_found(found)
 
   found.each do |vm|
-    @op.inspect_async vm["name"]
+    @op.inspect_async(machine: vm["name"])
   end
 end

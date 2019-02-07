@@ -8,8 +8,8 @@ run do |machine, service, install_block, params, plugin|
   $logger.debug "run install block for #{service.name}@#{machine.name}"
   svc = plugin.state[:services].select { |x| x.name == service["name"] }.first
 
-  # add in default values for service params
-  service["params"].each do |p|
+  # add in default values for service params  
+  svc.params.each do |p|
     param_name = p.name
     unless params.has_key? param_name
       if p.options.has_key? :default

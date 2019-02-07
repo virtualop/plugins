@@ -12,7 +12,8 @@ module Vop
       @plugin = plugin
       @name = name
       @data = {
-        install: { }
+        install: { },
+        "install" => {}
       }
       @install_blocks = [ ]
     end

@@ -11,11 +11,10 @@ run do |plugin, machine, service, params|
 
   @op.verify_mandatory_params(params)
 
-  $logger.debug "install data : #{service.data["install"]}"
   description = service.data["install"]
-  if description.include?(:files)
-    if description[:files].include?(:create)
-      creates = description[:files][:create]
+  if description.include?("files")
+    if description["files"].include?("create")
+      creates = description["files"]["create"]
       creates.each do |what|
         if what.include? :in
           machine.mkdirs(what[:in])
@@ -27,32 +26,32 @@ run do |plugin, machine, service, params|
       end
     end
 
-    if description[:files].include?(:copy)
-      copies = description[:files][:copy]
+    if description["files"].include?("copy")
+      copies = description["files"]["copy"]
       copies.each do |what|
-        unless what.include?(:from) && what.include?(:to)
-          raise "copy needs to include :from and :to"
+        unless what.include?("from") && what.include?("to")
+          raise "copy needs to include 'from' and 'to'"
         end
 
-        local_path = File.join(service.plugin.plugin_dir(:files), what[:from])
+        local_path = File.join(service.plugin.plugin_dir(:files), what["from"])
         unless File.exists? local_path
           raise "file not found at #{local_path}"
         end
         # TODO this does not work if remote_path needs root permissions
         # (and current user is marvin)
-        machine.scp_up("local_path" => local_path, "remote_path" => what[:to])
+        machine.scp_up("local_path" => local_path, "remote_path" => what["to"])
         processed[:copy] << what
       end
     end
 
-    if description[:files].include?(:template)
-      templates = description[:files][:template]
+    if description["files"].include?("template")
+      templates = description["files"]["template"]
       templates.each do |what|
-        unless what.include?(:template) && what.include?(:to)
-          raise "template needs to include :template and :to"
+        unless what.include?("template") && what.include?("to")
+          raise "template needs to include 'template' and 'to'"
         end
 
-        template_path = File.join(service.plugin.plugin_dir(:templates), what[:template])
+        template_path = File.join(service.plugin.plugin_dir(:templates), what["template"])
         unless File.exists? template_path
           raise "template not found at #{template_path}"
         end
@@ -70,8 +69,8 @@ run do |plugin, machine, service, params|
             bind: OpenStruct.new(vars).instance_eval { binding }
           )
           tmp.flush
-          $logger.info "template #{what[:template]} processed into #{what[:to]} (using local temp path #{tmp.path})"
-          machine.scp_up("local_path" => tmp.path, "remote_path" => what[:to])
+          $logger.info "template #{what["template"]} processed into #{what["to"]} (using local temp path #{tmp.path})"
+          machine.scp_up("local_path" => tmp.path, "remote_path" => what["to"])
           processed[:template] << what
         ensure
           tmp.close
@@ -80,31 +79,31 @@ run do |plugin, machine, service, params|
     end
   end
 
-  if description.include?(:repo)
-    description[:repo].each do |repo|
+  if description.include?("repo")
+    description["repo"].each do |repo|
       p = Hash[ repo.map { |k,v| [k.to_s, v] } ]
       machine.add_apt_repo(p)
     end
   end
 
-  if description.include?(:package)
-    machine.install_package(description[:package])
+  if description.include?("package")
+    machine.install_package(description["package"])
   end
 
-  if description.include?(:gems)
-    description[:gems].each do |gem|
+  if description.include?("gems")
+    description["gems"].each do |gem|
       machine.sudo("gem install #{gem}")
     end
   end
 
-  if description.include?(:github)
-    description[:github].each do |repo|
+  if description.include?("github")
+    description["github"].each do |repo|
       machine.deploy_from_github("github_project" => repo)
     end
   end
 
-  if description.include?(:url)
-    description[:url].each do |url|
+  if description.include?("url")
+    description["url"].each do |url|
       file_name = url.split("?").first.split("/").last
       puts "downloading to #{file_name} from #{url}"
       machine.download_file("url" => url, "file" => file_name)
@@ -113,8 +112,8 @@ run do |plugin, machine, service, params|
     end
   end
 
-  if description.include?(:service)
-    description[:service].each do |service|
+  if description.include?("service")
+    description["service"].each do |service|
       machine.install_service(service: service)
     end
   end
