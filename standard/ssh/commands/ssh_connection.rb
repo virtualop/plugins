@@ -2,6 +2,8 @@ param! :machine
 param "force", default: false
 param "dont_cache", default: false
 
+dont_log
+
 run do |plugin, machine, force, dont_cache|
   ssh_opts = @op.ssh_options("machine" => machine.name)
   $logger.debug "ssh options for #{machine.name} : #{ssh_opts.pretty_inspect}"

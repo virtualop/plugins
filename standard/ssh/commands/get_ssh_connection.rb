@@ -4,6 +4,8 @@ param! :machine
 param "force", default: false
 param "timeout", description: "in seconds", default: 10
 
+dont_log
+
 run do |machine, force|
   seconds = seconds.to_i
   connection = nil

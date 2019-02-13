@@ -12,11 +12,11 @@ run do |timeout, interval, error_text, params, block|
   while (seconds_waited < timeout.to_i) do
     begin
       current_result = block.call()
+      $logger.debug("checked condition : #{current_result}")
     rescue Exception => e
       $logger.warn("got an exception while waiting : #{e.message}")
     end
 
-    $logger.debug("checked condition : #{current_result}")
     break if current_result
 
     sleep(interval.to_i)

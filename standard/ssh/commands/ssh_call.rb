@@ -9,6 +9,8 @@ param "on_data", default: nil
 param "on_stderr", default: nil
 param "dont_loop", default: false, description: "if set to true, the command will return after spawning the process without waiting for it to terminate."
 
+dont_log
+
 run do |machine, params, show_output|
   connection = machine.get_ssh_connection
 
@@ -48,7 +50,7 @@ run do |machine, params, show_output|
       stderr += data
       combined += data
 
-      puts data if show_output
+      puts data if show_output # TODO to stderr
       $logger.debug "got data on STDERR #{data}"
     end
     channel.on_extended_data do |c, type, data|
