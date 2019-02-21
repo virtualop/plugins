@@ -16,10 +16,10 @@ run do |plugin, machine, service, params|
     if description["files"].include?("create")
       creates = description["files"]["create"]
       creates.each do |what|
-        if what.include? :in
-          machine.mkdirs(what[:in])
-          (what[:dirs] || []).each do |dir|
-            machine.mkdirs (File.join(what[:in], dir))
+        if what.include? "in"
+          machine.mkdirs(what["in"])
+          (what["dirs"] || []).each do |dir|
+            machine.mkdirs (File.join(what["in"], dir))
           end
           processed[:create] << what
         end
