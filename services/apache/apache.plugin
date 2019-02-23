@@ -1,0 +1,9 @@
+# TODO is that still true?
+depends_on :libvirt
+
+require "date"
+
+# for tailf
+on :init do |plugin|
+  plugin.state[:redis] = Redis.new
+end

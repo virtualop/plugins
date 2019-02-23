@@ -1,0 +1,18 @@
+<% if target_urls.size > 1 %>
+  <Proxy balancer://mycluster/>
+  <% target_urls.each do |target_url| %>
+    BalancerMember <%= target_url %>
+  <% end %>
+  </Proxy>
+  ProxyPass / balancer://mycluster/
+<% else %>
+  <% target_url = target_urls.first %>
+  <% target_url += "/" unless target_url.end_with? "/" %>
+  ProxyPass / <%= target_url %>
+  ProxyPassReverse / <%= target_url %>
+<% end %>
+
+ProxyPreserveHost On
+<% if proxy_timeout %>
+  ProxyTimeout <%= proxy_timeout %>
+<% end %>

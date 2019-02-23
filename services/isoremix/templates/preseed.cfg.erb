@@ -1,0 +1,59 @@
+# see https://help.ubuntu.com/lts/installation-guide/example-preseed.txt
+d-i debian-installer/locale string en_US
+d-i console-setup/ask_detect boolean false
+d-i keyboard-configuration/xkb-keymap select us
+d-i keyboard-configuration/layout select English (US)
+d-i keyboard-configuration/variant select English (US)
+d-i netcfg/choose_interface select eth0
+d-i base-installer/kernel/override-image string linux-server
+d-i clock-setup/utc-auto boolean true
+d-i clock-setup/utc boolean true
+d-i time/zone string Europe/Berlin
+d-i clock-setup/ntp boolean true
+d-i apt-setup/use_mirror boolean true
+d-i mirror/country string DE
+d-i mirror/http/proxy string
+d-i mirror/http/mirror select debian.charite.de
+d-i pkgsel/install-language-support boolean true
+d-i pkgsel/update-policy select none
+tasksel tasksel/first multiselect server
+d-i pkgsel/include string openssh-server
+d-i netcfg/get_hostname string unassigned-hostname
+d-i netcfg/get_domain string unassigned-domain
+d-i partman-auto/method string lvm
+d-i partman-lvm/device_remove_lvm boolean true
+d-i partman-md/device_remove_md boolean true
+d-i partman-lvm/confirm boolean true
+d-i partman-lvm/confirm_nooverwrite boolean true
+d-i partman-auto-lvm/guided_size string max
+d-i partman-auto/choose_recipe select atomic
+d-i partman/default_filesystem string xfs
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman-md/confirm boolean true
+d-i partman-partitioning/confirm_write_new_label boolean true
+d-i partman/choose_partition select finish
+d-i partman/confirm boolean true
+d-i partman/confirm_nooverwrite boolean true
+d-i partman/unmount_active boolean false
+d-i passwd/make-user boolean true
+d-i passwd/root-login boolean true
+d-i passwd/root-password password <%= service.plugin.config["root_password"] %>
+d-i passwd/root-password-again password <%= service.plugin.config["root_password"] %>
+<% if service.plugin.config.has_key? "normal_user_name" %>
+d-i passwd/user-fullname string <%= service.plugin.config["normal_user_full_name"] %>
+d-i passwd/username string <%= service.plugin.config["normal_user_name"] %>
+d-i passwd/user-password password <%= service.plugin.config["normal_user_password"] %>
+d-i passwd/user-password-again password <%= service.plugin.config["normal_user_password"] %>
+d-i user-setup/encrypt-home boolean false
+<% end %>
+d-i grub-installer/only_debian boolean true
+d-i grub-installer/with_other_os boolean true
+d-i finish-install/reboot_in_progress note
+d-i preseed/late_command string \
+cp /cdrom/extra/post_install.sh /target/root/; \
+cp /cdrom/extra/authorized_keys /target/root/; \
+in-target chmod +x /root/post_install.sh; \
+in-target /root/post_install.sh

@@ -1,0 +1,10 @@
+config_param "isoremix_root", default: "/var/local/lib/isoremix"
+
+config_param! "root_password"
+config_param "normal_user_name"
+config_param "normal_user_full_name"
+config_param "normal_user_password"
+
+config_param "authorized_keys", multi: true, default: [
+  'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA21N2+aa0coKsw4nKlsQXOE0+ppSj5vMIbbNzzbp3Pw78DmYVUXuKiD+IZIwttK6MWMFyEt8Iv7SfeGWXMNTBHKTFi4ikbHIf2PnwGOBnF9/wiA18LlIsSAaYWdA9UOEGiJ8GkFs2TpP5yW25buXAD0mJtVi9PWrt1myeA0MWO0JLJ/1T7v8YFSU3iRxmN+cEto3eX4II2a7UkID/3Wy9qEoANDYHes6Nm008Z9jwg8zW1On6fTacaShIemWBv/ilTa41bYNywgqJqRtsMVp3fYdcWRff2hdqja8fIq1HAIGfMNOU+lqVUgXY7nXQc2nzzPtqaYEI/P4xOM3n2jYTNw== philipp@deepthinkpad'
+]

@@ -1,0 +1,5 @@
+depends_on [ :machines, :ssh ]
+depends_on :rails_machines
+
+config_param! "ssh_user"
+config_param! "ssh_password"

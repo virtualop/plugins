@@ -1,0 +1,20 @@
+#!/bin/bash
+
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )
+
+SSH_DIR=/home/marvin/.ssh
+THE_USER=marvin
+
+mkdir $SSH_DIR
+chmod 0700 $SSH_DIR
+chown $THE_USER $SSH_DIR
+
+if [[ -f $SCRIPT_DIR/authorized_keys ]]; then
+  cp -v $SCRIPT_DIR/authorized_keys $SSH_DIR/authorized_keys
+fi
+chmod 0600 $SSH_DIR/authorized_keys
+chown $THE_USER $SSH_DIR/authorized_keys
+
+echo "$THE_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$THE_USER
+
+echo "post-install script completed at `date`; configured SSH access and sudo permissions for $THE_USER" > /var/log/post_install.log
