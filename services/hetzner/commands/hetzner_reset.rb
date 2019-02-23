@@ -2,7 +2,7 @@ param! :machine
 
 param "reset_type", default: "sw"
 
-run do |machine|
+run do |machine, reset_type|
   server_ip = machine.metadata["server_ip"]
   unless server_ip
     raise "no server IP found for #{machine.name}"
