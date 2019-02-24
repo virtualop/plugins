@@ -15,4 +15,6 @@ run do |plugin, params, username, password|
     "password" => password
   }
   plugin.write_config
+
+  @op.hetzner_accounts!
 end

@@ -9,4 +9,5 @@ run do |params, plugin|
     end
   end
 
+  @op.hetzner_accounts!
 end
