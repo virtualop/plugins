@@ -22,7 +22,10 @@ run do |machine, plugin|
     netmask: internal_netmask
   }
   if has_proxy
-    data["proxy_ip"] = machine.reverse_proxy.internal_ip
+    # read the proxy's IP without connecting to it
+    addresses = machine.list_vms_with_addresses
+    proxy_ip = addresses.select { |x| x["name"] == "proxy" }.first["address"]
+    data["proxy_ip"] = proxy_ip # machine.reverse_proxy.internal_ip
   end
   machine.write_template(
     template: plugin.template_path("iptables_minimal.sh.erb"),
