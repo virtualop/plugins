@@ -87,6 +87,7 @@ echo -forward-
 # allow all traffic to be forwarded across the bridges
 iptables -A FORWARD -m physdev --physdev-is-bridged -j ACCEPT
 
+<% if has_proxy? && proxy_ip %>
 # allow incoming http traffic to reach the proxy
 iptables -A FORWARD -d $IP_PRIVATE_PROXY -p tcp --dport 80 -m state --state NEW -j ACCEPT
 iptables -A FORWARD -d $IP_PRIVATE_PROXY -p tcp --dport 443 -m state --state NEW -j ACCEPT
@@ -102,6 +103,7 @@ iptables -A FORWARD -s $MASK_INTERNAL -d $IP_PRIVATE_PROXY -p tcp --sport 443 -m
 # outgoing http from proxy
 iptables -A FORWARD -s $IP_PRIVATE_PROXY -p tcp --sport 80 -m state --state NEW -j ACCEPT
 iptables -A FORWARD -s $IP_PRIVATE_PROXY -p tcp --sport 443 -m state --state NEW -j ACCEPT
+<% end %>
 
 # icmp forwarding for internal networks
 iptables -A FORWARD -p icmp -s $MASK_INTERNAL -m state --state NEW -j ACCEPT
