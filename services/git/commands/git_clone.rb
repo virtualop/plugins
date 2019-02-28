@@ -8,9 +8,7 @@ run do |machine, url, dir|
     dir = project_name
   end
 
-  unless machine.file_exists(dir)
-    machine.ssh("git clone #{url} #{dir}")
-  end
+  machine.ssh("git clone #{url} #{dir}")
 
   dir
 end
