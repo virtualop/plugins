@@ -1,0 +1,3 @@
+config_param "generator_path",
+  description: "the path where iptables scripts are generated into",
+  default: "/var/lib/virtualop/iptables.d"

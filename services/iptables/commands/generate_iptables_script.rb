@@ -1,7 +1,7 @@
 param! :machine
 
-run do |machine, plugin|
-  generator_path = "/var/lib/virtualop/iptables.d"
+run do |plugin, machine|
+  generator_path = plugin.config["generator_path"]
   script_path = "#{generator_path}/minimal_fw.sh"
 
   machine.mkdirs(generator_path)
