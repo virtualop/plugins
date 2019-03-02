@@ -35,5 +35,7 @@ run do |plugin, machine|
 
   machine.ssh("chmod +x #{script_path}")
 
+  machine.list_files! generator_path
+
   script_path
 end

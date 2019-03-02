@@ -8,4 +8,8 @@ run do |machine, file|
   file ||= "#{short_name}.ppm"
 
   machine.parent.sudo "virsh screenshot #{short_name} --file #{file}"
+
+  machine.parent.list_files! "."
+
+  file
 end

@@ -49,6 +49,8 @@ run do |machine, network, ip, params|
   machine.sudo "virsh net-destroy #{network}"
   machine.sudo "virsh net-start #{network}"
 
+  machine.restart_systemd_service "libvirt-bin"
+
   dumped = machine.sudo "virsh net-dumpxml #{network}"
   $logger.info "reloaded network : #{dumped}"
 
