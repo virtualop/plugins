@@ -6,12 +6,8 @@ end
 
 # iptables
 deploy do |machine|
-    # TODO persist iptables
-    iptables_script = machine.generate_iptables_script
-    machine.ssh(iptables_script)
-    $logger.info("post iptables test: #{machine.hostname}")
-
-    iptables_script
+  machine.generate_and_run_iptables
+  machine.persist_iptables
 end
 
 
