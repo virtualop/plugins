@@ -21,16 +21,29 @@ deploy do |machine, params|
   $logger.info "installing vop.dev into #{base_dir}"
 
   %w|vop plugins services web|.each do |repo|
+    path = "#{base_dir}/#{repo}"
     machine.deploy_from_github(
       "github_project" => "virtualop/#{repo}",
-      "dir" => "#{base_dir}/#{repo}"
-    )
+      "dir" => path
+    ) unless machine.file_exists(path)
   end
 
-  [ "vop", "web" ].each do |repo|
-    path = "#{base_dir}/#{repo}"
+  vop_root = "#{base_dir}/vop"
+  web_root = "#{base_dir}/web"
+
+  # upgrade bundler
+  machine.sudo "cd #{vop_root} && gem install bundler"
+
+  [ vop_root, web_root ].each do |path|
     machine.ssh "cd #{path} && bundle install"
   end
+  #
+  # [ "vop", "web" ].each do |repo|
+  #   path = "#{base_dir}/#{repo}"
+  #   machine.ssh "cd #{path} && bundle install"
+  # end
+
+  machine.ssh "cd #{web_root} && bundle exec rake db:migrate"
 
   machine.write_systemd_config(
     "name" => "vop-web",

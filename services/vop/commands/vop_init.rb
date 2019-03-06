@@ -22,6 +22,6 @@ run do |machine, params, vop_user|
     machine.chmod(file: config_file, permissions: "+x")
 
     machine.restart_systemd_service "vop-web"
-    true
   end
+  true
 end
