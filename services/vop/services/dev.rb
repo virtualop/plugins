@@ -37,11 +37,6 @@ deploy do |machine, params|
   [ vop_root, web_root ].each do |path|
     machine.ssh "cd #{path} && bundle install"
   end
-  #
-  # [ "vop", "web" ].each do |repo|
-  #   path = "#{base_dir}/#{repo}"
-  #   machine.ssh "cd #{path} && bundle install"
-  # end
 
   machine.ssh "cd #{web_root} && bundle exec rake db:migrate"
 
