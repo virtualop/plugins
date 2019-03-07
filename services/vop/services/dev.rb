@@ -20,6 +20,7 @@ deploy do |machine, params|
   end
   $logger.info "installing vop.dev into #{base_dir}"
 
+  # checkout from github
   %w|vop plugins services web|.each do |repo|
     path = "#{base_dir}/#{repo}"
     machine.deploy_from_github(
@@ -31,15 +32,15 @@ deploy do |machine, params|
   vop_root = "#{base_dir}/vop"
   web_root = "#{base_dir}/web"
 
-  # upgrade bundler
-  machine.sudo "cd #{vop_root} && gem install bundler"
-
+  # bundle install for vop and web
   [ vop_root, web_root ].each do |path|
     machine.ssh "cd #{path} && bundle install"
   end
 
+  # web needs database migrations
   machine.ssh "cd #{web_root} && bundle exec rake db:migrate"
 
+  # systemd services for web, sidekiq and message-pump
   machine.write_systemd_config(
     "name" => "vop-web",
     "user" => "marvin",
@@ -66,6 +67,7 @@ deploy do |machine, params|
     machine.start_systemd_service name
   end
 
+  # apache as reverse proxy in front
   machine.install_service("apache.reverse_proxy")
 
   cable_domain = nil
