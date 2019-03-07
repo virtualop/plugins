@@ -10,9 +10,12 @@ port tcp: 80
 
 deploy package: ["apache2"]
 
+deploy service: "certbot.certbot"
+
 # --- reverse proxy specific ---
 
 deploy do |machine|
   machine.sudo "a2enmod proxy proxy_balancer proxy_http"
   machine.sudo "a2enmod proxy_wstunnel"
+  machine.sudo "a2enmod headers"
 end
