@@ -41,6 +41,8 @@ iptables -t nat -A PREROUTING -p tcp -d $IP_HOST --dport 80  -j DNAT --to-destin
 iptables -t nat -A PREROUTING -p tcp -d $IP_HOST --dport 443 -j DNAT --to-destination $IP_PRIVATE_PROXY:443
 <% end %>
 
+<%= includes[:prerouting] %>
+
 echo -post-routing-
 
 iptables -t nat -A POSTROUTING -s $MASK_INTERNAL -o eth0 ! -d $MASK_INTERNAL -j SNAT --to $IP_HOST
@@ -74,6 +76,10 @@ iptables -A INPUT -p icmp --icmp-type parameter-problem -j ACCEPT
 
 iptables -A INPUT -p icmp --fragment -j LOG
 iptables -A INPUT -p icmp --fragment -j DROP
+
+<%= includes[:input] %>
+
+<%= includes[:output] %>
 
 # log & drop
 iptables -A INPUT -p tcp -m limit --limit 5/min -j LOG --log-level debug --log-prefix "!INPUT_DROP! ** TCP **  "
@@ -111,7 +117,7 @@ iptables -A FORWARD -s $IP_PRIVATE_PROXY -p tcp --sport 80 -m state --state NEW 
 iptables -A FORWARD -s $IP_PRIVATE_PROXY -p tcp --sport 443 -m state --state NEW -j ACCEPT
 <% end %>
 
-## outgoing HTTP from VMs
+# outgoing HTTP from VMs
 iptables -A FORWARD -s $MASK_INTERNAL -p tcp --dport 80 -j ACCEPT
 iptables -A FORWARD -s $MASK_INTERNAL -p tcp --dport 443 -m state --state NEW -j ACCEPT
 iptables -A FORWARD -s $MASK_INTERNAL -p tcp --sport 443 -m state --state NEW -j ACCEPT
@@ -126,6 +132,7 @@ iptables -A FORWARD -s $MASK_INTERNAL -p udp --dport 53 -m state --state NEW -j 
 # NTP
 iptables -A FORWARD -s $MASK_INTERNAL -p udp --dport 123 -m state --state NEW -j ACCEPT
 
+<%= includes[:forward] %>
 
 # log & drop
 iptables -A FORWARD -p tcp -m limit --limit 5/min -j LOG --log-level debug --log-prefix "!FORWARD__DROP! ** TCP **  "

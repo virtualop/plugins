@@ -1,7 +1,8 @@
 param! :machine
-param "script", default: "minimal_fw.sh"
+param "script", default: nil
 
 run do |plugin, machine, script|
+  script ||= plugin.config["script_name"]
   $logger.info "applying generated iptables script #{script} on #{machine.name}"
 
   generator_path = plugin.config["generator_path"]

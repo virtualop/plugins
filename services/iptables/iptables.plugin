@@ -1,3 +1,10 @@
 config_param "generator_path",
   description: "the path where iptables scripts are generated into",
-  default: "/var/lib/virtualop/iptables.d"
+  default: "/var/lib/virtualop/iptables"
+
+config_param "include_path",
+  description: "path where includes are stored and read from",
+  default: "/var/lib/virtualop/iptables/includes"
+
+config_param "script_name",
+  default: "vms-with-reverse-proxy.sh"
