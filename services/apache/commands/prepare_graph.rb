@@ -1,5 +1,7 @@
 param! "graph"
 
+dont_log
+
 run do |graph|
   result = {}
   graph.each do |selector, g|

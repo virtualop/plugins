@@ -2,6 +2,8 @@ param! "data", "the parsed entries to aggregate (array of hashes)", multi: true
 
 param "interval", lookup: lambda { %w|minute hour day week| }, default: "hour"
 
+dont_log
+
 run do |data, interval|
   raw = {}
 

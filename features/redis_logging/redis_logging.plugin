@@ -22,7 +22,7 @@ on :before_execute do |plugin, payload|
   Thread.current["call_stack"] = call_stack
 
   is_core = request.command.plugin.options[:core]
-  should_log = ! (is_core || request.command.dont_log)
+  should_log = ! (is_core || request.dont_log || request.command.dont_log)
   if should_log
     redis = plugin.state[:redis]
     redis.publish("vop_log", {

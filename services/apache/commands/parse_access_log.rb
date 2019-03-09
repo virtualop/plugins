@@ -2,6 +2,8 @@ param! "data", "the access log lines that should be read", multi: true
 
 show columns: %w|remote_ip timestamp request status|
 
+dont_log
+
 run do |data|
   data.map do |line|
     line.strip!
