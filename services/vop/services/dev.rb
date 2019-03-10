@@ -2,6 +2,8 @@ process_regex [ /vop.sh/, /puma/, /sidekiq/ ]
 
 icon "vop_16px.png"
 
+outgoing tcp: 22
+
 deploy package: %w|ruby ruby-dev ruby-bundler| +
                 %w|build-essential| +
                 %w|redis-server openssh-server|

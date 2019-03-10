@@ -118,6 +118,18 @@ run do |plugin, machine, service, params|
     end
   end
 
+  if description.include?("outgoing")
+    description["outgoing"].each do |protocol, port|
+      $logger.info "configuring outbound connection #{protocol} #{port}"
+      next unless %w|tcp udp|.include?(protocol.to_s)
+      machine.parent.add_forward_include(
+        source_machine: machine.name,
+        service: service.name,
+        content: "iptables -A FORWARD -s #{machine.internal_ip} -p #{protocol.to_s} --dport #{port}  -m state --state NEW -j ACCEPT"
+      )
+    end
+  end
+
   svc = plugin.state[:services].select { |x| x.name == service["name"] }.first
   raise "no service found named '#{service["name"]}'" unless svc
   svc.install_blocks.each_with_index do |install_block, idx|

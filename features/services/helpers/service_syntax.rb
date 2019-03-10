@@ -138,6 +138,10 @@ module Vop
 
     end
 
+    def outgoing(ports_by_protocol)
+      @service.data["install"]["outgoing"] = ports_by_protocol
+    end
+
   end
 
 end
