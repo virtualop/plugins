@@ -42,9 +42,9 @@ def ssh_regex(machine, command, regex, keys, options = {except: {}})
         parsed = options[:post_process].call(parsed)
       end
 
-      result << parsed
+      result << parsed unless parsed.nil?
     end
   end
 
-  result
+  result.compact
 end
