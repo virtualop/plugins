@@ -1,13 +1,13 @@
 param! :machine
+param! "file"
 
-run do |machine|
+run do |machine, file|
   candidates = machine.processes_like("tail").select do |process|
-    file_name = "/var/log/apache2/access.log"
-    process["command"] =~ /tail -f -n0 #{file_name}/ &&
+    process["command"] =~ /tail -f -n0 #{file}/ &&
     process["command"] !~ /sudo/
   end
 
-  candidates.each do |moriturus|    
+  candidates.each do |moriturus|
     machine.sudo "kill #{moriturus["pid"]}"
   end
 end

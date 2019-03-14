@@ -10,8 +10,6 @@ port tcp: 80
 
 deploy package: ["apache2"]
 
-deploy service: "certbot.certbot"
-
 # --- reverse proxy specific ---
 
 deploy do |machine|

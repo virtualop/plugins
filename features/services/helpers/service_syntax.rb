@@ -142,6 +142,11 @@ module Vop
       @service.data["install"]["outgoing"] = ports_by_protocol
     end
 
+    def log_file(path, options = {})
+      @service.data["logfiles"] ||= {}
+      @service.data["logfiles"][path] = options
+    end
+
   end
 
 end

@@ -9,10 +9,9 @@ run do |plugin, machine, file, count, sudo|
   redis = plugin.state[:redis]
   count = count ? "-n#{count}" : ""
 
-  tail_command = "tail -f #{count} #{file}"
-  if sudo
-    tail_command = "sudo #{tail_command}"
-  end
+  prefix = sudo ? "sudo " : ""
+  tail_command = "#{prefix} tail -f #{count} #{file}"
+
   result = machine.ssh_call(
     "command" => tail_command,
     "dont_loop" => true,
@@ -25,7 +24,7 @@ run do |plugin, machine, file, count, sudo|
       }.to_json())
 
       aggregated = @op.aggregate_logdata(data: parsed, interval: "minute")
-      graph = @op.prepare_graph(graph: aggregated)      
+      graph = @op.prepare_graph(graph: aggregated)
       redis.publish("graph", {
         "machine" => machine.name,
         "log" => file,
