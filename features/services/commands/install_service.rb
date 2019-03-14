@@ -63,15 +63,13 @@ run do |plugin, machine, service, params|
             "service" => service,
             "machine" => machine
           }
-          @op.machines["localhost"].write_template(
+
+          machine.write_template(
             template: template_path,
-            to: tmp.path,
+            to: what["to"],
             bind: OpenStruct.new(vars).instance_eval { binding }
           )
-          tmp.flush
-          $logger.info "template #{what["template"]} processed into #{what["to"]} (using local temp path #{tmp.path})"
-          machine.scp_up("local_path" => tmp.path, "remote_path" => what["to"])
-          processed[:template] << what
+          $logger.info "template #{what["template"]} processed into #{what["to"]}"          
         ensure
           tmp.close
         end

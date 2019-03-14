@@ -12,8 +12,9 @@ module Vop
       @plugin = plugin
       @name = name
       @data = {
+        # TODO cleanup
         install: { },
-        "install" => {}
+        "install" => {}        
       }
       @install_blocks = [ ]
     end
