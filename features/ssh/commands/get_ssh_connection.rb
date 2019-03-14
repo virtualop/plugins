@@ -24,7 +24,7 @@ run do |machine, force|
             state = force ? "fresh " : ""
             raise "problem while testing #{state}ssh connection to #{machine.name} : #{e.message}"
           else
-            $logger.debug "SSH check failed (#{e.message}), requesting fresh connection to #{machine.name}"
+            $logger.debug "checking cached SSH connection failed (#{e.message}), requesting fresh connection to #{machine.name}"
             force = true
           end
         end

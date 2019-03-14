@@ -9,10 +9,12 @@ param "on_data", default: nil
 param "on_stderr", default: nil
 param "dont_loop", default: false, description: "if set to true, the command will return after spawning the process without waiting for it to terminate."
 
+param "fresh_connection", default: false
+
 dont_log
 
 run do |machine, params, show_output|
-  connection = machine.get_ssh_connection
+  connection = machine.get_ssh_connection(force: params["fresh_connection"])
 
   $logger.debug "request_pty ? #{params["request_pty"]}"
 
@@ -71,7 +73,7 @@ run do |machine, params, show_output|
     end
   end
 
-  if params.has_key?('dont_loop') and params['dont_loop']
+  if params.has_key?('dont_loop') && params['dont_loop']
     $logger.debug "not waiting for process to finish"
     {
       "combined" => combined,
