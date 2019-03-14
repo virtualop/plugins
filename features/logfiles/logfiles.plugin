@@ -1,0 +1,4 @@
+# for keep_tailing (it sends results to Redis)
+on :init do |plugin|
+  plugin.state[:redis] = Redis.new
+end
