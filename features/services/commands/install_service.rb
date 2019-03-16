@@ -127,6 +127,7 @@ run do |plugin, machine, service, params|
           service: service.name,
           content: "iptables -A FORWARD -s #{machine.internal_ip} -p #{protocol.to_s} --dport #{port}  -m state --state NEW -j ACCEPT"
         )
+        machine.parent.generate_and_run_iptables
       end
     end
   end

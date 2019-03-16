@@ -1,5 +1,7 @@
 param! :machine
 
+# TODO locking might be a good idea
+
 run do |plugin, machine|
   # prepare generator_path
   generator_path = plugin.config["generator_path"]
