@@ -15,6 +15,6 @@ run do |machine|
         vhost["proxy"]["hostname"] = vms[ip]["name"]
       end
     end
-    vhost.data
+    vhost
   end
 end
