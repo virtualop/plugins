@@ -58,5 +58,11 @@ run do |plugin, machine|
   cache_key = "vop.scan_result.#{machine.name}"
   redis.set(cache_key, result.to_json)
 
+  json_result = result.to_json
+  redis.publish("scan", {
+    "machine" => machine.name,
+    "content" => result
+  }.to_json())
+
   result
 end
