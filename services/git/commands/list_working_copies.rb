@@ -1,7 +1,7 @@
 param! :machine
 
 run do |machine|
-  vop_root = "#{ENV["HOME"]}/projects/virtualop"
+  vop_root = "#{machine.home}/projects/virtualop"
 
   dirs = machine.list_files(dir: vop_root, extra_filter: "d")
   dirs.map do |file|
