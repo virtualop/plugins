@@ -69,7 +69,7 @@ run do |plugin, machine, service, params|
             to: what["to"],
             bind: OpenStruct.new(vars).instance_eval { binding }
           )
-          $logger.info "template #{what["template"]} processed into #{what["to"]}"          
+          $logger.info "template #{what["template"]} processed into #{what["to"]}"
         ensure
           tmp.close
         end
@@ -117,14 +117,18 @@ run do |plugin, machine, service, params|
   end
 
   if description.include?("outgoing")
-    description["outgoing"].each do |protocol, port|
-      $logger.info "configuring outbound connection #{protocol} #{port}"
-      next unless %w|tcp udp|.include?(protocol.to_s)
-      machine.parent.add_forward_include(
-        source_machine: machine.name,
-        service: service.name,
-        content: "iptables -A FORWARD -s #{machine.internal_ip} -p #{protocol.to_s} --dport #{port}  -m state --state NEW -j ACCEPT"
-      )
+    # for now, configure outgoing connections only for VMs
+    if machine.metadata["type"] == "vm"
+      description["outgoing"].each do |protocol, port|
+        $logger.info "configuring outbound connection #{protocol} #{port}"
+        next unless %w|tcp udp|.include?(protocol.to_s)
+        machine.parent.add_forward_include(
+          source_machine: machine.name,
+          service: service.name,
+          content: "iptables -A FORWARD -s #{machine.internal_ip} -p #{protocol.to_s} --dport #{port}  -m state --state NEW -j ACCEPT"
+        )
+        machine.parent.generate_and_run_iptables
+      end
     end
   end
 

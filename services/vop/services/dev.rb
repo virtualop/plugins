@@ -16,6 +16,7 @@ param "base_dir", default: "virtualop"
 param "vop_user", default: "marvin"
 
 deploy do |machine, params|
+  vop_user = params["vop_user"]
   base_dir = params["base_dir"]
   unless base_dir.start_with? "/"
     base_dir = "#{machine.home}/#{base_dir}"
@@ -45,21 +46,21 @@ deploy do |machine, params|
   # systemd services for web, sidekiq and message-pump
   machine.write_systemd_config(
     "name" => "vop-web",
-    "user" => "marvin",
+    "user" => vop_user,
     "exec_start" => "#{base_dir}/web/bin/web.sh",
     "after" => "redis.service"
   )
 
   machine.write_systemd_config(
     "name" => "vop-background",
-    "user" => "marvin",
+    "user" => vop_user,
     "exec_start" => "#{base_dir}/vop/bin/sidekiq.sh",
     "after" => "redis.service"
   )
 
   machine.write_systemd_config(
     "name" => "vop-message-pump",
-    "user" => "marvin",
+    "user" => vop_user,
     "exec_start" => "#{base_dir}/web/bin/message-pump.sh",
     "after" => "redis.service"
   )
@@ -97,6 +98,6 @@ deploy do |machine, params|
   machine.vop_init(
     "vop_domain" => params["domain"],
     "cable_domain" => cable_domain,
-    "vop_user" => params["vop_user"]
+    "vop_user" => vop_user
   )
 end

@@ -41,14 +41,23 @@ run do |plugin, machine|
     end
 
     result["distro"] = machine.distro
-    machine.processes!
+
+    garbled = machine.processes!
+    ungarbled = garbled.map do |row|
+      h = { }
+      row.each do |k,v|
+        h[k] = v.force_encoding("UTF-8")
+      end
+      h
+    end
+    result["processes"] = ungarbled
+
     machine.processes_top_mem
 
     result["services"] = machine.detect_services!
 
     # TODO packages contain non-serializable characters (like processes above)
-    #result["packages"] =
-    machine.list_packages
+    # result["packages"] = machine.list_packages
     if machine.detect_services!.include? "apache.apache"
       machine.vhosts!
     end
@@ -57,6 +66,12 @@ run do |plugin, machine|
   redis = plugin.state[:redis]
   cache_key = "vop.scan_result.#{machine.name}"
   redis.set(cache_key, result.to_json)
+
+  json_result = result.to_json
+  redis.publish("scan", {
+    "machine" => machine.name,
+    "content" => result
+  }.to_json())
 
   result
 end

@@ -17,4 +17,4 @@ chown $THE_USER $SSH_DIR/authorized_keys
 
 echo "$THE_USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$THE_USER
 
-echo "post-install script completed at `date`; configured SSH access and sudo permissions for $THE_USER" > /var/log/post_install.log
+echo "post-install script completed at `date`: configured SSH access and sudo permissions for $THE_USER" > /var/log/post_install.log
