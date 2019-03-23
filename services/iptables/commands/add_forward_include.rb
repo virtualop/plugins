@@ -15,4 +15,6 @@ run do |plugin, machine, source_machine, service, content|
     file_name: "#{drop_dir}/#{config_file}",
     content: content
   )
+
+  machine.list_files! drop_dir
 end
