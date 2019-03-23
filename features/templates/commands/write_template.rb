@@ -15,7 +15,7 @@ run do |machine, template, to, params, bind|
     rescue => detail
       # TODO move this maneuver into something like write_file ?
       if detail.message =~ /Permission denied/
-        $logger.info "could not scp as mortal user into #{to}, gonna scp into /tmp and then sudo-mv"
+        $logger.debug "could not scp as mortal user into #{to}, gonna scp into /tmp and then sudo-mv"
         $logger.debug detail.message
         remote_tmp = "/tmp/vop_template_scp_sudo_mv_#{to.gsub("/", "_")}_#{Time.now.utc.to_i}"
         begin

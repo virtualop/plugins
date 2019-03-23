@@ -1,14 +1,4 @@
-# TODO inherit from: "apache.apache"
-# (or: depend on: "apache.apache" ?)
-
-# disabled because we don't want duplicate apache service markers in the map
-#process_regex /httpd/
-#process_regex /apache2/
-
-port tcp: 80
-#icon "apache_16px.png"
-
-deploy package: ["apache2"]
+deploy service: "apache.apache"
 
 # --- reverse proxy specific ---
 
