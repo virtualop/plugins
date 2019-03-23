@@ -16,8 +16,7 @@ run do |plugin, machine, domain|
   end
 
   # invalidate
-  machine.list_files! "/etc/apache2/sites-enabled"
-  machine.list_files! "/etc/apache2/sites-available"
+  machine.vhosts!
 
   # post process: add SSL headers
   domain.each do |d|
