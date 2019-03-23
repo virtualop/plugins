@@ -2,6 +2,8 @@ param! :machine
 param! "file"
 param! "data"
 
+dont_log
+
 run do |plugin, machine, file, data|
   redis = plugin.state[:redis]
 
