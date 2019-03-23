@@ -24,7 +24,7 @@ deploy do |machine, params|
   $logger.info "installing vop.dev into #{base_dir}"
 
   # checkout from github
-  %w|vop plugins services web|.each do |repo|
+  %w|vop plugins web|.each do |repo|
     path = "#{base_dir}/#{repo}"
     machine.deploy_from_github(
       "github_project" => "virtualop/#{repo}",

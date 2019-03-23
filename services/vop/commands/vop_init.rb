@@ -10,8 +10,15 @@ run do |machine, params, vop_user|
   machine.generate_keypair
 
   # vop config in /etc/vop should be writable
-  machine.sudo "mkdir /etc/vop" unless machine.file_exists("/etc/vop")
-  machine.sudo "chown #{vop_user}: /etc/vop"
+  config_dir = "/etc/vop"
+  unless machine.file_exists config_dir
+    machine.sudo "mkdir #{config_dir}"
+    machine.sudo "chown #{vop_user}: #{config_dir}"
+  end
+  plugins_dir = "#{config_dir}/plugins.d"
+  unless machine.file_exists plugins_dir
+    machine.mkdirs plugins_dir
+  end
 
   if params["vop_domain"]
     config_file = "/etc/vop/web.conf.sh"
