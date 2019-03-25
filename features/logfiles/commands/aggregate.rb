@@ -36,8 +36,9 @@ run do |data, interval|
       raw[selector] = {} unless raw.has_key? selector
       hash = raw[selector]
 
-      hash[adjusted_timestamp.to_i] = [] unless hash.has_key? adjusted_timestamp
-      hash[adjusted_timestamp.to_i] << entry
+      key = adjusted_timestamp.to_i
+      hash[key] = [] unless hash.has_key? key
+      hash[key] << entry
     end
   end
 
