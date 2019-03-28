@@ -62,8 +62,13 @@ run do |plugin, machine|
 
         # TODO packages contain non-serializable characters (like processes above)
         # result["packages"] = machine.list_packages
-        if machine.detect_services!.include? "apache.apache"
+        if result["services"].include? "apache.apache"
           machine.vhosts!
+          result["domains"] = machine.domains!.map(&:data)
+        end
+
+        if result["services"].include? "mysql.mysql"
+          result["databases"] = machine.databases
         end
       end
     end

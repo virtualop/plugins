@@ -1,6 +1,8 @@
 param! :machine
 param "prefix", default: "192.168"
 
+read_only
+
 run do |machine, prefix|
   unless prefix.end_with? "."
     prefix += "."
