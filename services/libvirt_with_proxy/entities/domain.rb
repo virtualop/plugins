@@ -20,8 +20,16 @@ entity do |machine|
     end
   end
 
-  result.map do |k,v|
+  # reformat into array of hashes
+  result = result.map do |k,v|
     v["name"] = k
     v
+  end
+
+  # # and post-process
+  result.map do |domain|
+    protocol = domain["https"] ? "https" : "http"
+    domain["url"] = "#{protocol}://#{domain["name"]}"
+    domain
   end
 end
