@@ -1,8 +1,9 @@
+icon "vop_16px.png"
 process_regex [ /vop.sh/, /puma/, /sidekiq/ ]
 
-icon "vop_16px.png"
-
 outgoing tcp: 22
+
+database path: "db/development.sqlite3"
 
 deploy package: %w|ruby ruby-dev ruby-bundler| +
                 %w|build-essential| +

@@ -147,6 +147,11 @@ module Vop
       @service.data["logfiles"][path] = options
     end
 
+    def database(options)
+      @service.data["databases"] ||= []
+      @service.data["databases"] << options
+    end
+
   end
 
 end
