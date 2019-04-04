@@ -1,12 +1,12 @@
 param! :machine
-param! :service
+param! :known_service
 param! "install_block"
 
 allows_extra
 
-run do |machine, service, install_block, params, plugin|
-  $logger.debug "run install block for #{service.name}@#{machine.name}"
-  svc = plugin.state[:services].select { |x| x.name == service["name"] }.first
+run do |machine, known_service, install_block, params, plugin|
+  $logger.debug "run install block for #{known_service.name}@#{machine.name}"
+  svc = plugin.state[:services].select { |x| x.name == known_service["name"] }.first
 
   # add in default values for service params
   svc.params.each do |p|
@@ -34,7 +34,7 @@ run do |machine, service, install_block, params, plugin|
       elsif params.has_key? name
         payload << params[name]
       else
-        raise "unknown block param #{block_param_name} in installation block for service #{service["name"]}"
+        raise "unknown block param #{block_param_name} in installation block for service #{known_service["name"]}"
       end
     end
   end

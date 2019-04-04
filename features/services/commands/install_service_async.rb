@@ -1,5 +1,5 @@
 param! :machine
-param! :service, default_param: true
+param! :known_service, default_param: true
 
 allows_extra
 

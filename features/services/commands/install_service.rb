@@ -1,17 +1,16 @@
-require "erb"
 require "tempfile"
 
 param! :machine
-param! :service, default_param: true
+param! :known_service, default_param: true
 
 allows_extra
 
-run do |plugin, machine, service, params|
+run do |plugin, machine, known_service, params|
   processed = Hash.new { |h,k| h[k] = [] }
 
   @op.verify_mandatory_params(params)
 
-  description = service.data["install"]
+  description = known_service.describe_service["install"]
   if description.include?("files")
     if description["files"].include?("create")
       creates = description["files"]["create"]
@@ -33,7 +32,7 @@ run do |plugin, machine, service, params|
           raise "copy needs to include 'from' and 'to'"
         end
 
-        local_path = File.join(service.plugin.plugin_dir(:files), what["from"])
+        local_path = File.join(known_service.plugin.plugin_dir(:files), what["from"])
         unless File.exists? local_path
           raise "file not found at #{local_path}"
         end
@@ -51,7 +50,7 @@ run do |plugin, machine, service, params|
           raise "template needs to include 'template' and 'to'"
         end
 
-        template_path = File.join(service.plugin.plugin_dir(:templates), what["template"])
+        template_path = File.join(known_service.plugin.plugin_dir(:templates), what["template"])
         unless File.exists? template_path
           raise "template not found at #{template_path}"
         end
@@ -60,7 +59,7 @@ run do |plugin, machine, service, params|
         begin
           # TODO could use more bindings?
           vars = {
-            "service" => service,
+            "service" => known_service,
             "machine" => machine
           }
 
@@ -111,8 +110,8 @@ run do |plugin, machine, service, params|
   end
 
   if description.include?("service")
-    description["service"].each do |service|
-      machine.install_service(service: service)
+    description["service"].each do |other_service|
+      machine.install_service(other_service)
     end
   end
 
@@ -124,7 +123,7 @@ run do |plugin, machine, service, params|
         next unless %w|tcp udp|.include?(protocol.to_s)
         machine.parent.add_forward_include(
           source_machine: machine.name,
-          service: service.name,
+          service: known_service.name,
           content: "iptables -A FORWARD -s #{machine.internal_ip} -p #{protocol.to_s} --dport #{port}  -m state --state NEW -j ACCEPT"
         )
         machine.parent.generate_and_run_iptables
@@ -132,13 +131,13 @@ run do |plugin, machine, service, params|
     end
   end
 
-  svc = plugin.state[:services].select { |x| x.name == service["name"] }.first
-  raise "no service found named '#{service["name"]}'" unless svc
+  svc = plugin.state[:services].select { |x| x.name == known_service["name"] }.first
+  raise "no service found named '#{known_service["name"]}'" unless svc
   svc.install_blocks.each_with_index do |install_block, idx|
     $logger.info "calling install block #{idx}"
 
     new_params = params.merge({
-      service: service["name"],
+      known_service: known_service["name"],
       install_block: install_block
     })
     machine.run_install_block(new_params)
@@ -150,7 +149,7 @@ run do |plugin, machine, service, params|
   redis = plugin.state[:redis]
   redis.publish("installation_status", {
     "machine" => machine.name,
-    "service" => service["name"]
+    "service" => known_service["name"]
   }.to_json())
 
   processed
