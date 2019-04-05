@@ -5,6 +5,8 @@ outgoing tcp: 22
 
 database path: "db/development.sqlite3"
 
+data path: "/etc/vop"
+
 deploy package: %w|ruby ruby-dev ruby-bundler| +
                 %w|build-essential| +
                 %w|redis-server openssh-server|

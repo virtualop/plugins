@@ -151,6 +151,8 @@ module Vop
       @service.data["databases"] ||= []
       @service.data["databases"] << options
     end
+    alias :data :database
+
 
   end
 
