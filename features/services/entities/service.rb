@@ -1,8 +1,10 @@
-entity do |plugin|
-  plugin.state[:services].map do |x|
-    x.to_hash.merge(
-      "plugin_name" => x.plugin.name,
-      "params" => x.params
-    )
+on :machine
+
+entity do |machine|
+  machine = @op.machines[machine]
+  machine.detect_services.map do |x|
+    {
+      "name" => x
+    }
   end
 end
