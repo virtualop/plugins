@@ -1,5 +1,7 @@
 depends_on :machines
 
+config_param "installed_services_dir", default: "/etc/vop/installed_services"  
+
 on :init do |plugin|
   plugin.state[:services] = []
   plugin.state[:redis] = Redis.new

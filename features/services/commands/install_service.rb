@@ -2,15 +2,44 @@ require "tempfile"
 
 param! :machine
 param! :known_service, default_param: true
+param "service_root", "path where the service should be installed"
 
 allows_extra
 
 run do |plugin, machine, known_service, params|
   processed = Hash.new { |h,k| h[k] = [] }
 
+  detail = known_service.describe_service
+
+  service_root = params["service_root"]
+  unless service_root
+    # if the service needs a service_root param, set a default
+    unless detail["params"].nil?
+      svc_root_param = detail["params"].select { |p| p["name"] == "service_root" }.first
+      if svc_root_param && svc_root_param.has_key?("options") && svc_root_param["options"]["mandatory"]
+        options = svc_root_param["options"]
+        service_root = if options.has_key? "default"
+          options["default"]
+        else
+          known_service.name
+        end
+        $logger.info "default service_root : #{service_root}"
+        params["service_root"] = service_root
+      end
+    end
+  end
+
+  # prefix relative service_roots
+  if service_root
+    unless service_root.start_with? "/"
+      params["service_root"] = "#{machine.home}/#{service_root}"
+    end
+  else
+  end
+
   @op.verify_mandatory_params(params)
 
-  description = known_service.describe_service["install"]
+  description = detail["install"]
   if description.include?("files")
     if description["files"].include?("create")
       creates = description["files"]["create"]
@@ -143,9 +172,25 @@ run do |plugin, machine, known_service, params|
     machine.run_install_block(new_params)
   end
 
+  # record service installation
+  record_dir = plugin.config["installed_services_dir"]
+  machine.mkdirs(record_dir)
+  if machine.file_exists(record_dir)
+    record_file = "#{record_dir}/#{known_service["name"]}"
+    record_data = params.merge({
+      name: known_service["name"]
+    })
+    machine.write_file(
+      file_name: record_file,
+      content: record_data.to_json
+  )
+  end
+
+  # invalidate
   machine.processes!
   machine.detect_services!
 
+  # redis notification
   redis = plugin.state[:redis]
   redis.publish("installation_status", {
     "machine" => machine.name,
