@@ -3,9 +3,9 @@ process_regex [ /vop.sh/, /puma/, /sidekiq/ ]
 
 outgoing tcp: 22
 
-database path: "db/development.sqlite3"
+database path: "web/db/development.sqlite3"
 
-data path: "/etc/vop"
+local_files path: "/etc/vop", alias: "config"
 
 deploy package: %w|ruby ruby-dev ruby-bundler| +
                 %w|build-essential| +
@@ -15,15 +15,12 @@ deploy package: %w|ruby ruby-dev ruby-bundler| +
 deploy package: %w|libsqlite3-dev zlib1g-dev nodejs|
 
 param "domain"
-param "base_dir", default: "virtualop"
+param! "service_root", default: "virtualop"
 param "vop_user", default: "marvin"
 
 deploy do |machine, params|
   vop_user = params["vop_user"]
-  base_dir = params["base_dir"]
-  unless base_dir.start_with? "/"
-    base_dir = "#{machine.home}/#{base_dir}"
-  end
+  base_dir = params["service_root"]
   $logger.info "installing vop.dev into #{base_dir}"
 
   # checkout from github

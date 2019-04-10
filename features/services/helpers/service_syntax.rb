@@ -153,6 +153,11 @@ module Vop
     end
     alias :data :database
 
+    def local_files(options)
+      @service.data["local_files"] ||= []
+      @service.data["local_files"] << options
+    end
+
 
   end
 
