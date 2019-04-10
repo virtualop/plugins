@@ -1,3 +1,6 @@
+deploy template: "bash_prompt.sh.erb",
+  to: "/etc/profile.d/bash_colors.sh"
+
 deploy do |machine|
   machine.set_hostname machine.name.split(".").first
   # TODO set the domain as well?
