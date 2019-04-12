@@ -10,4 +10,6 @@ deploy do |machine|
   machine.sudo "DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade -y"
 
   machine.install_package "apt-transport-https"
+
+  machine.init_service_record_dir()
 end

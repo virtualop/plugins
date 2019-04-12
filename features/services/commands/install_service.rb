@@ -9,7 +9,7 @@ allows_extra
 run do |plugin, machine, known_service, params|
   processed = Hash.new { |h,k| h[k] = [] }
 
-  detail = known_service.describe_service
+  detail = @op.describe_service(known_service: known_service["name"])
 
   service_root = params["service_root"]
   unless service_root
@@ -34,7 +34,6 @@ run do |plugin, machine, known_service, params|
     unless service_root.start_with? "/"
       params["service_root"] = "#{machine.home}/#{service_root}"
     end
-  else
   end
 
   @op.verify_mandatory_params(params)
