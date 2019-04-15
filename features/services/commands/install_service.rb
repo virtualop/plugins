@@ -6,12 +6,10 @@ param "service_root", "path where the service should be installed"
 
 allows_extra
 
-run do |plugin, machine, known_service, params|
+run do |plugin, params, machine, known_service, service_root|
   processed = Hash.new { |h,k| h[k] = [] }
 
   detail = @op.describe_service(known_service: known_service["name"])
-
-  service_root = params["service_root"]
   unless service_root
     # if the service needs a service_root param, set a default
     unless detail["params"].nil?
