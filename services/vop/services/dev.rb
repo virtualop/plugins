@@ -1,4 +1,3 @@
-icon "vop_16px.png"
 process_regex [ /vop.sh/, /puma/, /sidekiq/ ]
 
 outgoing tcp: 22
@@ -7,12 +6,7 @@ database path: "web/db/development.sqlite3"
 
 local_files path: "/etc/vop", alias: "config"
 
-deploy package: %w|ruby ruby-dev ruby-bundler| +
-                %w|build-essential| +
-                %w|redis-server openssh-server|
-
-# web dependencies
-deploy package: %w|libsqlite3-dev zlib1g-dev nodejs|
+icon "vop_16px.png"
 
 param "domain"
 param! "service_root", default: "virtualop"
@@ -23,22 +17,13 @@ deploy do |machine, params|
   base_dir = params["service_root"]
   $logger.info "installing vop.dev into #{base_dir}"
 
-  # checkout from github
-  %w|vop plugins web|.each do |repo|
-    path = "#{base_dir}/#{repo}"
-    machine.deploy_from_github(
-      "github_project" => "virtualop/#{repo}",
-      "dir" => path
-    ) unless machine.file_exists(path)
-  end
+  machine.install_service(
+    known_service: "vop.build",
+    "service_root" => base_dir
+  )
 
   vop_root = "#{base_dir}/vop"
   web_root = "#{base_dir}/web"
-
-  # bundle install for vop and web
-  [ vop_root, web_root ].each do |path|
-    machine.ssh "cd #{path} && bundle install"
-  end
 
   # web needs database migrations
   machine.ssh "cd #{web_root} && bundle exec rake db:migrate"
