@@ -1,3 +1,9 @@
+# minimal requirements for a virtualization host:
+#  * libvirt
+#  * iptables
+#  * ISO remixer to build custom install media for VMs
+#  * reverse proxy to distribute incoming traffic
+
 # libvirt
 deploy service: "libvirt.libvirt"
 deploy do |machine|
@@ -17,7 +23,7 @@ deploy do |machine|
     machine.rebuild_debian_iso(source_iso: "ubuntu-18.04.2-server-amd64.iso")
 end
 
-# prepare a proxy
+# prepare reverse proxy
 deploy do |machine|
   machine.new_machine "proxy"
   machine.generate_and_run_iptables

@@ -34,6 +34,6 @@ run do |machine, ssh_key|
   # to avoid package lock issues during apt update in ubuntu.base_install
   sleep 15
 
-  machine.install_service(service: "ubuntu.base_install")
-  machine.install_service(service: "ubuntu.host_install")
+  machine.install_service "ubuntu.base"
+  machine.install_service "ubuntu.host"
 end

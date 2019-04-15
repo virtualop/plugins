@@ -15,5 +15,5 @@ run do |machine, name, params|
     status: "base_installing"
   )
 
-  new_machine.install_service("service" => "ubuntu.base_install")
+  new_machine.install_service "ubuntu.base"
 end
