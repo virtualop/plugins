@@ -8,7 +8,7 @@ run do |plugin, known_service, machine|
 
   if machine
     installed = machine.installed_services
-    if installed.map(&:name).include?(known_service.name)
+    if installed && installed.respond_to?(:map) && installed.map(&:name).include?(known_service.name)
       installation_params = machine.installed_services[known_service.name].data
       result.merge!({
         "installed" => installation_params
