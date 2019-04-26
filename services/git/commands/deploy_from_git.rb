@@ -17,14 +17,9 @@ contribute to: "deploy" do |machine, git_url, params, subfolder|
     if subfolder
       web_root = File.join(web_root, subfolder)
     end
-    machine.add_static_vhost("server_name" => domain, "web_root" => web_root)
 
-    # TODO actually, this should maybe be machine.publish(machine.internal_ip => domain)
-    # (and the apache-specific add_reverse_proxy contributes to publish)
-    machine.parent.reverse_proxy.add_reverse_proxy(
-      "server_name" => domain,
-      "target_url" => "http://#{machine.internal_ip}/"
-    )
+    machine.add_static_vhost("server_name" => domain, "web_root" => web_root)
+    machine.publish(domain)
   else
     machine.git_clone("url" => git_url, "dir" => params["dir"])
   end

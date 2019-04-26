@@ -34,4 +34,6 @@ run do |plugin, machine, server_name, vhost_config, port|
   machine.read_file! file: available_path
 
   machine.sudo("service apache2 restart")
+
+  server_name
 end

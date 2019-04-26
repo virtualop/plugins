@@ -14,7 +14,7 @@ param "timeout",
   description: "configuration for the ProxyTimeout directive - timeout in seconds to wait for a proxied response",
   default: 60
 
-run do |plugin, machine, server_name, target_url, port, params|
+run do |plugin, params, machine, server_name, target_url, port|
   reverse_proxy_config = @op.read_template(
     template: plugin.template_path("reverse.proxy.conf.erb"),
     vars: {
