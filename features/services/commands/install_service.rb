@@ -37,6 +37,46 @@ run do |plugin, params, machine, known_service, service_root|
   @op.verify_mandatory_params(params)
 
   description = detail["install"]
+
+  if description.include?("repo")
+    description["repo"].each do |repo|
+      p = Hash[ repo.map { |k,v| [k.to_s, v] } ]
+      machine.add_apt_repo(p)
+    end
+  end
+
+  if description.include?("package")
+    machine.install_package(description["package"])
+  end
+
+  if description.include?("gems")
+    description["gems"].each do |gem|
+      machine.sudo("gem install #{gem}")
+    end
+  end
+
+  if description.include?("github")
+    description["github"].each do |repo|
+      machine.deploy_from_github("github_project" => repo)
+    end
+  end
+
+  if description.include?("url")
+    description["url"].each do |url|
+      file_name = url.split("?").first.split("/").last
+      puts "downloading to #{file_name} from #{url}"
+      machine.download_file("url" => url, "file" => file_name)
+
+      # TODO auto-extract?
+    end
+  end
+
+  if description.include?("service")
+    description["service"].each do |other_service|
+      machine.install_service(other_service)
+    end
+  end
+
   if description.include?("files")
     if description["files"].include?("create")
       creates = description["files"]["create"]
@@ -102,45 +142,6 @@ run do |plugin, params, machine, known_service, service_root|
     end
   end
 
-  if description.include?("repo")
-    description["repo"].each do |repo|
-      p = Hash[ repo.map { |k,v| [k.to_s, v] } ]
-      machine.add_apt_repo(p)
-    end
-  end
-
-  if description.include?("package")
-    machine.install_package(description["package"])
-  end
-
-  if description.include?("gems")
-    description["gems"].each do |gem|
-      machine.sudo("gem install #{gem}")
-    end
-  end
-
-  if description.include?("github")
-    description["github"].each do |repo|
-      machine.deploy_from_github("github_project" => repo)
-    end
-  end
-
-  if description.include?("url")
-    description["url"].each do |url|
-      file_name = url.split("?").first.split("/").last
-      puts "downloading to #{file_name} from #{url}"
-      machine.download_file("url" => url, "file" => file_name)
-
-      # TODO auto-extract?
-    end
-  end
-
-  if description.include?("service")
-    description["service"].each do |other_service|
-      machine.install_service(other_service)
-    end
-  end
-
   if description.include?("outgoing")
     # for now, configure outgoing connections only for VMs
     if machine.metadata["type"] == "vm"
@@ -186,6 +187,8 @@ run do |plugin, params, machine, known_service, service_root|
   # invalidate
   machine.processes!
   machine.detect_services!
+
+  
 
   # redis notification
   redis = plugin.state[:redis]
