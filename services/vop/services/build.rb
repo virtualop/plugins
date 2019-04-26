@@ -12,6 +12,8 @@ deploy package: %w|libsqlite3-dev zlib1g-dev nodejs|
 deploy do |machine, params|
   base_dir = params["service_root"]
   repos = %w|vop plugins web bundle|
+
+  # checkout all repos and install dependencies
   repos.each do |repo|
     path = "#{base_dir}/#{repo}"
 
@@ -22,9 +24,6 @@ deploy do |machine, params|
     )
 
     # bundle install
-    gem_file = "#{path}/Gemfile"
-    if machine.file_exists(gem_file)
-      machine.ssh "cd #{path} && bundle install"
-    end
+    machine.maybe_bundle(path)
   end
 end
