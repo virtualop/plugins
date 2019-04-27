@@ -11,7 +11,7 @@ run do |machine, database|
   end
 
   if database.nil? || database.size == 0
-    database = machine.user_databases    
+    database = machine.user_databases
   end
 
   database.each do |db|
