@@ -17,7 +17,7 @@ run do |machine, working_copy|
           $1
         end,
       "raw" => $1,
-      "path" => $2
+      "path" => $2.strip
     }
   end
 end
