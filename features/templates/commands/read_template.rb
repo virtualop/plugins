@@ -3,6 +3,11 @@ param "vars", default: {}
 
 run do |template, vars|
   renderer = ERB.new(IO.read(template))
-  bind = OpenStruct.new(vars).instance_eval { binding }
+
+  bind = binding
+  vars.each do |k,v|
+    bind.local_variable_set(k.to_sym, v)
+  end
+  
   renderer.result(bind)
 end
