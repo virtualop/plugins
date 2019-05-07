@@ -1,7 +1,18 @@
-deploy package: %w|ruby ruby-dev| +
-                %w|openssh-server redis-server|
+deploy repository: {
+  alias: "vop",
+  url: "http://repo.virtualop.org/ubuntu/",
+  dist: "bionic main",
+  key: "http://repo.virtualop.org/ubuntu/dists/bionic/Release.key",
+  arch: "amd64",
+}
 
-deploy gem: %w|vop vop-plugins vop-services|
+deploy package: "virtualop"
+
+local_files path: "/etc/vop", alias: "config"
 
 binary_name "vop"
 icon "vop_16px.png"
+
+deploy do |machine|
+  machine.vop_init
+end
