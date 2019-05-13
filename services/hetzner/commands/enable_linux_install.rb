@@ -1,6 +1,6 @@
 param! :machine
 
-param "dist", default: "Ubuntu 18.04.1 LTS minimal"
+param "dist", default: "Ubuntu 18.04.2 LTS minimal"
 param "arch", default: 64
 
 param "lang", default: "en"
