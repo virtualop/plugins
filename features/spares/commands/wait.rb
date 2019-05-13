@@ -1,11 +1,12 @@
 description "waits until a condition has been met"
 
 block_param! "block", description: "the block that should be executed periodically. should return true if the condition is met, false otherwise"
+
 param! "timeout", description: "number of seconds to wait for the condition to be met", default: 60
 param! "interval", description: "seconds to wait between tries", default: 1
 param  "error_text", description: "text that is displayed when the specified timeout is reached", default: "condition not met"
 
-run do |timeout, interval, error_text, params, block|
+run do |params, block, timeout, interval, error_text|
   seconds_waited = 0
 
   current_result = false
@@ -23,6 +24,6 @@ run do |timeout, interval, error_text, params, block|
     seconds_waited += interval.to_i
   end
 
-  raise Exception.new(error_text) unless current_result
+  raise error_text.to_s unless current_result
   current_result
 end
