@@ -1,10 +1,8 @@
 on :machine
 
 entity do |machine|
-  machine = @op.machines[machine]
-  machine.detect_services.map do |x|
-    {
-      "name" => x
-    }
-  end
+  @op.collect_contributions(
+    command_name: "services",
+    raw_params: { machine: machine }
+  )
 end

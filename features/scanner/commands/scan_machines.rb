@@ -6,6 +6,8 @@ contribute to: "scan" do
 
   stats = @op.machines_found(scanned)
 
+  # TODO clean machines that have no longer been found and/or mark them
+
   @op.machines!.each &:inspect_async
 
   stats

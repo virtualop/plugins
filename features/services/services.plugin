@@ -1,6 +1,8 @@
+require "password_generator"
+
 depends_on :machines
 
-config_param "installed_services_dir", default: "/var/lib/virtualop/installed_services"  
+config_param "installed_services_dir", default: "/var/lib/virtualop/installed_services"
 
 on :init do |plugin|
   plugin.state[:services] = []

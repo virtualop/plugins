@@ -26,7 +26,7 @@ module Vop
 
     def self.from_json string
       return if string.nil?
-      payload = JSON.load(string)
+      payload = JSON.parse(string)
       self.new(payload["data"], payload["options"], payload["timestamp"])
     end
 

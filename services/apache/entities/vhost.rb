@@ -30,11 +30,9 @@ entity do |machine|
   end
 
   # read vhost config
-  result.each do |vhost|
-    vhost.merge! machine.parse_vhost_config(
-      "/etc/apache2/sites-available/#{vhost["name"]}"
-    )
+  result.map do |x|
+    file_name = "/etc/apache2/sites-available/#{x["name"]}"
+    vhost_config = machine.parse_vhost_config(file_name)
+    x.merge(vhost_config)
   end
-
-  result
 end

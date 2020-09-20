@@ -14,5 +14,5 @@ deploy do |machine|
 
   machine.install_package "apt-transport-https"
 
-  machine.init_service_record_dir()
+  machine.init_service_record_dir
 end

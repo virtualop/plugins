@@ -1,15 +1,5 @@
 module Vop
-
   module ServiceSyntax
-
-    def resolve_options_string(options)
-      if options.is_a? String
-        options = {
-          description: options
-        }
-      end
-      options
-    end
 
     def param(name, options = {})
       options = resolve_options_string(options)
@@ -22,8 +12,6 @@ module Vop
       options.merge! mandatory: true
       param(name, options)
     end
-
-
 
     def process_regex(regex)
       @service.data[:process_regex] ||= []
@@ -158,7 +146,16 @@ module Vop
       @service.data["local_files"] << options
     end
 
+    private
+
+    def resolve_options_string(options)
+      if options.is_a? String
+        options = {
+          description: options
+        }
+      end
+      options
+    end
 
   end
-
 end

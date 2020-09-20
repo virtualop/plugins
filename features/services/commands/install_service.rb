@@ -178,6 +178,7 @@ run do |plugin, params, machine, known_service, service_root|
     record_data = params.merge({
       name: known_service["name"]
     })
+    # TODO filter passwords from record_data
     machine.write_file(
       file_name: record_file,
       content: record_data.to_json
@@ -187,8 +188,6 @@ run do |plugin, params, machine, known_service, service_root|
   # invalidate
   machine.processes!
   machine.detect_services!
-
-  
 
   # redis notification
   redis = plugin.state[:redis]
