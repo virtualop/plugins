@@ -1,7 +1,6 @@
 on :machine
 
 entity do |machine|
-  machine = @op.machines[machine]
   ip = machine.internal_ip
 
   result = {}

@@ -10,8 +10,8 @@ run do |plugin, params, machine, known_service, service_root|
   processed = Hash.new { |h,k| h[k] = [] }
 
   detail = @op.describe_service(known_service: known_service["name"])
+  # if the service needs a service_root param, set a default
   unless service_root
-    # if the service needs a service_root param, set a default
     unless detail["params"].nil?
       svc_root_param = detail["params"].select { |p| p["name"] == "service_root" }.first
       if svc_root_param && svc_root_param.has_key?("options") && svc_root_param["options"]["mandatory"]

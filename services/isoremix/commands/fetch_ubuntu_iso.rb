@@ -6,8 +6,8 @@ run do |machine, version|
 
   isos = machine.find_ubuntu_isos(version: version).select do |file|
     file[:extension] == "iso" &&
-    file[:arch] == "amd64" &&
-    file[:type] == "server"
+    file[:arch] == "server-arm64" &&
+    file[:type] == "live"
   end
 
   iso = isos.first

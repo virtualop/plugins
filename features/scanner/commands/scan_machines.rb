@@ -8,7 +8,7 @@ contribute to: "scan" do
 
   # TODO clean machines that have no longer been found and/or mark them
 
-  @op.machines!.each &:inspect_async
+  # TODO reactivate @op.machines!.each &:inspect_async
 
   stats
 end

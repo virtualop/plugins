@@ -7,10 +7,10 @@ run do |command, request, plugin|
     redis = @op.plugin("redis_cache").state[:redis]
     raise "no redis connection" unless redis
 
-    cache_wrapper = CacheWrapper.from_json redis.get(request.cache_key)
     cached = nil
     cache_state = "miss"
 
+    cache_wrapper = CacheWrapper.from_json redis.get(request.cache_key)
     if cache_wrapper
       cache_state = "hit"
       cached = reconstruct_entities(cache_wrapper)

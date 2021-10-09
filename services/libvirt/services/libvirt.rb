@@ -1,10 +1,12 @@
 process_regex /libvirtd/
 
-# https://help.ubuntu.com/lts/serverguide/libvirt.html
-deploy package: ["qemu-kvm", "libvirt-bin"]
-deploy package: "virtinst"
-deploy package: "libosinfo-bin"
+# https://ubuntu.com/server/docs/virtualization-libvirt
+# + dnsmasq
+# + qemu-utils (for qemu-img)
+deploy package: ["libvirt-daemon-system", "qemu-kvm", "qemu-utils", "dnsmasq"]
+deploy package: ["virtinst", "libosinfo-bin"]
 
+param "adjust_network", default: false
 param "subnet", default: "123"
 
 deploy do |machine, params|
@@ -16,11 +18,14 @@ deploy do |machine, params|
   end
 
   # the default network should have the correct IP
+  puts "adjust network ? #{params["adjust_network"]}"
   machine.update_network_ip(
     "ip" => "192.168.#{subnet}.1",
     "dhcp_start" => "192.168.#{subnet}.2",
     "dhcp_stop" => "192.168.#{subnet}.254"
-  )
+  ) if params["adjust_network"]
+
+  # TODO : add domain
 
   # the default network should be running
   active_networks = machine.list_networks.select { |network|

@@ -6,8 +6,9 @@ param! "server_name",
 
 contribute to: "publish" do |machine, params|
   params.merge!({
-    "machine" => machine.parent.reverse_proxy.name,
     "target_url" => "http://#{machine.internal_ip}/"
-  })
-  @op.add_reverse_proxy(params)
+    })
+  proxy_vm = machine.parent.reverse_proxy
+  proxy_vm.add_reverse_proxy(params)
+  proxy_vm.letsencrypt params["server_name"]
 end

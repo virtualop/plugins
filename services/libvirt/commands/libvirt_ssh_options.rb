@@ -11,7 +11,7 @@ contribute to: "ssh_options" do |machine, params, plugin|
 
      # extract the parent host from the VM name
      parent_name = machine.name.split(".")[1..-1].join(".")
-     result["jump_host"] = parent_name
+     result["jump_host"] = parent_name unless parent_name == "localhost"
 
      # from the jump host, we connect to the VM's internal IP
      vm_short_name = machine.name.split(".").first

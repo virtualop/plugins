@@ -1,11 +1,15 @@
 require "redis"
 require "json"
 
+REDIS_LOGGING_ACTIVE = false
+
 on :init do |plugin|
   plugin.state[:redis] = Redis.new
 end
 
 on :before_execute do |plugin, payload|
+  next unless REDIS_LOGGING_ACTIVE
+
   request = payload[:request]
 
   request_idx = Thread.current["idx"] || 0
@@ -38,6 +42,8 @@ on :before_execute do |plugin, payload|
 end
 
 on :after_execute do |plugin, payload|
+  next unless REDIS_LOGGING_ACTIVE
+
   request = payload[:request]
   response = payload[:response]
 
@@ -62,7 +68,7 @@ on :after_execute do |plugin, payload|
           }
           if response
             log_data[:status] = response.status
-            log_data[:preview] = response.result.to_s[0..50]
+            # TODO log_data[:preview] = response.result.to_s#[0..50]
           end
           redis.publish("vop_log", log_data.to_json())
         end

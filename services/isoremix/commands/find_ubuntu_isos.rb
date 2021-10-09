@@ -1,6 +1,6 @@
 param! :machine
 
-param "version", default: "18.04"
+param "version", default: "20.04"
 
 run do |machine, version|
   dir = isoremix_dir("clean")

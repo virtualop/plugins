@@ -15,8 +15,10 @@ run do |machine, database|
   end
 
   database.each do |db|
-    machine.sudo "mysqldump #{db.name} > #{dump_dir}/#{dump_name}.dmp"
-    machine.ssh "cd #{dump_dir} && tar -czf #{dump_name}.tgz #{dump_name}.dmp && rm #{dump_name}.dmp"
+    db_dump_name_base = "#{dump_name}-#{db.name}"
+    db_dump_name = "#{db_dump_name_base}.dmp"
+    machine.sudo "mysqldump #{db.name} > #{dump_dir}/#{db_dump_name}"
+    machine.ssh "cd #{dump_dir} && tar -czf #{db_dump_name_base}.tgz #{db_dump_name} && rm #{db_dump_name}"
   end
 
   machine.list_dumps!

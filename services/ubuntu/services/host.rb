@@ -19,8 +19,8 @@ end
 # remix ubuntu iso
 deploy service: "isoremix.isoremix"
 deploy do |machine|
-    machine.fetch_ubuntu_iso(version: "18.04")
-    machine.rebuild_debian_iso(source_iso: "ubuntu-18.04.2-server-amd64.iso")
+    machine.fetch_ubuntu_iso(version: "20.04")
+    machine.rebuild_debian_iso(source_iso: "ubuntu-20.04.1-live-server-amd64.iso")
 end
 
 # prepare reverse proxy

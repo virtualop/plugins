@@ -1,7 +1,9 @@
 deploy do |machine|
-  machine.install_package "software-properties-common"
-  machine.install_repo "ppa:certbot/certbot"
-  machine.install_package "python-certbot-apache"
+  machine.sudo "snap install core"
+  machine.sudo "snap refresh core"
+  machine.sudo "snap install --classic certbot"
+
+  machine.sudo "ln -s /snap/bin/certbot /usr/bin/certbot" unless machine.file_exists "/usr/bin/certbot"
 end
 
 binary_name "certbot"

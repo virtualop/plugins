@@ -30,7 +30,6 @@ run do |machine, template, to, params, bind|
         raise detail
       end
     end
-
   ensure
     tmp.close
   end

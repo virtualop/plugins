@@ -10,5 +10,5 @@ run do |machine, public_key|
     machine.ssh("touch .ssh/authorized_keys")
     machine.chmod("file" => ".ssh/authorized_keys", "permissions" => "600")
   end
-  machine.ssh("echo \"#{public_key}\" >> .ssh/authorized_keys")
+  machine.append_to_file(file_name: ".ssh/authorized_keys", content: public_key)
 end

@@ -18,7 +18,7 @@ deploy template: "post_install.sh.erb",
 deploy template: "authorized_keys.erb",
   to: "#{isoremix_root}/extra/authorized_keys"
 
-deploy package: ["bsdtar", "genisoimage"]
+deploy package: ["libarchive-tools", "genisoimage"]
 
 deploy do |machine|
   machine.chmod(file: "#{bin_path}/rebuild-debian-iso", permissions: "+x")

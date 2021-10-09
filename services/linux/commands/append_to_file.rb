@@ -8,7 +8,7 @@ run do |machine, file_name, content|
   old_content = machine.file_exists(file_name) ?
     machine.read_file(file_name) : nil
 
-  new_content = [ old_content, content ].join("\n")
+  new_content = [ old_content, content ].compact.join("\n")
 
   machine.write_file("file_name" => file_name, "content" => new_content)
 end

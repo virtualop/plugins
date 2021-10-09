@@ -7,10 +7,6 @@ param "cpu_count", default: 1
 param "disk_size", description: "in GB", default: 25
 
 run do |params, name, machine|
-  unless machine
-    machine = @op.machines["cabildo.traederphi"]
-  end
-
   @op.track_installation_status(
     host_name: machine.name,
     vm_name: name,

@@ -65,7 +65,7 @@ run do |machine, name, memory, cpu_count, disk_size, iso_path, vnc_listen_addres
     # remove old host key
     machine.vm_addresses!(name: name)
     vm_address = machine.vm_address(name: name)
-    @op.clean_known_host(ip: vm_address)
+    @op.clean_known_host(ip: vm_address) unless vm_address.nil? || vm_address == ""
 
     $logger.info "waiting 5"
     sleep 5

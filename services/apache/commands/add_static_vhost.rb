@@ -16,5 +16,5 @@ run do |machine, server_name, web_root, plugin|
   machine.add_vhost(
     server_name: server_name,
     vhost_config: static_vhost_config
-  )  
+  )
 end

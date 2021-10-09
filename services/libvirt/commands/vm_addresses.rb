@@ -6,10 +6,12 @@ read_only
 run do |machine, name|
   $logger.debug "reading IP address of VM #{name}"
 
-  input = machine.ssh("command" => "virsh domifaddr #{name}")
+  input = machine.ssh "bash -l -c 'virsh domifaddr #{name}'"
+
+  most_lines = input.lines.select { |line| line !~ /Inappropriate ioctl for device/ }
 
   # compare headers vs. expectations
-  header_line = input.lines.first
+  header_line = most_lines.first
   headers = header_line.split
   expected = ["Name", "MAC", "address", "Protocol", "Address"]
   unless headers & expected == expected
@@ -17,7 +19,7 @@ run do |machine, name|
   end
 
   result = []
-  data = input.lines[2..-1].each do |line|
+  data = most_lines[2..-1].each do |line|
     line.strip!
     next if line.empty?
     (name, mac, protocol, address) = line.strip.split

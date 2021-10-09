@@ -1,7 +1,6 @@
 on :machine
 
 entity do |plugin, machine|
-  machine = @op.machines[machine]
   record_dir = plugin.config["installed_services_dir"]
   result = []
   if machine.file_exists(record_dir)

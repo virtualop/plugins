@@ -1,0 +1,21 @@
+PATH
+  remote: .
+  specs:
+    vop-plugins (0.3.6)
+      passgen
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    passgen (1.2.0)
+    rspec (0.9.4)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rspec (~> 0)
+  vop-plugins!
+
+BUNDLED WITH
+   2.1.4

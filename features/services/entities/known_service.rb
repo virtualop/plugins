@@ -1,3 +1,7 @@
+show columns: []
+
+key "name"
+
 entity do |plugin|
   plugin.state[:services].map do |x|
     h = x.to_hash.merge(

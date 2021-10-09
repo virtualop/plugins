@@ -1,3 +1,5 @@
+require "net/http"
+
 param! :hetzner_account
 param! "http_request"
 
@@ -9,10 +11,11 @@ run do |hetzner_account, params|
 
   $logger.debug "hosts for account #{hetzner_account["alias"]}"
 
+  auth_data = @op.hetzner_account_auth_data(hetzner_account: hetzner_account["alias"])
   request = params["http_request"]
-  request.basic_auth(hetzner_account["username"], hetzner_account["password"])
+  request.basic_auth(auth_data[:username], auth_data[:password])
 
-  $logger.info "authenticating with user #{hetzner_account["username"]}"
+  $logger.info "authenticating with user #{auth_data["username"]}"
 
   response = http.request(request)
   unless response.is_a?(Net::HTTPOK) || response.code == 201

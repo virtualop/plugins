@@ -24,8 +24,13 @@ run do |input|
           "shared" => shared,
           "buffer" => buffer
         }
-        full = (used.to_i / (total.to_i / 100)).round(2)
-        row["full"] = full
+        begin
+          full = (used.to_f / (total.to_f / 100)).round(2)
+          row["full"] = full
+        rescue => e
+          $logger.error "could not calculate 'full' capacity for line #{idx} : #{e.message}"
+          $logger.debug "row : #{row.pretty_inspect}"
+        end
 
         known = %w|Mem Swap|
         if known.include? matched.captures[0]

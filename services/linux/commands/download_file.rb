@@ -3,15 +3,18 @@ param! "url"
 param! "file"
 
 run do |machine, url, file|
-  has_curl = machine.ssh("which curl")
+  # install curl if missing
+  has_curl = machine.ssh_call("which curl")["result_code"] == 0
+  unless has_curl
+    machine.install_package("curl")
+  end
 
-  $logger.debug "has_curl: #{has_curl}"
-  raise "no curl" unless has_curl
-
+  # assemble curl command
   command = "curl --silent --location"
   command += " --create-dirs -o #{file}"
   command += " '#{url}'"
-
   $logger.debug "command: #{command}"
-  machine.ssh(command)
+
+  # invoke curl to download
+  machine.ssh(command) unless machine.file_exists(file)
 end

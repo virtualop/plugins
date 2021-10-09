@@ -1,5 +1,3 @@
-require "net/http"
-
 param! :hetzner_account
 
 run do |hetzner_account|

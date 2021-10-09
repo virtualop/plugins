@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
   spec.name          = "vop-plugins"
   spec.version       = "0.3.6"
   spec.authors       = ["Philipp T."]
-  spec.email         = ["philipp@virtualop.org"]
+  spec.email         = ["philipp@hitchhackers.net"]
 
   spec.summary       = %q{Default plugins for the virtualop (see gem "vop").}
   spec.description   = %q{The standard plugins are always loaded in a normal vop installation, the extended ones only if configured.}
@@ -16,6 +16,8 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  spec.add_dependency "passgen"
 
   spec.add_development_dependency "rspec", "~> 0"
 end

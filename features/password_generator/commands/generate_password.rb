@@ -1,9 +1,10 @@
 param "length", default: 12
-param "options", default: { avoid_symbols: true }
+param "symbols", default: true
 
-run do |length, options|
+run do |length, symbols|
   # TODO [vop] auto-conversion for ints would be cool
-  generated = PasswordGenerator.generate(length.to_i, options)
+  generated = Passgen::generate(:length => length.to_i, symbols: symbols)
+
   # strip different kinds of quotes in order not to fuck up whoever needs to use it
   generated.tr('`"\'', '')
 end

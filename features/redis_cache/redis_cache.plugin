@@ -1,3 +1,5 @@
+depends_on "cache"
+
 require "redis"
 
 on :init do |plugin|

@@ -7,22 +7,25 @@ dont_log
 run do |plugin, machine, force, dont_cache|
   ssh_opts = @op.ssh_options("machine" => machine.name)
   $logger.debug "ssh options for #{machine.name} : #{ssh_opts.pretty_inspect}"
-  if ssh_opts.nil? || ssh_opts.empty?
+  if ssh_opts.nil?
     raise "no SSH options for machine #{machine.name}"
   end
 
   host = ssh_opts["host_or_ip"] || machine.name
   user = ssh_opts["user"] || ENV["USER"]
-  port = ssh_opts["port"] || 22
-  options = ssh_opts.has_key?("options") ? ssh_opts["options"] : {}
+  key = "#{user}@#{host}"
 
-  options[:port] = port
+  options = ssh_opts.has_key?("options") ? ssh_opts["options"] : {}
+  if ssh_opts["port"]
+    port = ssh_opts["port"]
+    options[:port] = port
+    key += ":#{port}"
+  end
 
   if ssh_opts.has_key? "password"
     options[:password] = ssh_opts["password"]
   end
 
-  key = "#{user}@#{host}:#{port}"
   $logger.debug("ssh connection to #{key}")
 
   pool = plugin.state[:ssh_connections]

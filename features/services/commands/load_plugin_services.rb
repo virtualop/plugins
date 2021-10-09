@@ -14,4 +14,6 @@ run do |plugin|
       plugin.state[:services] += loaded
     end
   end
+
+  @op.known_services!
 end
