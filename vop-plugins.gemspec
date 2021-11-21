@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "passgen"
+  spec.add_dependency "vault"
 
   spec.add_development_dependency "rspec", "~> 0"
 end
