@@ -20,6 +20,7 @@ run do |plugin, machine, server_name, vhost_config, port|
   )
 
   # remove default template
+  # TODO do we need this?
   if machine.file_exists "/etc/apache2/sites-enabled/000-default.conf"
     machine.sudo "unlink /etc/apache2/sites-enabled/000-default.conf"
   end

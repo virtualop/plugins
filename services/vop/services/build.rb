@@ -11,8 +11,7 @@ deploy package: %w|libsqlite3-dev zlib1g-dev nodejs|
 
 deploy do |machine, params|
   base_dir = params["service_root"]
-  #repos = %w|vop plugins web bundle|
-  repos = %w|vop plugins web|
+  repos = %w|vop plugins web bundle|
 
   # checkout all repos and install dependencies
   repos.each do |repo|

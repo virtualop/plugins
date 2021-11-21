@@ -1,7 +1,7 @@
 param! :machine
 param! "name"
 param! "exec_start", "path to a script/executable to run"
-param "description"
+param "description", default: ""
 param "user", default: nil
 param "after", multi: true, description: "list of systemd units the new config depends on"
 
