@@ -6,6 +6,7 @@ run do |machine, url|
 
   dir = "/var/www/#{project_name}"
   unless machine.file_exists(dir)
+    # TODO the sudo should be hidden inside mkdir (or somewhere below)
     machine.sudo("mkdir #{dir}")
     # TODO hardcoded marvin
     machine.sudo("chown marvin:www-data #{dir}")

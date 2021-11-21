@@ -3,7 +3,8 @@ param! :machine
 contribute to: "ssh_options" do |machine|
   if (! machine.nil?) && machine.name && machine.name == "localhost"
     {
-      "user" => ENV["USER"]
+      "user" => ENV["USER"],
+      "port" => 2233
     }
   end
 end

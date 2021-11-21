@@ -11,7 +11,7 @@ contribute to: "deploy" do |machine, git_url, params, subfolder|
 
   domain = params["domain"]
   if domain
-    machine.install_service("apache.apache")
+    machine.install_service("known_service" => "apache.apache")
 
     web_root = machine.git_clone_web(git_url)
     if subfolder

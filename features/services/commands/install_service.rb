@@ -1,7 +1,7 @@
 require "tempfile"
 
 param! :machine
-param! :known_service, default_param: true
+param! :known_service #, default_param: true
 param "service_root", "path where the service should be installed"
 
 allows_extra
@@ -172,7 +172,7 @@ run do |plugin, params, machine, known_service, service_root|
 
   # record service installation
   record_dir = plugin.config["installed_services_dir"]
-  machine.mkdirs(record_dir)
+  machine.mkdirs(record_dir) # TODO sudo
   if machine.file_exists(record_dir)
     record_file = "#{record_dir}/#{known_service["name"]}"
     record_data = params.merge({

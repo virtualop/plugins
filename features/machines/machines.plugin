@@ -1,1 +1,4 @@
 # TODO depends_on :isoremix
+
+config_param "default_host", default: "santafe.xop",
+  description: "the host on which to setup new virtual machines when new_machine is called without host param"
