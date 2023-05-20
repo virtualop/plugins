@@ -28,3 +28,6 @@ deploy do |machine|
   machine.new_machine "proxy"
   machine.generate_and_run_iptables
 end
+
+# need this for secure apt
+deploy package: "gnupg2"

@@ -19,8 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "passgen"
   spec.add_dependency "vault"
+  spec.add_dependency "xml-simple"
 
   spec.add_development_dependency "rspec", "~> 0"
-
-  spec.add_dependency "xml-simple"
 end

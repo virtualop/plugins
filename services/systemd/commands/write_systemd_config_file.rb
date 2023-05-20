@@ -8,6 +8,7 @@ run do |plugin, machine, name, content|
     content: content,
     sudo: true
   )
+  # TODO: machine.systemd_reload
   machine.sudo "systemctl daemon-reload"
   machine.list_systemd_services!
 end
