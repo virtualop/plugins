@@ -182,7 +182,8 @@ run do |plugin, params, machine, known_service, service_root|
     machine.write_file(
       file_name: record_file,
       content: record_data.to_json
-  )
+    )
+    machine.list_files!(record_dir)
   end
 
   # invalidate

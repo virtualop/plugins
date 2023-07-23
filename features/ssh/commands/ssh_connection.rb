@@ -4,7 +4,7 @@ param "dont_cache", default: false
 
 dont_log
 
-run do |plugin, machine, force, dont_cache|
+run do |context, plugin, machine, force, dont_cache|
   ssh_opts = @op.ssh_options("machine" => machine.name)
   $logger.debug "ssh options for #{machine.name} : #{ssh_opts.pretty_inspect}"
   if ssh_opts.nil?
@@ -12,7 +12,7 @@ run do |plugin, machine, force, dont_cache|
   end
 
   host = ssh_opts["host_or_ip"] || machine.name
-  user = ssh_opts["user"] || ENV["USER"]
+  user = ssh_opts["user"] || context["system_user"] || ENV["USER"]
   key = "#{user}@#{host}"
 
   options = ssh_opts.has_key?("options") ? ssh_opts["options"] : {}

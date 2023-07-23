@@ -1,5 +1,6 @@
 param! :machine
 
+# TODO
 param "version", default: "20.04"
 
 run do |machine, version|
@@ -7,6 +8,9 @@ run do |machine, version|
 
   major = version.split(".").first.to_i
 
+  # TODO funnily enough, for Ubuntu 22.04 the amd64 image is not listed anymore on the release page
+  # it is available at https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-server-amd64.iso, though
+  # TODO maybe try https://releases.ubuntu.com/22.04/ instead
   if major >= 18
     upstream_url = "http://cdimage.ubuntu.com/releases/#{version}/release/"
   else

@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["philipp@hitchhackers.net"]
 
   spec.summary       = %q{Default plugins for the virtualop (see gem "vop").}
-  spec.description   = %q{The standard plugins are always loaded in a normal vop installation, the extended ones only if configured.}
+  spec.description   = %q{Minimal set of plugins that are shipped with the virtualop, with the idea to keep the core small.}
   spec.licenses      = ['WTFPL']
   spec.homepage      = "http://www.virtualop.org"
 
@@ -21,5 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "vault"
   spec.add_dependency "xml-simple"
 
-  spec.add_development_dependency "rspec", "~> 0"
+  spec.add_dependency "vop", '>= 0.3.6'
+
+  spec.add_development_dependency "rspec", "~> 3.0"
 end

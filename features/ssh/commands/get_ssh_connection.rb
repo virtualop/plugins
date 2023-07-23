@@ -10,6 +10,7 @@ run do |machine, force|
   seconds = seconds.to_i
   connection = nil
   begin
+    # TODO : the internet says not to use Timeout anymore
     Timeout::timeout(seconds) do
       tried_with_force = false
       done = false
