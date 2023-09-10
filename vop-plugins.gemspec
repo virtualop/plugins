@@ -1,5 +1,4 @@
 # encoding: utf-8
-#require 'vop'
 
 Gem::Specification.new do |spec|
   spec.name          = "vop-plugins"
