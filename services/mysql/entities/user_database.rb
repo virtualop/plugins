@@ -8,3 +8,5 @@ entity do |machine|
     not default_blacklist.include? database.name
   end.map(&:data)
 end
+
+# TODO needs to be invalidated e.g. when a database is added via create_database or copy_remote_database

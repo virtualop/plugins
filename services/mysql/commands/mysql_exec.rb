@@ -5,7 +5,7 @@ param "database"
 
 run do |machine, command_string, params|
   mysql_command = "sudo mysql --skip-column-names"
-  database = params[:database]
+  database = params["database"]
   if database
     mysql_command += " -D#{database}"
   end

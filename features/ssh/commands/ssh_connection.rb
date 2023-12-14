@@ -4,8 +4,8 @@ param "dont_cache", default: false
 
 dont_log
 
-run do |context, plugin, machine, force, dont_cache|
-  ssh_opts = @op.ssh_options("machine" => machine.name)
+run do |context, plugin, machine, force, dont_cache|  
+  ssh_opts = machine.ssh_options
   $logger.debug "ssh options for #{machine.name} : #{ssh_opts.pretty_inspect}"
   if ssh_opts.nil?
     raise "no SSH options for machine #{machine.name}"
@@ -13,6 +13,7 @@ run do |context, plugin, machine, force, dont_cache|
 
   host = ssh_opts["host_or_ip"] || machine.name
   user = ssh_opts["user"] || context["system_user"] || ENV["USER"]
+  # TODO missing at least the port in the key as well
   key = "#{user}@#{host}"
 
   options = ssh_opts.has_key?("options") ? ssh_opts["options"] : {}
@@ -28,6 +29,7 @@ run do |context, plugin, machine, force, dont_cache|
 
   $logger.debug("ssh connection to #{key}")
 
+  # TODO would be nice if we could invalidate the pool
   pool = plugin.state[:ssh_connections]
   connection = nil
   connection = pool[key] unless force
