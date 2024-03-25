@@ -1,3 +1,5 @@
 depends_on :machines
 
 # https://robot.your-server.de/doc/webservice/de.html
+
+auto_load false

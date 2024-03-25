@@ -35,5 +35,5 @@ def test_vop(sub_tree = nil, options = {})
     options[:plugin_path] = test_spec_path(sub_tree)
   end
 
-  Vop.setup(options)
+  Vop.setup(options).tap { |vop| vop.scan }
 end
