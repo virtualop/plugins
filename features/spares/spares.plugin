@@ -1,1 +1,1 @@
-depends_on :rails_machines
+depends_on :redis_machines

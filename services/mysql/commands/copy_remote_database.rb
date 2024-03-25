@@ -11,7 +11,9 @@ run do |params, machine, source_machine, database|
   target_database ||= database
   $logger.info "copying database #{database} from #{source_machine} #{target_database == database ? "to #{machine.name}" : "into #{target_database} on #{machine.name}"}"
 
-  machine.create_database target_database
+  unless machine.database_exists(target_database)
+    machine.create_database target_database
+  end
 
   connection_string = [
     (source_user unless source_user.nil?),

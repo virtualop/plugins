@@ -1,3 +1,5 @@
+depends_on_gem "redis"
+
 on :init do |plugin|
   plugin.state[:redis] = Redis.new
 end

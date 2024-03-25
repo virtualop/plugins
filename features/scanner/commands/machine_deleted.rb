@@ -11,4 +11,5 @@ run do |machine, plugin|
   redis.lrem(machine_list_key(), 0, machine)
 
   @op.redis_machines!
+  @op.machines!
 end

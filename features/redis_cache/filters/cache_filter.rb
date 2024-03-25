@@ -29,7 +29,7 @@ run do |command, request, plugin|
         # TODO filter sensitive data
         $logger.debug "serializing to JSON : #{for_cache}"
         json = for_cache.to_json()
-        $logger.debug "caching for #{request.cache_key} : #{json}"
+        $logger.debug "caching for #{request.cache_key} : #{json[0..49]}..."
         redis.set(request.cache_key, json)
       rescue => detail
         $logger.warn("could not cache #{request.cache_key} : #{detail.message}")

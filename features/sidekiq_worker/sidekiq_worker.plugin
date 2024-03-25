@@ -1,0 +1,5 @@
+depends_on_gem "sidekiq"
+
+on :init do
+  require File.join(File.dirname(__FILE__), "lib", "worker.rb")
+end

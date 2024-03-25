@@ -1,4 +1,5 @@
 require "bundler/setup"
+require "sidekiq/testing"
 require "vop"
 
 RSpec.configure do |config|
@@ -10,6 +11,14 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.around do |example|
+    if example.metadata[:sidekiq_inline] == true
+      Sidekiq::Testing.inline! { example.run }
+    else
+      example.run
+    end
   end
 end
 

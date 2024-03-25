@@ -1,0 +1,7 @@
+on :init do |plugin|
+  local_plugin_dir = "#{ENV['HOME']}/.vop/plugins"
+  if File.exists? local_plugin_dir
+    plugin.op.class.search_path << local_plugin_dir
+    $logger.debug "adding #{local_plugin_dir} to search path"
+  end
+end

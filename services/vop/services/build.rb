@@ -13,6 +13,10 @@ deploy do |machine, params|
   base_dir = params["service_root"]
   repos = %w|vop plugins web bundle|
 
+  unless machine.file_contains("path" => "/etc/environment", "content" => "VOP_PATH")
+    machine.append_to_file("file_name" => "/etc/environment", "content" => 'VOP_PATH="../vop"')
+  end
+
   # checkout all repos and install dependencies
   repos.each do |repo|
     path = "#{base_dir}/#{repo}"

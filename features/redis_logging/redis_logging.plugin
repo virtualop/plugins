@@ -1,14 +1,13 @@
-require "redis"
+depends_on_gem "redis"
 require "json"
-
-REDIS_LOGGING_ACTIVE = false
 
 on :init do |plugin|
   plugin.state[:redis] = Redis.new
+  plugin.state[:active] = false
 end
 
 on :before_execute do |plugin, payload|
-  next unless REDIS_LOGGING_ACTIVE
+  next unless plugin.state[:active]
 
   request = payload[:request]
 
@@ -42,7 +41,7 @@ on :before_execute do |plugin, payload|
 end
 
 on :after_execute do |plugin, payload|
-  next unless REDIS_LOGGING_ACTIVE
+  next unless plugin.state[:active]
 
   request = payload[:request]
   response = payload[:response]
