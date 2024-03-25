@@ -1,0 +1,39 @@
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-ruby
+
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - and-tonic
+  pull_request:
+    branches: [ master, and-tonic ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      # https://docs.github.com/en/actions/using-containerized-services/creating-redis-service-containers
+      redis:
+        image: redis
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@359bebbc29cbe6c87da6bc9ea3bc930432750108
+        with:
+          ruby-version: '3.1'
+      - name: Install dependencies
+        run: bundle install
+      - name: Run tests
+        run: bundle exec rake
