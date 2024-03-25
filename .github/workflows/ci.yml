@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: bundle install
       - name: Generate SSH Key
-        run: ssh-keygen -N ''
+        run: ssh-keygen -N '' -f $HOME/.ssh/id_rsa
       - name: Authorize SSH access
         run: cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys; chmod 600 $HOME/.ssh/authorized_keys
       - name: Run tests
