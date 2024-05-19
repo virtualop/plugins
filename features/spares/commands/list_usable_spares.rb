@@ -10,7 +10,9 @@ run do |machine|
 
     vm_running = vm["state"] == "running"
     ssh_ok = @op.test_ssh("machine" => "#{vm_name}.#{machine.name}")
-    installation_finished = @op.installation_status(host_name: machine.name, vm_name: vm_name) == "installed"
+    installation_status = @op.installation_status(host_name: machine.name, vm_name: vm_name)
+    # allow other vop installations to re-use spares without shared redis
+    installation_finished = installation_status == "installed" || installation_status == nil
 
     usable = vm_running && installation_finished && ssh_ok
 
